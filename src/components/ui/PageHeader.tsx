@@ -1,0 +1,58 @@
+import Link from 'next/link';
+import { Container } from '@/components/ui/Container';
+
+/**
+ * Interior page opener: solid green band so every page below the homepage starts from
+ * the brand rather than from a photograph competing with the headline.
+ */
+export function PageHeader({
+  title,
+  lead,
+  breadcrumbs,
+  children,
+}: {
+  title: string;
+  lead?: string;
+  breadcrumbs?: { label: string; href?: string }[];
+  children?: React.ReactNode;
+}) {
+  return (
+    <section className="bg-green text-cream">
+      <Container className="py-12 lg:py-16">
+        {breadcrumbs && breadcrumbs.length > 0 && (
+          <nav aria-label="Breadcrumb" className="mb-6">
+            <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] text-cream/70">
+              {breadcrumbs.map((crumb, index) => (
+                <li key={crumb.label} className="flex items-center gap-2">
+                  {index > 0 && (
+                    <span aria-hidden="true" className="text-cream/40">
+                      /
+                    </span>
+                  )}
+                  {crumb.href ? (
+                    <Link href={crumb.href} className="hover:text-gold">
+                      {crumb.label}
+                    </Link>
+                  ) : (
+                    <span aria-current="page" className="text-cream">
+                      {crumb.label}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
+
+        <span aria-hidden="true" className="mb-5 block h-[3px] w-10 bg-gold" />
+        <h1 className="max-w-[30ch] text-[clamp(2rem,4.6vw,3.25rem)] text-cream">{title}</h1>
+        {lead && (
+          <p className="mt-5 max-w-[62ch] text-[1.0625rem] leading-relaxed text-cream/80">
+            {lead}
+          </p>
+        )}
+        {children && <div className="mt-8">{children}</div>}
+      </Container>
+    </section>
+  );
+}

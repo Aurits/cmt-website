@@ -1,0 +1,275 @@
+@import "tailwindcss";
+
+/*
+  CMT Realtors design tokens.
+
+  ONE GREEN: #1b361c, the green inside the supplied logo tile, is the only green on the
+  site. Every green surface — masthead, footer, page headers, stats, CTA bands, buttons,
+  map pins — uses it, so the logo merges into any of them and the whole site reads as one
+  material. Depth comes from alpha of this same green (green/8, green/85) and from the gold
+  hairline, never from a second green hue.
+
+  This supersedes the brief's #143d1e, at the client's direction: the mark cannot be
+  recoloured, so matching the site to the mark was the only way to get a continuous
+  masthead. Recorded in OPEN-ITEMS.md.
+
+  Gold and cream are the brief's values, unchanged. Body text is a warm near-black
+  (#171612) rather than pure #000000, which reads harsh on cream.
+*/
+@theme {
+  --color-green: #1b361c;
+  --color-gold: #daa706;
+  --color-gold-deep: #a67f05;
+  --color-cream: #f7f2dd;
+  --color-cream-deep: #efe7c9;
+  --color-paper: #fffdf7;
+  --color-ink: #171612;
+  --color-muted: #5c6353;
+  --color-rule: #ded5b6;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  --text-display: clamp(2.4rem, 6.2vw, 4.3rem);
+  --text-h2: clamp(1.75rem, 3.4vw, 2.6rem);
+  --text-h3: clamp(1.2rem, 1.6vw, 1.45rem);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Headlines carry the personality: Fraunces, tight, optically sized. */
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.06;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  ::selection {
+    background-color: var(--color-gold);
+    color: var(--color-green);
+  }
+}
+
+@utility tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* A valuation schedule: ruled key/value rows, the structural motif of the site. */
+@utility schedule-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.25rem;
+  border-top: 1px solid var(--color-rule);
+  padding-block: 0.6rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Motion
+   Three deliberate kinds, and nothing else: content arriving as you scroll,
+   the hero carousel drifting, and the client conveyor. All three stop dead
+   under prefers-reduced-motion, at the bottom of this file.
+   --------------------------------------------------------------------------- */
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* The one orchestrated entrance: the hero settling on first paint. */
+@utility hero-rise {
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/*
+  Scroll reveal. The server HTML carries none of this: the Reveal component adds .reveal on
+  the client, before paint, and only to elements that are actually below the fold, then
+  .is-revealed when they scroll in. So content is never invisible waiting for JavaScript.
+  The <noscript> block in layout.tsx is a second belt for the same braces.
+*/
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Slow drift across the active carousel frame. Restarts with each slide change. */
+@keyframes drift {
+  from { transform: scale(1.015); }
+  to { transform: scale(1.11); }
+}
+
+.carousel-frame {
+  animation: drift 11s ease-out both;
+}
+
+/* ---------------------------------------------------------------------------
+   Client conveyor
+   One track of colour, with a desaturating veil over each side. Because there
+   is a single track, the colour and grey states can never fall out of
+   register; the veils simply grey out whatever passes behind them, so the mark
+   in the centre is the only one at full strength.
+   --------------------------------------------------------------------------- */
+
+.conveyor {
+  position: relative;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.conveyor__track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  animation: conveyor var(--conveyor-duration, 42s) linear infinite;
+}
+
+.conveyor--reverse .conveyor__track {
+  animation-direction: reverse;
+}
+
+/* Hovering or tabbing into the belt holds it still so a name can be read. */
+.conveyor:hover .conveyor__track,
+.conveyor:focus-within .conveyor__track {
+  animation-play-state: paused;
+}
+
+/*
+  Each item carries its own trailing margin rather than the track using `gap`, so the
+  duplicated half is exactly 50% of the track and the loop has no seam.
+*/
+.conveyor__item {
+  margin-right: 0.75rem;
+  flex: none;
+}
+
+.conveyor__veil {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  pointer-events: none;
+  -webkit-backdrop-filter: grayscale(1);
+  backdrop-filter: grayscale(1);
+  background: color-mix(in srgb, var(--color-cream) 55%, transparent);
+}
+
+.conveyor__veil--left {
+  left: 0;
+  -webkit-mask-image: linear-gradient(to right, #000 55%, transparent);
+  mask-image: linear-gradient(to right, #000 55%, transparent);
+}
+
+.conveyor__veil--right {
+  right: 0;
+  -webkit-mask-image: linear-gradient(to left, #000 55%, transparent);
+  mask-image: linear-gradient(to left, #000 55%, transparent);
+}
+
+@keyframes conveyor {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+/* Leaflet: keep the map inside the brand, and never let it outrank the content. */
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: var(--color-cream-deep);
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  color: var(--color-muted);
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  border-radius: 2px;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  box-shadow: 0 8px 24px rgb(27 54 28 / 0.18);
+}
+
+.leaflet-bar a {
+  color: var(--color-green);
+}
+
+.leaflet-control-attribution {
+  background: rgb(255 253 247 / 0.85) !important;
+  font-size: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  /* Nothing may depend on motion to become visible or legible. */
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .conveyor__track {
+    animation: none;
+    /* A still belt shows one set of marks, centred and wrapped — never the clones. */
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    row-gap: 0.75rem;
+  }
+
+  .conveyor__item[data-clone='true'] {
+    display: none;
+  }
+
+  .conveyor__veil {
+    display: none;
+  }
+
+  .conveyor {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
