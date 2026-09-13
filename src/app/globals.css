@@ -205,10 +205,22 @@
   to { transform: translate3d(-50%, 0, 0); }
 }
 
-/* Leaflet: keep the map inside the brand, and never let it outrank the content. */
+/*
+  Leaflet: keep the map inside the brand, and never let it outrank the content.
+
+  Leaflet's own stylesheet gives its internal layers real z-index values — the tile pane is
+  200, markers 600, popups 700, the zoom control 1000 — set on elements that never
+  otherwise form a stacking context. Without `isolation`, those values are compared against
+  the WHOLE page rather than staying inside the map, so once a map scrolls near the sticky
+  header (z-40) its tiles and zoom buttons paint on top of it. `isolation: isolate` gives
+  the map its own stacking context: everything inside is still ordered 200 through 1000
+  relative to each other, but the box as a whole sits wherever it falls in normal document
+  order, same as any other element with no z-index of its own — behind the header, always.
+*/
 .leaflet-container {
   font-family: var(--font-sans);
   background: var(--color-cream-deep);
+  isolation: isolate;
 }
 
 .leaflet-container a.leaflet-popup-close-button {
