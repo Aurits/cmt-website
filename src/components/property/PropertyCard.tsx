@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/Badge';
 import { AreaIcon, BathIcon, BedIcon, PinIcon } from '@/components/ui/icons';
 import { categoryBySlug } from '@/data/categories';
 import { listingTypeLabel, priceWithPeriod } from '@/lib/format';
@@ -41,7 +42,7 @@ export function PropertyCard({
   return (
     <article
       className={cx(
-        'group flex flex-col overflow-hidden rounded-[2px] border border-rule bg-paper',
+        'group flex flex-col overflow-hidden rounded-brand border border-rule bg-paper',
         'transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(27,54,28,0.5)]',
         className,
       )}
@@ -55,12 +56,12 @@ export function PropertyCard({
           priority={priority}
           className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
         />
-        <span className="absolute left-0 top-0 bg-green px-3 py-1.5 text-[0.75rem] text-cream">
+        <Badge tone="category" className="absolute left-3 top-3">
           {category.name}
-        </span>
-        <span className="absolute right-0 top-0 bg-gold px-3 py-1.5 text-[0.75rem] font-medium text-green">
+        </Badge>
+        <Badge tone="type" className="absolute right-3 top-3">
           {listingTypeLabel(listing)}
-        </span>
+        </Badge>
       </Link>
 
       <div className="flex flex-1 flex-col p-5">

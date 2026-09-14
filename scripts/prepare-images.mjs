@@ -153,27 +153,62 @@ for (const [src, out, w, h] of JOBS) {
 /*
  * Brand marks.
  *
- * The badge is used as-is: nothing is recoloured, knocked out or redrawn. The only
- * preparation is a 14px inset that drops the outermost band of the supplied PNG, whose
- * pixels are 4-5 levels lighter than the tile itself (#1f381e against a #1b361c field)
- * from earlier lossy compression. Left in, that band draws a halo round the mark wherever
- * it sits on a green surface. 14px of flat tile out of 1798 changes no proportion in the
- * artwork.
+ * The letterforms are used as-is: nothing about the wordmark itself is recoloured, knocked
+ * out or redrawn. cmt-logo-gold.png is the client's gold-on-tile export, swapped in for the
+ * original white-on-tile cmt-logo-01.png (kept in the repo for history, no longer read
+ * here) at the client's request — gold ink instead of cream, matching the site's own
+ * gold-for-emphasis colour rather than sitting apart from it. A 14px inset drops the
+ * outermost band of the supplied PNG, matching the trim the original export needed for its
+ * own compression halo; 14px of flat tile out of 1798 changes no proportion in the artwork.
  *
- * The tile's own green is #1b361c, which is NOT the brand green #143d1e. Surfaces the mark
- * has to merge into use --color-green-mark for that reason; see globals.css and
- * OPEN-ITEMS.md, where a transparent-background variant is requested so the masthead can
- * go back to exact brand green.
+ * Both colours in the export are retuned to the site's own tokens rather than kept as
+ * supplied: the tile becomes ONE GREEN (globals.css --color-green, #11341b — the client's
+ * call, now taken from THIS export rather than cmt-logo-01.png) and the ink becomes the
+ * site's own --color-gold (#daa706) rather than the export's own slightly different gold
+ * (#e7a70f), so the mark uses the exact same two colours as everything drawn around it
+ * instead of a close-but-not-quite pair. remapTwoTone does this by treating the source
+ * image as if it were only ever these two flat colours: every pixel's red channel (the
+ * widest-spread channel between this green and this gold, so the safest one to measure
+ * blend against) places it somewhere on the line between the two, and that same position
+ * is used to blend the two NEW colours. Genuinely two-tone art round-trips as flat colour;
+ * an anti-aliased edge pixel keeps its antialiasing, just recoloured — nothing is
+ * hard-thresholded, so no edge gets harder or softer than the source drew it.
+ *
+ * Still the opaque tile, not the transparent variant OPEN-ITEMS.md #11 asks CMT for. A
+ * transparent gold wordmark, if CMT supplies one, replaces this file at the same path and
+ * lets the masthead return to the brief's exact green (#143d1e) instead of the tile's.
  */
+
+const hexToRgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+const lerp = (a, b, t) => Math.round(a + (b - a) * t);
+
+/** Recolours a flat two-tone image from one {bg, fg} colour pair to another. */
+async function remapTwoTone(input, from, to) {
+  const [fromBg, fromFg, toBg, toFg] = [from.bg, from.fg, to.bg, to.fg].map(hexToRgb);
+  const image = sharp(input).ensureAlpha();
+  const { data, info } = await image.raw().toBuffer({ resolveWithObject: true });
+  for (let i = 0; i < data.length; i += info.channels) {
+    const t = Math.min(1, Math.max(0, (data[i] - fromBg[0]) / (fromFg[0] - fromBg[0])));
+    for (let c = 0; c < 3; c++) data[i + c] = lerp(toBg[c], toFg[c], t);
+  }
+  return sharp(data, { raw: info }).png().toBuffer();
+}
+
 fs.mkdirSync('public/brand', { recursive: true });
 const INSET = 14;
-const { width: lw, height: lh } = await sharp('cmt-logo-01.png').metadata();
-const trimmed = await sharp('cmt-logo-01.png')
+const LOGO_SOURCE = 'cmt-logo-gold.png';
+const { width: lw, height: lh } = await sharp(LOGO_SOURCE).metadata();
+const trimmed = await sharp(LOGO_SOURCE)
   .extract({ left: INSET, top: INSET, width: lw - INSET * 2, height: lh - INSET * 2 })
   .png()
   .toBuffer();
+const normalized = await remapTwoTone(
+  trimmed,
+  { bg: '#11341b', fg: '#e7a70f' }, // measured from the export's own flat fills
+  { bg: '#11341b', fg: '#daa706' }, // globals.css --color-green / --color-gold
+);
 
-await sharp(trimmed).resize(900).png({ compressionLevel: 9, palette: true })
+await sharp(normalized).resize(900).png({ compressionLevel: 9, palette: true })
   .toFile('public/brand/cmt-logo.png');
 
 // Favicons and app icons are built from this mark by scripts/prepare-icons.mjs, which
@@ -202,7 +237,7 @@ const credits = [
   '| --- | --- | --- |',
   ...JOBS.map(([src, out, , , desc]) => `| \`${out}\` | ${creditLink(src)} | ${desc} |`),
   '',
-  '`public/brand/cmt-logo.png` is the client-supplied mark (`cmt-logo-01.png`), optimised.',
+  '`public/brand/cmt-logo.png` is the client-supplied mark (`cmt-logo-gold.png`), optimised.',
   '',
 ].join('\n');
 fs.writeFileSync(path.join(OUT, 'CREDITS.md'), credits);

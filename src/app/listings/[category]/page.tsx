@@ -51,7 +51,7 @@ export default async function CategoryPage({
 
       <section className="py-12 lg:py-16">
         <Container className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-14">
-          <div className="relative aspect-[3/2] overflow-hidden rounded-[2px] border border-rule">
+          <div className="relative aspect-[3/2] overflow-hidden rounded-brand border border-rule">
             <Image
               src={category.image}
               alt={category.imageAlt}

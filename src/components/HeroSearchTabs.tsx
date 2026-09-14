@@ -121,7 +121,7 @@ export function HeroSearchTabs() {
 
         <button
           type="submit"
-          className="rounded-[2px] bg-gold px-6 py-3 text-[0.9375rem] font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
+          className="rounded-brand bg-gold px-6 py-3 text-[0.9375rem] font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
         >
           {current.id === 'value' ? 'Request a valuation' : 'Search'}
           <span className="sr-only"> — {current.action}</span>

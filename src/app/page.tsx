@@ -7,6 +7,8 @@ import { PartnerConveyor } from '@/components/PartnerConveyor';
 import { StatsStrip } from '@/components/StatsStrip';
 import { TestimonialCard, TestimonialsPending } from '@/components/TestimonialCard';
 import { FeaturedCarousel } from '@/components/property/FeaturedCarousel';
+import { HeroVideo } from '@/components/HeroVideo';
+import { AnimatedHeadline } from '@/components/ui/AnimatedHeadline';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Reveal } from '@/components/ui/Reveal';
@@ -49,20 +51,22 @@ export default function HomePage() {
     <>
       {/* Hero: identity first, product second — the nav order makes the same argument,
           and the text stays first in document order so that holds on mobile too. The
-          photograph is full-bleed at every width, edge to edge with no card, no rounding
-          and no side margin — the one deliberate break from the page's 1200px measure —
-          and the whole band is sized to `--header-h` (globals.css) so it fills exactly
-          what's left of the first screen below the sticky masthead: no cream gap
-          before the fold, on a phone or a desktop monitor. flex-col stacks text over a
-          bottom-anchored photograph on a phone; flex-row at lg runs the photograph
-          floor-to-ceiling on the right, both simply children stretched or grown to fill
-          a height that is never guessed at, only ever computed. */}
+          photograph (now a looping video of the same building — see HeroVideo, which
+          falls back to the still photograph for anyone who shouldn't get the video) is
+          full-bleed at every width, edge to edge with no card, no rounding and no side
+          margin — the one deliberate break from the page's 1200px measure — and the whole
+          band is sized to `--header-h` (globals.css) so it fills exactly what's left of
+          the first screen below the sticky masthead: no cream gap before the fold, on a
+          phone or a desktop monitor. flex-col stacks text over a bottom-anchored
+          photograph on a phone; flex-row at lg runs the photograph floor-to-ceiling on
+          the right, both simply children stretched or grown to fill a height that is
+          never guessed at, only ever computed. */}
       <section className="relative overflow-hidden bg-cream">
         <div className="flex min-h-[calc(100dvh_-_var(--header-h)_-_var(--mobile-cta-h))] flex-col lg:min-h-[calc(100dvh_-_var(--header-h))] lg:flex-row lg:items-stretch">
           <Container className="relative z-10 shrink-0 py-8 lg:w-[46%] lg:shrink-0 lg:self-center lg:py-16">
             <div className="hero-rise">
               <h1 className="text-display text-green">
-                Fifteen years of valuations Uganda&rsquo;s banks lend against
+                <AnimatedHeadline text="15+ years of valuations Uganda’s banks lend against" />
               </h1>
               <p className="mt-6 max-w-[52ch] text-[1.0625rem] leading-relaxed text-muted sm:text-[1.125rem]">
                 CMT Realtors is a Kampala valuation and property consultancy firm, regulated by
@@ -95,13 +99,14 @@ export default function HomePage() {
               intentional, never clipped) do the rest of the work of tying it to the page
               around it. */}
           <div className="relative min-h-[240px] flex-1 overflow-hidden lg:min-h-0 lg:w-[54%] lg:flex-none">
-            <Image
-              src="/images/hero-home.jpg"
-              alt="Wavy, ribbon-like balconies rippling down an apartment facade"
-              fill
-              priority
+            <HeroVideo
+              posterSrc="/images/hero-home.jpg"
+              posterAlt="Wavy, ribbon-like balconies rippling down an apartment facade"
+              desktopSrc="/videos/hero-loop.mp4"
+              mobileSrc="/videos/hero-loop-mobile.mp4"
               sizes="(min-width: 1024px) 54vw, 100vw"
-              className="object-cover hue-rotate-[20deg] saturate-[1.25] contrast-[1.05]"
+              className="object-cover"
+              gradeClassName="hue-rotate-[20deg] saturate-[1.25] contrast-[1.05]"
             />
             <span
               aria-hidden="true"
@@ -120,7 +125,7 @@ export default function HomePage() {
 
         {/* The counter: the three jobs a visitor came to do, closing the hero. */}
         <Container className="relative z-10 mt-8 pb-8 lg:mt-10 lg:pb-12">
-          <div className="rounded-[2px] border border-rule border-t-2 border-t-gold">
+          <div className="rounded-brand border border-rule border-t-2 border-t-gold">
             <HeroSearchTabs />
           </div>
         </Container>
@@ -147,7 +152,7 @@ export default function HomePage() {
       {/* Identity */}
       <section className="py-12 lg:py-16">
         <Container className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-          <Reveal className="relative order-2 aspect-[4/3] overflow-hidden rounded-[2px] border border-rule lg:order-1 lg:aspect-auto lg:min-h-[380px]">
+          <Reveal className="relative order-2 aspect-[4/3] overflow-hidden rounded-brand border border-rule lg:order-1 lg:aspect-auto lg:min-h-[380px]">
             <Image
               src="/images/identity-office.jpg"
               alt="Kampala's business district under a clear sky"
@@ -206,7 +211,7 @@ export default function HomePage() {
             ))}
             {/* Sixth cell: the visitors who do not know which class their property is. */}
             <Reveal as="li" delay={350} className="flex">
-              <div className="flex min-h-[190px] w-full flex-col justify-between rounded-[2px] border border-green/25 bg-paper p-5">
+              <div className="flex min-h-[190px] w-full flex-col justify-between rounded-brand border border-green/25 bg-paper p-5">
                 <div>
                   <h3 className="text-[1.375rem] text-green">Not sure which it is?</h3>
                   <p className="mt-2.5 max-w-[32ch] text-[0.9375rem] leading-relaxed text-muted">
@@ -311,7 +316,7 @@ export default function HomePage() {
       <section className="py-12 lg:py-16">
         <Container>
           <Reveal>
-            <div className="flex flex-col gap-6 rounded-[2px] border border-rule bg-paper p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+            <div className="flex flex-col gap-6 rounded-brand border border-rule bg-paper p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
               <div>
                 <span aria-hidden="true" className="mb-4 block h-[3px] w-10 bg-gold" />
                 <h2 className="text-[clamp(1.5rem,2.4vw,2rem)] text-green">

@@ -3,7 +3,7 @@ import type { Testimonial } from '@/lib/types';
 
 export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
-    <figure className="flex h-full flex-col justify-between rounded-[2px] border border-rule bg-paper p-6">
+    <figure className="flex h-full flex-col justify-between rounded-brand border border-rule bg-paper p-6">
       <blockquote className="font-display text-[1.1875rem] leading-snug text-green">
         <span aria-hidden="true" className="mr-1 text-gold">
           &ldquo;
@@ -27,7 +27,7 @@ export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
  */
 export function TestimonialsPending() {
   return (
-    <div className="rounded-[2px] border border-dashed border-green/30 bg-cream-deep/50 p-6 sm:p-7">
+    <div className="rounded-brand border border-dashed border-green/30 bg-cream-deep/50 p-6 sm:p-7">
       <p className="max-w-[52ch] font-display text-[1.375rem] leading-snug text-green">
         References from the banks, agencies and corporate clients CMT already works for
         will sit here.

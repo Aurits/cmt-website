@@ -59,7 +59,7 @@ export default function AboutPage() {
         <Container className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
           <div>
             <SectionHeading
-              title="What fifteen years of instructions buys you"
+              title="What 15+ years of instructions buys you"
               lead="Not a longer brochure — a body of evidence. Valuation is a judgement call made under professional liability, and the firms that last are the ones whose judgement holds up when a lender, a court or a tax authority tests it."
             />
             <div className="mt-8 space-y-5 text-[1.0625rem] leading-relaxed text-muted">
@@ -76,7 +76,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[2px] border border-rule lg:aspect-auto lg:min-h-[420px]">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-brand border border-rule lg:aspect-auto lg:min-h-[420px]">
             <Image
               src="/images/identity-office.jpg"
               alt="Kampala's business district under a clear sky"
@@ -136,7 +136,7 @@ export default function AboutPage() {
             lead="The credentials that let a CMT report be relied on."
           />
           <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            <li className="flex gap-4 rounded-[2px] border border-cream/20 p-6">
+            <li className="flex gap-4 rounded-brand border border-cream/20 p-6">
               <ShieldIcon width={26} height={26} className="mt-0.5 shrink-0 text-gold" />
               <div>
                 <h3 className="text-[1.0625rem] text-cream">{site.regulator}</h3>
@@ -146,7 +146,7 @@ export default function AboutPage() {
                 </p>
               </div>
             </li>
-            <li className="flex gap-4 rounded-[2px] border border-dashed border-cream/30 p-6">
+            <li className="flex gap-4 rounded-brand border border-dashed border-cream/30 p-6">
               <div>
                 <h3 className="text-[1.0625rem] text-cream/90">Further memberships</h3>
                 <p className="mt-2 text-[0.875rem] leading-relaxed text-cream/70">

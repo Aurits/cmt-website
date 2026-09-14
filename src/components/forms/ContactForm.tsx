@@ -24,7 +24,7 @@ export function ContactForm({ defaultSubject = 'general' }: { defaultSubject?: s
 
   if (submitted) {
     return (
-      <div className="rounded-[2px] border border-green/25 bg-green/8 p-6">
+      <div className="rounded-brand border border-green/25 bg-green/8 p-6">
         <h3 className="text-[1.375rem] text-green">Your details are not sent yet</h3>
         <p className="mt-3 max-w-[54ch] text-[0.9375rem] leading-relaxed text-muted">
           This form is part of a site still in build, so nothing has been delivered to CMT.

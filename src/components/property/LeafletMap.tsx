@@ -18,7 +18,7 @@ const pin = L.divIcon({
   className: 'cmt-pin',
   // Leaflet builds this as a plain string, outside our CSS pipeline, so the green is
   // hardcoded rather than a var() — keep it matched to --color-green in globals.css.
-  html: `<span style="display:block;width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#1b361c;border:2px solid #daa706;box-shadow:0 3px 10px rgba(0,0,0,.35)"></span>`,
+  html: `<span style="display:block;width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#11341b;border:2px solid #daa706;box-shadow:0 3px 10px rgba(0,0,0,.35)"></span>`,
   iconSize: [26, 26],
   iconAnchor: [13, 26],
   popupAnchor: [0, -26],

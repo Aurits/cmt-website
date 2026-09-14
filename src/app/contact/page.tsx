@@ -42,7 +42,7 @@ export default async function ContactPage({
           </div>
 
           <div>
-            <div className="rounded-[2px] border border-rule bg-paper p-6">
+            <div className="rounded-brand border border-rule bg-paper p-6">
               <h2 className="text-[1.375rem] text-green">Our office</h2>
 
               <address className="mt-5 space-y-4 text-[0.9375rem] not-italic">
@@ -111,7 +111,7 @@ export default async function ContactPage({
               </div>
             </div>
 
-            <div className="mt-6 rounded-[2px] border border-green/25 bg-green/8 p-6">
+            <div className="mt-6 rounded-brand border border-green/25 bg-green/8 p-6">
               <h2 className="font-display text-[1.25rem] text-green">
                 Own a property you want on the market?
               </h2>

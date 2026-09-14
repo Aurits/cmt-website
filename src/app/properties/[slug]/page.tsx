@@ -7,6 +7,7 @@ import { InquiryForm } from '@/components/forms/InquiryForm';
 import { PropertyCard } from '@/components/property/PropertyCard';
 import { PropertyGallery } from '@/components/property/PropertyGallery';
 import { PropertyMap } from '@/components/property/PropertyMap';
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
@@ -91,12 +92,8 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="bg-green px-3 py-1.5 text-[0.75rem] text-cream">
-                  {category.name}
-                </span>
-                <span className="bg-gold px-3 py-1.5 text-[0.75rem] font-medium text-green">
-                  {listingTypeLabel(listing)}
-                </span>
+                <Badge tone="category">{category.name}</Badge>
+                <Badge tone="type">{listingTypeLabel(listing)}</Badge>
               </div>
               <h1 className="mt-4 max-w-[26ch] text-[clamp(1.875rem,3.6vw,2.75rem)] text-green">
                 {listing.title}
@@ -179,7 +176,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
 
             <div
               id="enquire"
-              className="mt-6 scroll-mt-32 rounded-[2px] border border-rule bg-paper p-5"
+              className="mt-6 scroll-mt-32 rounded-brand border border-rule bg-paper p-5"
             >
               <h2 className="text-[1.25rem] text-green">Enquire about {listing.reference}</h2>
               <p className="mt-2 text-[0.875rem] leading-relaxed text-muted">
@@ -190,7 +187,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
               </div>
             </div>
 
-            <div className="mt-6 rounded-[2px] border border-green/25 bg-green/8 p-5">
+            <div className="mt-6 rounded-brand border border-green/25 bg-green/8 p-5">
               <h2 className="font-display text-[1.125rem] text-green">
                 Want this valued instead?
               </h2>

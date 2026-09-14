@@ -40,7 +40,7 @@ export function AgentCard({
   return (
     <div
       className={cx(
-        'flex flex-col rounded-[2px] border border-rule bg-paper',
+        'flex flex-col rounded-brand border border-rule bg-paper',
         variant === 'contact' ? 'p-5' : 'p-6',
         className,
       )}
@@ -52,12 +52,12 @@ export function AgentCard({
             alt={agent.name}
             width={120}
             height={120}
-            className="h-16 w-16 rounded-[2px] object-cover"
+            className="h-16 w-16 rounded-brand object-cover"
           />
         ) : (
           <span
             aria-hidden="true"
-            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[2px] bg-green font-display text-xl text-cream"
+            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-brand bg-green font-display text-xl text-cream"
           >
             {initials(agent.name)}
           </span>

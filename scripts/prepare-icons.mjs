@@ -20,7 +20,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const SRC = 'public/brand/cmt-logo.png';
-const GREEN = '#1b361c';
+const GREEN = '#11341b';
 
 /* Measured ink boxes within the 900x431 mark (see the profiling in prepare-images.mjs). */
 const WORDMARK = { left: 136, top: 62, width: 651, height: 213 };

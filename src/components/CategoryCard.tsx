@@ -22,7 +22,7 @@ export function CategoryCard({
     <Link
       href={`/listings/${category.slug}`}
       className={cx(
-        'group relative flex min-h-[190px] flex-col justify-end overflow-hidden rounded-[2px] border border-green/10 bg-green',
+        'group relative flex min-h-[190px] flex-col justify-end overflow-hidden rounded-brand border border-green/10 bg-green',
         className,
       )}
     >

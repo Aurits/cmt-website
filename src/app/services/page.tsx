@@ -48,7 +48,7 @@ export default function ServicesPage() {
                 >
                   <Reveal
                     className={cx(
-                      'relative aspect-[4/3] overflow-hidden rounded-[2px] border border-rule',
+                      'relative aspect-[4/3] overflow-hidden rounded-brand border border-rule',
                       imageFirst ? 'lg:order-1' : 'lg:order-2',
                     )}
                   >
@@ -102,7 +102,7 @@ export default function ServicesPage() {
 
       <section className="bg-cream-deep/45 py-14 lg:py-20">
         <Container className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
-          <Reveal className="relative aspect-[3/2] overflow-hidden rounded-[2px] border border-rule">
+          <Reveal className="relative aspect-[3/2] overflow-hidden rounded-brand border border-rule">
             <Image
               src="/images/valuation-keys.jpg"
               alt="A model house and a set of keys on a desk"
@@ -169,7 +169,7 @@ export default function ServicesPage() {
               <Reveal as="li" key={category.slug} delay={index * 60}>
                 <a
                   href={`/listings/${category.slug}`}
-                  className="flex h-full flex-col rounded-[2px] border border-rule bg-paper p-5 transition-colors hover:border-green/40"
+                  className="flex h-full flex-col rounded-brand border border-rule bg-paper p-5 transition-colors hover:border-green/40"
                 >
                   <span className="font-display text-[1.0625rem] text-green">{category.name}</span>
                   <span className="mt-1.5 text-[0.875rem] leading-snug text-muted">
