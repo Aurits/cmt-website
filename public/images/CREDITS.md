@@ -41,4 +41,4 @@ genuine, identifiable Kampala or Uganda photography.
 | `listings/agri-wheat.jpg` | https://unsplash.com/photos/1499529112087-3cb3b73cec95 | Cereal crop close-up |
 | `listings/agri-seedlings.jpg` | https://unsplash.com/photos/1523348837708-15d4a09cfac2 | Seedlings / nursery |
 
-`public/brand/cmt-logo.png` is the client-supplied mark (`cmt-logo-01.png`), optimised.
+`public/brand/cmt-logo.png` is the client-supplied mark (`cmt-logo-gold.png`), optimised.

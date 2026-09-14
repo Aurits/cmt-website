@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 
 /** Colours the browser chrome on mobile to match the masthead. */
 export const viewport: Viewport = {
-  themeColor: '#1b361c',
+  themeColor: '#11341b',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

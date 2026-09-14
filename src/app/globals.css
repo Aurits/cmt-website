@@ -3,7 +3,7 @@
 /*
   CMT Realtors design tokens.
 
-  ONE GREEN: #1b361c, the green inside the supplied logo tile, is the only green on the
+  ONE GREEN: #11341b, the green inside the supplied logo tile, is the only green on the
   site. Every green surface — masthead, footer, page headers, stats, CTA bands, buttons,
   map pins — uses it, so the logo merges into any of them and the whole site reads as one
   material. Depth comes from alpha of this same green (green/8, green/85) and from the gold
@@ -11,13 +11,16 @@
 
   This supersedes the brief's #143d1e, at the client's direction: the mark cannot be
   recoloured, so matching the site to the mark was the only way to get a continuous
-  masthead. Recorded in OPEN-ITEMS.md.
+  masthead. Recorded in OPEN-ITEMS.md. Re-measured from cmt-logo-gold.png when that export
+  replaced the original white-on-tile mark — see scripts/prepare-images.mjs — since the two
+  exports' tiles turned out to be a few RGB steps apart; this is the second value, not the
+  first.
 
   Gold and cream are the brief's values, unchanged. Body text is a warm near-black
   (#171612) rather than pure #000000, which reads harsh on cream.
 */
 @theme {
-  --color-green: #1b361c;
+  --color-green: #11341b;
   --color-gold: #daa706;
   --color-gold-deep: #a67f05;
   --color-cream: #f7f2dd;
