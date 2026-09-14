@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/Badge';
 import { Container } from '@/components/ui/Container';
 import { ChevronIcon, PinIcon } from '@/components/ui/icons';
 import { categoryBySlug } from '@/data/categories';
@@ -122,12 +123,8 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
             <Container className="relative flex h-full flex-col justify-end pb-24 pt-20 sm:pb-28">
               <div className="max-w-[46ch]">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="bg-gold px-3 py-1.5 text-[0.75rem] font-medium text-green">
-                    {listingTypeLabel(listing)}
-                  </span>
-                  <span className="border border-cream/40 px-3 py-1.5 text-[0.75rem] text-cream">
-                    {category.name}
-                  </span>
+                  <Badge tone="type">{listingTypeLabel(listing)}</Badge>
+                  <Badge tone="categoryOnDark">{category.name}</Badge>
                 </div>
 
                 <h3 className="mt-5 text-[clamp(1.875rem,4vw,3rem)] text-cream">
@@ -172,14 +169,14 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
                   <Link
                     href={`/properties/${listing.slug}`}
                     tabIndex={active ? 0 : -1}
-                    className="inline-flex items-center justify-center rounded-brand bg-gold px-6 py-3.5 text-base font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-brand bg-gold px-6 py-3.5 text-base font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
                   >
                     View this property
                   </Link>
                   <Link
                     href={`/properties/${listing.slug}#enquire`}
                     tabIndex={active ? 0 : -1}
-                    className="inline-flex items-center justify-center rounded-brand border border-cream/45 px-6 py-3.5 text-base text-cream transition-colors hover:border-gold hover:text-gold"
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-brand border border-cream/45 px-6 py-3.5 text-base text-cream transition-colors hover:border-gold hover:text-gold"
                   >
                     Contact the agent
                   </Link>

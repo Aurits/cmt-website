@@ -179,7 +179,7 @@ export function Header() {
             <Link
               href="/contact?subject=listing"
               onClick={() => setOpen(false)}
-              className="inline-flex items-center justify-center rounded-brand bg-gold px-6 py-3.5 text-base font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-brand bg-gold px-6 py-3.5 text-base font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
             >
               List Your Property
             </Link>

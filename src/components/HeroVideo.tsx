@@ -42,6 +42,13 @@ function getServerSnapshot() {
  * Two source widths, not one: <source media> lets the browser itself pick the file before
  * it downloads anything, the same way a <picture> element would for an image, so a phone on
  * mobile data gets the ~360kB clip and never touches the ~1MB desktop one.
+ *
+ * `gradeClassName` (the hue-rotate/saturate/contrast that matches this shot to the rest of
+ * the hero's photography) is kept separate from `className` and applied only to the poster
+ * <Image>, not the <video>: a CSS `filter` re-run on every decoded frame at 24fps on a
+ * full-bleed element is real per-frame GPU cost a still image never pays, and was read as
+ * jitter. The video carries the same grade instead, baked in once at encode time —
+ * scripts/prepare-hero-video.mjs.
  */
 export function HeroVideo({
   posterSrc,
@@ -50,6 +57,7 @@ export function HeroVideo({
   mobileSrc,
   sizes,
   className,
+  gradeClassName,
 }: {
   posterSrc: string;
   posterAlt: string;
@@ -57,6 +65,7 @@ export function HeroVideo({
   mobileSrc: string;
   sizes: string;
   className?: string;
+  gradeClassName?: string;
 }) {
   const animate = useSyncExternalStore(subscribeToMotionPreference, shouldAnimate, getServerSnapshot);
 
@@ -68,7 +77,7 @@ export function HeroVideo({
         fill
         priority
         sizes={sizes}
-        className={className}
+        className={cx(className, gradeClassName)}
       />
     );
   }

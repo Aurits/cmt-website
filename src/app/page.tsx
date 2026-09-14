@@ -105,7 +105,8 @@ export default function HomePage() {
               desktopSrc="/videos/hero-loop.mp4"
               mobileSrc="/videos/hero-loop-mobile.mp4"
               sizes="(min-width: 1024px) 54vw, 100vw"
-              className="object-cover hue-rotate-[20deg] saturate-[1.25] contrast-[1.05]"
+              className="object-cover"
+              gradeClassName="hue-rotate-[20deg] saturate-[1.25] contrast-[1.05]"
             />
             <span
               aria-hidden="true"

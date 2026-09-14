@@ -17,6 +17,24 @@
  * scripts/prepare-hero-video.mjs` any time the source clip changes; nothing here reaches
  * into public/ except the two output files.
  *
+ * Two changes past the first cut, both chasing the same visible-jitter complaint:
+ *
+ * - The hue-rotate/saturate/contrast grade that matches this shot to the rest of the
+ *   hero's photography used to be a live CSS `filter` on the playing <video>. A filter
+ *   graph re-run on every decoded frame at 24fps, on a full-bleed element, is real
+ *   per-frame GPU cost that a still <img> never pays — cheap enough there to go
+ *   unnoticed, expensive enough here to drop frames and read as stutter. Baked into the
+ *   encode instead (the `hue`/`eq` filters below), it costs nothing at playback; the
+ *   static poster image (HeroVideo.tsx's no-JS/reduced-motion fallback) still carries the
+ *   grade live, since a single filter pass on a still image is negligible.
+ * - `scale` now asks for `flags=lanczos` explicitly. The balcony railings are a dense,
+ *   near-periodic vertical pattern — close to the textbook case for moiré under a
+ *   lower-quality resize, which shows up as shimmer between frames rather than a static
+ *   artifact, and reads exactly like jitter. Lanczos anti-aliases that pattern down
+ *   properly; the default scaler does not. CRF also drops (bytes were nowhere near the
+ *   ceiling that made the first pass worth compressing harder), since this same pattern
+ *   is the other thing low bitrate shows up on first, as blocking that swims under motion.
+ *
  * Usage: node scripts/prepare-hero-video.mjs
  */
 import { spawnSync } from 'node:child_process';
@@ -43,9 +61,14 @@ fs.mkdirSync(OUT, { recursive: true });
  * loss for a decorative background loop, not archival quality.
  */
 const JOBS = [
-  ['hero-loop.mp4', 1600, 900, ['-c:v', 'libx264', '-profile:v', 'high', '-preset', 'slow', '-crf', '27']],
-  ['hero-loop-mobile.mp4', 960, 540, ['-c:v', 'libx264', '-profile:v', 'high', '-preset', 'slow', '-crf', '29']],
+  ['hero-loop.mp4', 1600, 900, ['-c:v', 'libx264', '-profile:v', 'high', '-preset', 'slow', '-crf', '21']],
+  ['hero-loop-mobile.mp4', 960, 540, ['-c:v', 'libx264', '-profile:v', 'high', '-preset', 'slow', '-crf', '23']],
 ];
+
+// The colour grade matching this clip to the rest of the hero's photography (see
+// HeroVideo.tsx / page.tsx className), baked in at encode time rather than left as a live
+// CSS filter on the playing <video> — see the docblock above.
+const GRADE = 'hue=h=20,eq=saturation=1.25:contrast=1.05';
 
 for (const [out, w, h, codec] of JOBS) {
   const dest = path.join(OUT, out);
@@ -53,8 +76,9 @@ for (const [out, w, h, codec] of JOBS) {
     '-y',
     '-i', SOURCE,
     // force_original_aspect_ratio + crop is a no-op on this 16:9 source and a safe centre
-    // crop if a future re-shoot isn't exactly 16:9.
-    '-vf', `scale=${w}:${h}:force_original_aspect_ratio=increase,crop=${w}:${h}`,
+    // crop if a future re-shoot isn't exactly 16:9. flags=lanczos: the balcony railings are
+    // a dense near-periodic pattern, prone to moiré under the default scaler — see above.
+    '-vf', `${GRADE},scale=${w}:${h}:force_original_aspect_ratio=increase:flags=lanczos,crop=${w}:${h}`,
     '-an', // silent background loop — no audio track to ship or to autoplay-block on
     ...codec,
     '-pix_fmt', 'yuv420p',
