@@ -30,6 +30,10 @@ export default function ServicesPage() {
         One service per row, the photograph alternating sides. A four-card grid would
         shrink each service to a caption; a row gives the summary, the detail and the
         deliverables schedule room to be read, and the alternation keeps a long page moving.
+
+        The photographs are close-ups of the work itself — a tape, a signature, a
+        blueprint, a set of keys — not a place, so there's no location for them to get
+        right or wrong.
       */}
       <section className="py-14 lg:py-20">
         <Container>

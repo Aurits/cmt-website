@@ -47,40 +47,76 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero: identity first, product second — the nav order makes the same argument. */}
-      <section className="relative overflow-hidden bg-cream pt-10 lg:pt-14">
-        <Container className="grid items-start gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14">
-          <div className="hero-rise">
-            <h1 className="text-display text-green">
-              Fifteen years of valuations Uganda&rsquo;s banks lend against
-            </h1>
-            <p className="mt-6 max-w-[52ch] text-[1.0625rem] leading-relaxed text-muted sm:text-[1.125rem]">
-              CMT Realtors is a Kampala valuation and property consultancy firm, regulated by
-              the {site.regulator}. Banks, government bodies and corporate clients instruct us
-              when a figure has to hold up to scrutiny. We sell and let property too, priced
-              from the same evidence.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button href="/listings" variant="primary" size="lg">
-                Browse properties
-              </Button>
-              <Button href="/contact?subject=valuation" variant="outline" size="lg">
-                Request a valuation
-              </Button>
+      {/* Hero: identity first, product second — the nav order makes the same argument,
+          and the text stays first in document order so that holds on mobile too. The
+          photograph is full-bleed at every width, edge to edge with no card, no rounding
+          and no side margin — the one deliberate break from the page's 1200px measure —
+          and the whole band is sized to `--header-h` (globals.css) so it fills exactly
+          what's left of the first screen below the sticky masthead: no cream gap
+          before the fold, on a phone or a desktop monitor. flex-col stacks text over a
+          bottom-anchored photograph on a phone; flex-row at lg runs the photograph
+          floor-to-ceiling on the right, both simply children stretched or grown to fill
+          a height that is never guessed at, only ever computed. */}
+      <section className="relative overflow-hidden bg-cream">
+        <div className="flex min-h-[calc(100dvh_-_var(--header-h)_-_var(--mobile-cta-h))] flex-col lg:min-h-[calc(100dvh_-_var(--header-h))] lg:flex-row lg:items-stretch">
+          <Container className="relative z-10 shrink-0 py-8 lg:w-[46%] lg:shrink-0 lg:self-center lg:py-16">
+            <div className="hero-rise">
+              <h1 className="text-display text-green">
+                Fifteen years of valuations Uganda&rsquo;s banks lend against
+              </h1>
+              <p className="mt-6 max-w-[52ch] text-[1.0625rem] leading-relaxed text-muted sm:text-[1.125rem]">
+                CMT Realtors is a Kampala valuation and property consultancy firm, regulated by
+                the {site.regulator}. Banks, government bodies and corporate clients instruct us
+                when a figure has to hold up to scrutiny. We sell and let property too, priced
+                from the same evidence.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Button href="/listings" variant="primary" size="lg">
+                  Browse properties
+                </Button>
+                <Button href="/contact?subject=valuation" variant="outline" size="lg">
+                  Request a valuation
+                </Button>
+              </div>
             </div>
-          </div>
+          </Container>
 
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[2px] border border-green/10 lg:aspect-[5/4]">
+          {/* flex-1 with no basis of its own: on a phone it claims whatever height the
+              text block above didn't, right down to the last pixel; at lg, stretched by
+              the row's align-items, it claims that same exactness vertically and 54% of
+              the width. The 240px floor is the one exception, for a short phone with the
+              longer end of the text: without it flex-1 would rather shrink the photograph
+              to nothing than let the (shrink-0) text clip, and the hero band simply grows
+              past its target height on those screens instead — a small extra scroll, not
+              a missing photograph. A mild hue-rotate carries its own warm tones toward
+              the brand's gold rather than replacing them, so it stays a real photograph;
+              the green wash along the foot and the fade to cream on the edge each
+              breakpoint cuts (top on a phone, left at lg — so the cut always reads as
+              intentional, never clipped) do the rest of the work of tying it to the page
+              around it. */}
+          <div className="relative min-h-[240px] flex-1 overflow-hidden lg:min-h-0 lg:w-[54%] lg:flex-none">
             <Image
               src="/images/hero-home.jpg"
-              alt="Contemporary house at dusk with lit interiors and a lawn"
+              alt="Wavy, ribbon-like balconies rippling down an apartment facade"
               fill
               priority
-              sizes="(min-width: 1024px) 48vw, 100vw"
-              className="object-cover"
+              sizes="(min-width: 1024px) 54vw, 100vw"
+              className="object-cover hue-rotate-[20deg] saturate-[1.25] contrast-[1.05]"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 bg-gradient-to-t from-green/35 via-transparent to-transparent"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-cream to-transparent lg:hidden"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 hidden bg-gradient-to-r from-cream via-transparent to-transparent lg:block"
             />
           </div>
-        </Container>
+        </div>
 
         {/* The counter: the three jobs a visitor came to do, closing the hero. */}
         <Container className="relative z-10 mt-8 pb-8 lg:mt-10 lg:pb-12">
@@ -114,7 +150,7 @@ export default function HomePage() {
           <Reveal className="relative order-2 aspect-[4/3] overflow-hidden rounded-[2px] border border-rule lg:order-1 lg:aspect-auto lg:min-h-[380px]">
             <Image
               src="/images/identity-office.jpg"
-              alt="Light, modern office interior with meeting space"
+              alt="Kampala's business district under a clear sky"
               fill
               sizes="(min-width: 1024px) 48vw, 100vw"
               className="object-cover"

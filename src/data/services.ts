@@ -15,7 +15,7 @@ export const services: Service[] = [
     detail:
       'We inspect the property, verify the title and tenure, gather comparable evidence from the same market, and issue a written report you can put in front of a lender, a court, a tax authority or a co-owner.',
     image: '/images/services/valuation.jpg',
-    imageAlt: 'A surveyor measuring a drawing at a desk',
+    imageAlt: 'A tape measure, held up for an inspection',
     deliverables: [
       'Signed valuation report with photographs and comparable evidence',
       'Title and tenure verification',
@@ -32,7 +32,7 @@ export const services: Service[] = [
     detail:
       'Instructions come in directly from the lender or through the borrower. Reports are delivered in the format the credit team expects, with the forced-sale position stated explicitly rather than buried.',
     image: '/images/services/lending.jpg',
-    imageAlt: 'A report being signed',
+    imageAlt: 'A hand signing a report',
     deliverables: [
       'Security report in the bank template where one exists',
       'Market value and forced-sale value',
@@ -49,7 +49,7 @@ export const services: Service[] = [
     detail:
       'Site acquisition advice, highest-and-best-use studies, portfolio reviews, compensation assessments and expert opinion where a valuation is contested. Consultancy work is scoped in writing before it starts, so the fee and the deliverable are agreed up front.',
     image: '/images/services/consultancy.jpg',
-    imageAlt: 'Two people working over plans and figures',
+    imageAlt: 'Hands working over an architectural blueprint',
     deliverables: [
       'Written advice with the assumptions stated',
       'Site and portfolio reviews',
@@ -66,7 +66,7 @@ export const services: Service[] = [
     detail:
       'We list residential, commercial, industrial, land and agricultural property. Because we value for a living, the asking price starts from evidence rather than ambition. We handle viewings, qualify buyers and tenants, and see the transaction through to transfer.',
     image: '/images/services/listing.jpg',
-    imageAlt: 'A house at dusk with its windows lit',
+    imageAlt: 'A set of house keys held up at the door',
     deliverables: [
       'Asking-price advice backed by comparable evidence',
       'Listing, viewings and buyer or tenant qualification',

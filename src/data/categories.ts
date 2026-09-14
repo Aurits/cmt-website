@@ -8,7 +8,7 @@ export const categories: Category[] = [
     description:
       'Family houses, apartments and rental units across Kampala and the regional towns. We value residential stock for mortgage lending and probate, and we list it for owners who want a realistic asking price rather than an optimistic one.',
     image: '/images/categories/residential.jpg',
-    imageAlt: 'Modern apartment block seen from the street',
+    imageAlt: 'Kampala rooftops above Lake Victoria, under a rainbow',
     cta: { label: 'Book a residential valuation', href: '/contact?subject=valuation' },
   },
   {
@@ -18,7 +18,7 @@ export const categories: Category[] = [
     description:
       'Office suites, retail space and mixed-use buildings. Commercial instructions usually turn on income rather than finish, so our reports lead with lettable area, rent roll and comparable evidence.',
     image: '/images/categories/commercial.jpg',
-    imageAlt: 'Office towers photographed from ground level',
+    imageAlt: "Kampala's commercial towers rising above the trees",
     cta: { label: 'Discuss a commercial instruction', href: '/contact?subject=valuation' },
   },
   {
@@ -38,7 +38,7 @@ export const categories: Category[] = [
     description:
       'Titled plots and development sites. Every land instruction starts with the title and the tenure, because that is where most Ugandan land disputes and most lending refusals begin.',
     image: '/images/categories/land.jpg',
-    imageAlt: 'Wooded land on the edge of a development area',
+    imageAlt: 'Titled plots on a tea-covered Ugandan hillside',
     cta: { label: 'Check a title and value a plot', href: '/contact?subject=valuation' },
   },
   {
@@ -48,7 +48,7 @@ export const categories: Category[] = [
     description:
       'Farmland, plantations and agricultural estates. Valuation accounts for soil, water access and standing crop, and for the harvest cycle the buyer is actually inheriting.',
     image: '/images/categories/agricultural.jpg',
-    imageAlt: 'Farmland at sunset',
+    imageAlt: 'Coffee cherries ripening on the branch',
     cta: { label: 'Value farmland or an estate', href: '/contact?subject=valuation' },
   },
 ];

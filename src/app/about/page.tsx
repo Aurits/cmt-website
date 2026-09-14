@@ -79,7 +79,7 @@ export default function AboutPage() {
           <div className="relative aspect-[4/3] overflow-hidden rounded-[2px] border border-rule lg:aspect-auto lg:min-h-[420px]">
             <Image
               src="/images/identity-office.jpg"
-              alt="Office interior with meeting table and natural light"
+              alt="Kampala's business district under a clear sky"
               fill
               sizes="(min-width: 1024px) 42vw, 100vw"
               className="object-cover"
