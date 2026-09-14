@@ -2,10 +2,16 @@
  * One-off asset pipeline.
  *
  * Every photo below is from Unsplash (free, commercial use permitted, no attribution
- * required — we credit anyway in public/images/CREDITS.md). All shots are generic and
- * representative: none is a specific, identifiable Kampala building. Real photography of
- * CMT's managed listings replaces these in a later phase — drop the new file in at the
- * same path and nothing else has to change.
+ * required — we credit anyway in public/images/CREDITS.md). Two tiers:
+ *
+ *  - Listings imagery (public/images/listings/*) stays deliberately generic: none of it
+ *    is a specific, identifiable building, because none of it is a real CMT property yet.
+ *    Real photography of CMT's managed listings replaces these in a later phase — drop
+ *    the new file in at the same path and nothing else has to change.
+ *  - Everything else — the hero, the identity photo, the closing CTA banner and four of
+ *    the five property-class cards — is genuine, identifiable Kampala/Uganda photography
+ *    (the `ug-*` source keys below), since those spots are the site's own atmosphere
+ *    rather than a stand-in for a specific listing.
  *
  * Usage: node scripts/prepare-images.mjs [--force]
  * Sources are fetched from https://images.unsplash.com/photo-<id> (see SOURCES) and cached
@@ -32,28 +38,46 @@ const SOURCES = {
   '16': '1613490493576-7fde63acd811', '17': '1600607687939-ce8a6c25118c',
   '18': '1582407947304-fd86f028f716', '19': '1545324418-cc1a3fa10c00',
   '23': '1590487988256-9ed24133863e', '24': '1499529112087-3cb3b73cec95',
-  // Service imagery.
-  '30': '1503387762-592deb58ef4e', '31': '1450101499163-c8848c66ca85',
-  '32': '1454165804606-c3d57bc86b40', '33': '1568605114967-8130f3a36994',
+  // Service imagery — close-ups of the work itself (tape, signature, blueprint, keys)
+  // rather than a place, so there's no location to verify one way or the other; run in
+  // black and white (see services/page.tsx) so the set reads as one deliberate style
+  // rather than four unrelated stock photos. Two are Pexels rather than Unsplash (a
+  // `pexels:<id>` value, handled in source() below) — the only two, of everything tried
+  // for this page, that were both a genuine free-license close-up AND depicted a Black
+  // subject rather than defaulting to a white one, which is worth having on a Ugandan
+  // firm's own site even where the photo itself carries no geography.
+  'svc-valuation': '1716698286313-9a2349d41110', // a tape measure, held up
+  'svc-lending': 'pexels:8730964', // Mikhail Nilov — a hand signing a report
+  'svc-consultancy': 'pexels:6282116', // Yaroslav Shuraev — hands over an architectural blueprint
+  'svc-listing': '1741156386380-0236c72eb6f9', // a set of house keys, held up at the door
+
+  // Genuine Kampala / Uganda photography — see the docblock above for where these run.
+  'ug-hero': '1752654605009-3b12790fe738', // wavy, layered apartment balconies — ribbon-like curves
+  'ug-cta': '1763220207281-c4d0febb61a8', // Robin Kutesa: Kampala skyline at sunset, from Nsambya
+  'ug-office': '1675756261486-09bd1e0f6c8a', // Keith Kasaija: Kampala business district by day
+  'ug-commercial': '1777887544354-74a7248c8a74', // Michael Starkie: Kampala towers above the trees
+  'ug-residential': '1578325872347-6cc1795a5fea', // aerial: Kampala rooftops, Lake Victoria, a rainbow
+  'ug-land': '1696963609168-5c3d93857ea4', // terraced plots on a Ugandan hillside
+  'ug-agri': '1741012253817-67aacc8e25c6', // coffee cherries ripening, Kampala
 };
 
 /** [source, output path, width, height, human description] */
 const JOBS = [
-  ['03', 'hero-home.jpg', 2000, 1250, 'Modern house at dusk — homepage hero'],
-  ['08', 'identity-office.jpg', 1400, 1000, 'Light modern office interior — About / identity section'],
-  ['18', 'cta-skyline.jpg', 2000, 1000, 'Mixed-use towers — CTA banner background'],
+  ['ug-hero', 'hero-home.jpg', 2200, 1760, 'Wavy, ribbon-like apartment balconies — homepage hero'],
+  ['ug-office', 'identity-office.jpg', 1400, 1000, "Kampala's business district by day — About / identity section"],
+  ['ug-cta', 'cta-skyline.jpg', 2000, 1000, 'Kampala skyline at sunset, from Nsambya — CTA banner background'],
   ['01', 'valuation-keys.jpg', 1200, 800, 'House model and keys — Services / valuation'],
 
-  ['30', 'services/valuation.jpg', 1200, 900, 'Measuring a drawing — property valuation'],
-  ['31', 'services/lending.jpg', 1200, 900, 'Signing a report — valuation for lending'],
-  ['32', 'services/consultancy.jpg', 1200, 900, 'Working over plans — real estate consultancy'],
-  ['33', 'services/listing.jpg', 1200, 900, 'A home at dusk — listing and sales management'],
+  ['svc-valuation', 'services/valuation.jpg', 1200, 900, 'A tape measure, held up — property valuation'],
+  ['svc-lending', 'services/lending.jpg', 1200, 900, 'A report being signed — valuation for lending'],
+  ['svc-consultancy', 'services/consultancy.jpg', 1200, 900, 'Hands over a blueprint — real estate consultancy'],
+  ['svc-listing', 'services/listing.jpg', 1200, 900, 'House keys at the door — listing and sales management'],
 
-  ['19', 'categories/residential.jpg', 1600, 1000, 'Generic modern apartment block'],
-  ['06', 'categories/commercial.jpg', 1600, 1000, 'Generic office towers'],
+  ['ug-residential', 'categories/residential.jpg', 1600, 1000, 'Kampala rooftops, Lake Victoria and a rainbow'],
+  ['ug-commercial', 'categories/commercial.jpg', 1600, 1000, "Kampala's commercial towers above the trees"],
   ['09', 'categories/industrial.jpg', 1600, 1000, 'Generic warehouse interior'],
-  ['13', 'categories/land.jpg', 1600, 1000, 'Wooded land before clearing'],
-  ['11', 'categories/agricultural.jpg', 1600, 1000, 'Farmland at sunset'],
+  ['ug-land', 'categories/land.jpg', 1600, 1000, 'Terraced plots on a Ugandan hillside'],
+  ['ug-agri', 'categories/agricultural.jpg', 1600, 1000, 'Coffee cherries ripening, Kampala'],
 
   ['02', 'listings/res-villa-pool.jpg', 1200, 800, 'House with pool'],
   ['16', 'listings/res-modern-villa.jpg', 1200, 800, 'Modern villa'],
@@ -79,8 +103,11 @@ fs.mkdirSync(CACHE, { recursive: true });
 async function source(id) {
   const cached = path.join(CACHE, `${id}.jpg`);
   if (fs.existsSync(cached) && !force) return cached;
-  const url = `https://images.unsplash.com/photo-${SOURCES[id]}?w=2400&q=80&fm=jpg`;
-  // Unsplash occasionally refuses a cold connection; three tries is plenty.
+  const ref = SOURCES[id];
+  const url = ref.startsWith('pexels:')
+    ? `https://images.pexels.com/photos/${ref.slice(7)}/pexels-photo-${ref.slice(7)}.jpeg?cs=srgb&fm=jpg&w=2400`
+    : `https://images.unsplash.com/photo-${ref}?w=2400&q=80&fm=jpg`;
+  // Unsplash (and Pexels) occasionally refuse a cold connection; three tries is plenty.
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       const response = await fetch(url, {
@@ -98,10 +125,25 @@ async function source(id) {
   return cached;
 }
 
+// Most sources crop fine from the centre. This one is sky-heavy — the skyline sits in the
+// bottom half of the frame — so a plain centred cover crop (which, going from a wide
+// source to a narrower target, only trims left/right) leaves it mostly cloud. Trim the top
+// fraction of the source off first so the skyline dominates whatever box it lands in.
+const TOP_TRIM = {
+  'identity-office.jpg': 0.42,
+};
+
 for (const [src, out, w, h] of JOBS) {
   const dest = path.join(OUT, out);
   fs.mkdirSync(path.dirname(dest), { recursive: true });
-  await sharp(await source(src))
+  let pipeline = sharp(await source(src));
+  const trim = TOP_TRIM[out];
+  if (trim) {
+    const { width: sw, height: sh } = await pipeline.metadata();
+    const top = Math.round(sh * trim);
+    pipeline = pipeline.extract({ left: 0, top, width: sw, height: sh - top });
+  }
+  await pipeline
     .resize(w, h, { fit: 'cover', position: 'centre' })
     .jpeg({ quality: 72, mozjpeg: true, progressive: true })
     .toFile(dest);
@@ -137,18 +179,28 @@ await sharp(trimmed).resize(900).png({ compressionLevel: 9, palette: true })
 // Favicons and app icons are built from this mark by scripts/prepare-icons.mjs, which
 // steps the artwork down with size (the whole wordmark is unreadable at 16px).
 
+const creditLink = (src) => {
+  const ref = SOURCES[src];
+  return ref.startsWith('pexels:')
+    ? `https://www.pexels.com/photo/${ref.slice(7)}/`
+    : `https://unsplash.com/photos/${ref}`;
+};
+
 const credits = [
   '# Image credits and licensing',
   '',
-  'Photography: [Unsplash](https://unsplash.com/license) — free for commercial use, no',
-  'attribution required. Credited here for traceability. Every shot is generic and',
-  'representative; none depicts a specific, identifiable Kampala building or a real CMT',
-  'listing. Replace with client-supplied photography at the same paths when available.',
+  'Photography: [Unsplash](https://unsplash.com/license) or, for two of the four service',
+  'photographs, [Pexels](https://www.pexels.com/license/) — both free for commercial use,',
+  'no attribution required. Credited here for traceability, including the photographer of',
+  'each Kampala/Uganda shot. Listings imagery (`listings/*`) is generic and',
+  'representative on purpose — none of it is a real CMT property yet, and it is replaced',
+  'with client-supplied photography at the same paths when that exists. Everywhere else —',
+  'hero, identity photo, CTA banner and four of the five property-class cards — is',
+  'genuine, identifiable Kampala or Uganda photography.',
   '',
   '| File | Source | Description |',
   '| --- | --- | --- |',
-  ...JOBS.map(([src, out, , , desc]) =>
-    `| \`${out}\` | https://unsplash.com/photos/${SOURCES[src]} | ${desc} |`),
+  ...JOBS.map(([src, out, , , desc]) => `| \`${out}\` | ${creditLink(src)} | ${desc} |`),
   '',
   '`public/brand/cmt-logo.png` is the client-supplied mark (`cmt-logo-01.png`), optimised.',
   '',

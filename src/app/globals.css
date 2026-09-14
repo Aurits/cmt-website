@@ -36,6 +36,40 @@
 }
 
 @layer base {
+  :root {
+    /*
+      The sticky masthead's actual rendered height, so a section below it (the homepage
+      hero) can size itself to exactly fill what's left of the first screen — no gap
+      before the fold, no scroll stolen either. Two pieces, per Header.tsx: the utility
+      strip (h-9 + its border, hidden below md) and the nav bar itself (h-[80px], growing
+      at lg and xl). Keep these in step if either changes.
+
+      --mobile-cta-h is the other piece: StickyMobileCTA (h-14 + its border-top + the iOS
+      safe-area inset), fixed over the bottom of the viewport below lg, where it's the
+      thing a full-height hero has to leave clear rather than run underneath.
+    */
+    --header-h: 81px;
+    --mobile-cta-h: calc(57px + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --header-h: 118px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --header-h: 130px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    :root {
+      --header-h: 142px;
+    }
+  }
+
   html {
     scroll-behavior: smooth;
   }
