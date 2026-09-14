@@ -179,7 +179,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
 
             <div
               id="enquire"
-              className="mt-6 scroll-mt-32 rounded-[2px] border border-rule bg-paper p-5"
+              className="mt-6 scroll-mt-32 rounded-brand border border-rule bg-paper p-5"
             >
               <h2 className="text-[1.25rem] text-green">Enquire about {listing.reference}</h2>
               <p className="mt-2 text-[0.875rem] leading-relaxed text-muted">
@@ -190,7 +190,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
               </div>
             </div>
 
-            <div className="mt-6 rounded-[2px] border border-green/25 bg-green/8 p-5">
+            <div className="mt-6 rounded-brand border border-green/25 bg-green/8 p-5">
               <h2 className="font-display text-[1.125rem] text-green">
                 Want this valued instead?
               </h2>

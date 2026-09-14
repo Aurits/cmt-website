@@ -1,3 +1,4 @@
+import { AnimatedStatValue } from '@/components/AnimatedStatValue';
 import { Container } from '@/components/ui/Container';
 import { stats } from '@/data/site';
 import { cx } from '@/lib/cx';
@@ -24,8 +25,8 @@ export function StatsStrip({ className }: { className?: string }) {
               <dt className="sr-only">{stat.label}</dt>
               <dd>
                 <span className="flex items-baseline gap-2">
-                  <span className="tnum font-display text-[2.5rem] leading-none text-gold lg:text-[3rem]">
-                    {stat.value}
+                  <span className="font-display text-[2.5rem] leading-none text-gold lg:text-[3rem]">
+                    <AnimatedStatValue value={stat.value} />
                   </span>
                   <span className="text-sm text-cream/70">{stat.unit}</span>
                 </span>

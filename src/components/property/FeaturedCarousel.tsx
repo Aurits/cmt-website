@@ -172,14 +172,14 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
                   <Link
                     href={`/properties/${listing.slug}`}
                     tabIndex={active ? 0 : -1}
-                    className="inline-flex items-center justify-center rounded-[2px] bg-gold px-6 py-3.5 text-base font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
+                    className="inline-flex items-center justify-center rounded-brand bg-gold px-6 py-3.5 text-base font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
                   >
                     View this property
                   </Link>
                   <Link
                     href={`/properties/${listing.slug}#enquire`}
                     tabIndex={active ? 0 : -1}
-                    className="inline-flex items-center justify-center rounded-[2px] border border-cream/45 px-6 py-3.5 text-base text-cream transition-colors hover:border-gold hover:text-gold"
+                    className="inline-flex items-center justify-center rounded-brand border border-cream/45 px-6 py-3.5 text-base text-cream transition-colors hover:border-gold hover:text-gold"
                   >
                     Contact the agent
                   </Link>
@@ -218,7 +218,7 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
             <button
               type="button"
               onClick={() => go(index - 1, true)}
-              className="flex h-11 w-11 items-center justify-center rounded-[2px] border border-cream/35 text-cream transition-colors hover:border-gold hover:text-gold"
+              className="flex h-11 w-11 items-center justify-center rounded-brand border border-cream/35 text-cream transition-colors hover:border-gold hover:text-gold"
             >
               <ChevronIcon className="rotate-180" />
               <span className="sr-only">Previous property</span>
@@ -226,7 +226,7 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
             <button
               type="button"
               onClick={() => go(index + 1, true)}
-              className="flex h-11 w-11 items-center justify-center rounded-[2px] border border-cream/35 text-cream transition-colors hover:border-gold hover:text-gold"
+              className="flex h-11 w-11 items-center justify-center rounded-brand border border-cream/35 text-cream transition-colors hover:border-gold hover:text-gold"
             >
               <ChevronIcon />
               <span className="sr-only">Next property</span>

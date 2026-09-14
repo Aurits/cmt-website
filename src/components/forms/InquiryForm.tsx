@@ -20,7 +20,7 @@ export function InquiryForm({
 
   if (submitted) {
     return (
-      <div className="rounded-[2px] border border-green/25 bg-green/8 p-6">
+      <div className="rounded-brand border border-green/25 bg-green/8 p-6">
         <h3 className="text-[1.25rem] text-green">Not sent — the site is still in build</h3>
         <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">
           Nothing has reached CMT. Quote reference{' '}

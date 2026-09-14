@@ -24,7 +24,7 @@ function ConveyorItem({ partner, clone }: { partner: Partner; clone: boolean }) 
     // Clones exist only to make the loop seamless. With motion off they are hidden, or
     // the belt would collapse into a wall of the same logos repeated.
     <div className="conveyor__item" data-clone={clone ? 'true' : undefined}>
-      <div className="flex h-[92px] w-[190px] items-center justify-center rounded-[2px] border border-rule bg-white px-5 sm:h-[104px] sm:w-[220px]">
+      <div className="flex h-[92px] w-[190px] items-center justify-center rounded-brand border border-rule bg-white px-5 sm:h-[104px] sm:w-[220px]">
         {partner.logo ? (
           <Image
             src={partner.logo}

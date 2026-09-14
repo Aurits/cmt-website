@@ -24,7 +24,7 @@ export function PropertyGallery({
 
   return (
     <figure>
-      <div className="relative aspect-[4/3] overflow-hidden rounded-[2px] border border-rule bg-cream-deep sm:aspect-[3/2]">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-brand border border-rule bg-cream-deep sm:aspect-[3/2]">
         <Image
           key={current.src}
           src={current.src}
@@ -40,7 +40,7 @@ export function PropertyGallery({
             <button
               type="button"
               onClick={() => go(index - 1)}
-              className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-[2px] bg-paper/90 text-green transition-colors hover:bg-paper"
+              className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-brand bg-paper/90 text-green transition-colors hover:bg-paper"
             >
               <ChevronIcon className="rotate-180" />
               <span className="sr-only">Previous photograph</span>
@@ -48,14 +48,14 @@ export function PropertyGallery({
             <button
               type="button"
               onClick={() => go(index + 1)}
-              className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-[2px] bg-paper/90 text-green transition-colors hover:bg-paper"
+              className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-brand bg-paper/90 text-green transition-colors hover:bg-paper"
             >
               <ChevronIcon />
               <span className="sr-only">Next photograph</span>
             </button>
             <p
               aria-live="polite"
-              className="tnum absolute bottom-3 right-3 rounded-[2px] bg-green/90 px-2.5 py-1 text-[0.75rem] text-cream"
+              className="tnum absolute bottom-3 right-3 rounded-brand bg-green/90 px-2.5 py-1 text-[0.75rem] text-cream"
             >
               {index + 1} of {images.length}
             </p>
@@ -72,7 +72,7 @@ export function PropertyGallery({
                 onClick={() => setIndex(i)}
                 aria-current={i === index}
                 className={cx(
-                  'relative block h-16 w-24 overflow-hidden rounded-[2px] border-2 transition-colors',
+                  'relative block h-16 w-24 overflow-hidden rounded-brand border-2 transition-colors',
                   i === index ? 'border-gold' : 'border-transparent hover:border-green/40',
                 )}
               >

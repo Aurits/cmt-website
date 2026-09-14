@@ -193,7 +193,7 @@ export function Select({
         onClick={() => (open ? close(false) : openList())}
         onKeyDown={onTriggerKeyDown}
         className={cx(
-          'flex w-full items-center justify-between gap-3 rounded-[2px] border text-left transition-colors duration-150',
+          'flex w-full items-center justify-between gap-3 rounded-brand border text-left transition-colors duration-150',
           heights,
           tone === 'cream' ? 'bg-cream' : 'bg-paper',
           open ? 'border-green' : 'border-rule hover:border-green/45',
@@ -225,7 +225,7 @@ export function Select({
            * z-[35] sits above the sticky mobile CTA bar (z-30) and below the masthead
            * (z-40), which is the order you want if a list opens near either edge.
            */
-          className="absolute left-0 right-0 top-[calc(100%+4px)] z-[35] max-h-[17rem] overflow-y-auto rounded-[2px] border border-rule border-t-2 border-t-gold bg-paper shadow-[0_18px_40px_-18px_rgba(27,54,28,0.45)]"
+          className="absolute left-0 right-0 top-[calc(100%+4px)] z-[35] max-h-[17rem] overflow-y-auto rounded-brand border border-rule border-t-2 border-t-gold bg-paper shadow-[0_18px_40px_-18px_rgba(27,54,28,0.45)]"
         >
           {options.map((option, index) => {
             const isSelected = option.value === value;

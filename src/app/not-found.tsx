@@ -37,7 +37,7 @@ export default function NotFound() {
               <li key={category.slug}>
                 <a
                   href={`/listings/${category.slug}`}
-                  className="inline-block rounded-[2px] border border-rule bg-paper px-3.5 py-2 text-[0.875rem] text-green transition-colors hover:border-green/50"
+                  className="inline-block rounded-brand border border-rule bg-paper px-3.5 py-2 text-[0.875rem] text-green transition-colors hover:border-green/50"
                 >
                   {category.name}
                 </a>

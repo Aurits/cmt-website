@@ -33,6 +33,16 @@
   --text-display: clamp(2.4rem, 6.2vw, 4.3rem);
   --text-h2: clamp(1.75rem, 3.4vw, 2.6rem);
   --text-h3: clamp(1.2rem, 1.6vw, 1.45rem);
+
+  /*
+   * ONE RADIUS, same idea as ONE GREEN above: every rounded rectangle on the site — cards,
+   * buttons, inputs, photo frames, popups — takes this one value (`rounded-brand`), so the
+   * whole site reads as one material rather than a mix of sharp and soft edges. Previously
+   * a near-square 2px, at the client's request for something more modern; still restrained
+   * rather than bubbly, which is the one thing the pill-shaped nav (Header.tsx) is deliber-
+   * ately allowed to break, as the one shape on the page that says "this is different".
+   */
+  --radius-brand: 0.625rem;
 }
 
 @layer base {
@@ -137,6 +147,24 @@
 /* The one orchestrated entrance: the hero settling on first paint. */
 @utility hero-rise {
   animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/*
+  hero-rise, word by word: AnimatedHeadline splits the hero <h1> into one span per word and
+  sets --word-delay inline on each, so the sentence arrives left to right rather than as one
+  block. Pure CSS — the words are real, complete, server-rendered text from the first byte,
+  this only staggers their entrance — and covered by the same prefers-reduced-motion rule at
+  the bottom of this file as everything else here, with no special case needed.
+*/
+@keyframes word-rise {
+  from { opacity: 0; transform: translateY(0.5em); }
+  to { opacity: 1; transform: none; }
+}
+
+@utility hero-word {
+  display: inline-block;
+  animation: word-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--word-delay, 0ms);
 }
 
 /*
@@ -263,7 +291,7 @@
 
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {
-  border-radius: 2px;
+  border-radius: var(--radius-brand);
   background: var(--color-paper);
   color: var(--color-ink);
   box-shadow: 0 8px 24px rgb(27 54 28 / 0.18);

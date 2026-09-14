@@ -32,7 +32,7 @@ export function PropertyMap({
   height?: string;
 }) {
   return (
-    <figure className={cx('overflow-hidden rounded-[2px] border border-rule', className)}>
+    <figure className={cx('overflow-hidden rounded-brand border border-rule', className)}>
       <div className={cx('w-full', height)}>
         <LeafletMap center={center} label={label} zoom={zoom} />
       </div>

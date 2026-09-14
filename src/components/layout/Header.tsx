@@ -14,6 +14,7 @@ import {
   ShieldIcon,
   WhatsAppIcon,
 } from '@/components/ui/icons';
+import { PillNav } from '@/components/layout/PillNav';
 import { nav, site, whatsappHref } from '@/data/site';
 import { cx } from '@/lib/cx';
 
@@ -99,36 +100,12 @@ export function Header() {
             />
           </Link>
 
-          <nav aria-label="Main" className="hidden lg:block">
-            <ul className="flex items-center gap-6 xl:gap-7">
-              {nav.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    aria-current={isActive(item.href) ? 'page' : undefined}
-                    className={cx(
-                      'relative block py-2 text-[0.9375rem] transition-colors',
-                      isActive(item.href) ? 'text-gold' : 'text-cream/85 hover:text-cream',
-                    )}
-                  >
-                    {item.label}
-                    <span
-                      aria-hidden="true"
-                      className={cx(
-                        'absolute -bottom-0.5 left-0 h-[2px] w-full origin-left bg-gold transition-transform duration-200',
-                        isActive(item.href) ? 'scale-x-100' : 'scale-x-0',
-                      )}
-                    />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <PillNav isActive={isActive} />
 
           <div className="hidden items-center gap-3 lg:flex">
             <a
               href={whatsappHref('Hello CMT Realtors, I have a property enquiry.')}
-              className="flex h-10 w-10 items-center justify-center rounded-[2px] border border-cream/30 text-cream transition-colors hover:border-gold hover:text-gold"
+              className="flex h-10 w-10 items-center justify-center rounded-brand border border-cream/30 text-cream transition-colors hover:border-gold hover:text-gold"
               aria-label={
                 site.whatsapp
                   ? 'Message us on WhatsApp'
@@ -145,7 +122,7 @@ export function Header() {
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="flex h-11 w-11 items-center justify-center rounded-[2px] border border-cream/30 text-cream lg:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-brand border border-cream/30 text-cream lg:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
           >
@@ -172,7 +149,7 @@ export function Header() {
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="flex h-11 w-11 items-center justify-center rounded-[2px] border border-cream/30"
+            className="flex h-11 w-11 items-center justify-center rounded-brand border border-cream/30"
           >
             <CloseIcon />
             <span className="sr-only">Close menu</span>
@@ -202,7 +179,7 @@ export function Header() {
             <Link
               href="/contact?subject=listing"
               onClick={() => setOpen(false)}
-              className="inline-flex items-center justify-center rounded-[2px] bg-gold px-6 py-3.5 text-base font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
+              className="inline-flex items-center justify-center rounded-brand bg-gold px-6 py-3.5 text-base font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
             >
               List Your Property
             </Link>
