@@ -64,6 +64,14 @@ pagination), `PropertyGallery`, `PropertyMap`, `HeroSearchTabs`, `Reveal`, `Cont
   see `OPEN-ITEMS.md`.
 - **Type**: Inter for UI and body, Fraunces for headlines, picking up the tall serif of the
   CMT wordmark.
+- **Sharp surfaces, softened controls**: two radii, and the split carries meaning. Anything
+  that presents information — cards, panels, photo frames, the map, badges — is square
+  (`rounded-brand`, 0), because a schedule, a certificate and a ruled table are square, and
+  those edges argue the same thing the hairlines and tabular numerals argue. Anything you
+  press or type into — buttons, inputs, the `Select` trigger, pagers, chips — takes 4px
+  (`rounded-control`). Against genuinely sharp surfaces 4px is all it takes to read as a
+  control, and it keeps the gold top rule straight. Read it as: sharp means read this,
+  softened means press this. The pill-shaped nav breaks both on purpose.
 - **Structure**: ruled key/value "schedules" (label, figure, hairline) are the recurring
   device, borrowed from how a valuation report presents facts. Prices and figures use
   tabular numerals.
@@ -96,6 +104,20 @@ pagination), `PropertyGallery`, `PropertyMap`, `HeroSearchTabs`, `Reveal`, `Cont
 The brief forbids invented testimonials, and the same principle is applied throughout:
 where CMT has not supplied something, the UI says so instead of filling the gap with a
 plausible fiction. See `OPEN-ITEMS.md` for the full list and where each one is wired.
+
+## Strategy and layout
+
+Two documents drive the current direction, written after a review of CMT's own published material
+(Uganda and Kenya) and the competitive field:
+
+- **`SITE-STRATEGY.md`** — what the research found, the positioning, the navigation naming and the
+  sitemap. Read this first; it explains *why* the pages are what they are.
+- **`LAYOUT-SPECS.md`** — nine sheets specifying how each page in that sitemap is built: structural
+  concept, visitor flow, section order and exact dimensions, all resolving against the tokens in
+  `globals.css`.
+
+`Plan.md` remains the client's original brief and is not edited — where the strategy supersedes it, the
+strategy says so and gives the reason.
 
 ## Replacing placeholder content
 
