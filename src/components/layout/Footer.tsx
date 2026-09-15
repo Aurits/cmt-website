@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Container } from '@/components/ui/Container';
 import { MailIcon, PhoneIcon, PinIcon } from '@/components/ui/icons';
 import { categories } from '@/data/categories';
-import { nav, site } from '@/data/site';
+import { aboutPages, nav, site } from '@/data/site';
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -37,6 +37,19 @@ export function Footer() {
                   <Link href={item.href} className="text-cream/80 hover:text-gold">
                     {item.label}
                   </Link>
+                  {/* The About sub-pages carry the firm's standing, so they are reachable from
+                      every page rather than only from /about. */}
+                  {item.href === '/about' && (
+                    <ul className="mt-2.5 space-y-2.5 border-l border-cream/15 pl-3">
+                      {aboutPages.map((page) => (
+                        <li key={page.href}>
+                          <Link href={page.href} className="text-cream/65 hover:text-gold">
+                            {page.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               ))}
             </ul>

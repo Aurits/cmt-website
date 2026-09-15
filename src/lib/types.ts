@@ -47,10 +47,40 @@ export interface Listing {
   featured?: boolean;
 }
 
+/**
+ * Where a fact about a person came from.
+ *
+ * 'cmt' means CMT publishes it themselves, on cmtrealtors.com or cmtrealtors.co.ke. 'directory'
+ * means we found it in a third-party business directory and it has not been confirmed by CMT.
+ * The distinction is load-bearing: a directory is good enough to know who to ask about, and not
+ * good enough to publish on the firm's own site as fact.
+ */
+export type SourcedFrom = 'cmt' | 'directory';
+
+/** A professional registration. The number is withheld until CMT confirms it. */
+export interface Registration {
+  /** Short form, for the schedule: 'RICS', 'SRB', 'ISK'. */
+  authority: string;
+  authorityFull: string;
+  /** What this registration licenses, in plain words. */
+  jurisdiction: string;
+  /** Post-nominals this registration confers, where it does. */
+  postNominals?: string;
+  /** Undefined until confirmed — the row renders as pending rather than disappearing. */
+  number?: string;
+  confirmed: boolean;
+}
+
 export interface Agent {
   id: string;
   name: string;
   role: string;
+  /**
+   * Directors lead the team page and are rendered larger: the credibility of a valuation
+   * practice sits with the people who sign the reports, not with the agents who show the
+   * properties. The prototype previously had this exactly inverted.
+   */
+  rank: 'director' | 'valuer' | 'agent';
   /**
    * Headshots are a client deliverable. Until they arrive we render initials —
    * never a stock photograph of an unrelated person in place of a named colleague.
@@ -59,6 +89,26 @@ export interface Agent {
   phone?: string;
   email?: string;
   bio?: string;
+  /** Degrees and memberships, as they should be written. */
+  qualifications?: string[];
+  registrations?: Registration[];
+  /**
+   * False until CMT confirms the credentials in writing. Name and role still render — those are
+   * matters of public record — but no professional credential is published unverified.
+   */
+  credentialsConfirmed: boolean;
+  sourcedFrom: SourcedFrom;
+  /** Which practice they sit in. */
+  based?: string;
+}
+
+export interface Office {
+  city: string;
+  country: 'Uganda' | 'Kenya';
+  role: 'Head office' | 'Branch';
+  /** Only the head offices publish a street address. */
+  address?: string;
+  coords?: [number, number];
 }
 
 export interface Partner {

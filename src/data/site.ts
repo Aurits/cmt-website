@@ -1,3 +1,5 @@
+import type { Office } from '@/lib/types';
+
 /**
  * Single source of truth for identity, contact routes and navigation.
  *
@@ -43,6 +45,14 @@ export const site = {
   hoursConfirmed: false,
 
   cities: ['Kampala', 'Gulu', 'Mbale', 'Mbarara'],
+  /**
+   * OPEN ITEM (OPEN-ITEMS.md #2): CMT Realtors is incorporated in Kenya (2010) as well as
+   * practising in Uganda, and we do not yet know whether that is one firm with two arms or two
+   * firms sharing a director. Until it is settled the site leads with Uganda and presents Kenya
+   * as a linked practice rather than claiming a single regional entity. Flip `regionConfirmed`
+   * when CMT tells us, and the wording on /about/offices follows.
+   */
+  regionConfirmed: false,
   regulator: 'Uganda Institution of Surveyors',
   yearsInBusiness: '16+',
 } as const;
@@ -72,6 +82,18 @@ export const nav = [
   { label: 'Contact', href: '/contact' },
 ] as const;
 
+/**
+ * The About section. Not in the masthead — six nav items was the brief's ceiling and these are
+ * destinations you arrive at from /about — but reachable from the footer on every page, because
+ * they are where the firm's standing is actually argued.
+ */
+export const aboutPages = [
+  { label: 'Our people', href: '/about/people' },
+  { label: 'Credentials', href: '/about/credentials' },
+  { label: 'Offices', href: '/about/offices' },
+  { label: 'Our clients', href: '/about/clients' },
+] as const;
+
 /** Where the WhatsApp CTA should point given what we actually know. */
 export function whatsappHref(message?: string): string {
   if (!site.whatsapp) return '/contact#whatsapp';
@@ -79,9 +101,47 @@ export function whatsappHref(message?: string): string {
   return `https://wa.me/${site.whatsapp}${text}`;
 }
 
+/**
+ * Nine offices, two countries.
+ *
+ * The survey baseline on /about renders these in order, split at the border. Only the two head
+ * offices publish a street address — the branches are listed because coverage is the point, and a
+ * street address we have not confirmed is worse than none. Kenya's branches come from
+ * cmtrealtors.co.ke; Uganda's from cmtrealtors.com.
+ */
+export const offices: Office[] = [
+  {
+    city: 'Kampala',
+    country: 'Uganda',
+    role: 'Head office',
+    address: 'Ambassador House, Plot 56/60, Suite B, 1st Floor, Kampala Road',
+    coords: [0.3146, 32.5806],
+  },
+  { city: 'Gulu', country: 'Uganda', role: 'Branch' },
+  { city: 'Mbale', country: 'Uganda', role: 'Branch' },
+  { city: 'Mbarara', country: 'Uganda', role: 'Branch' },
+  { city: 'Nairobi', country: 'Kenya', role: 'Head office' },
+  { city: 'Mombasa', country: 'Kenya', role: 'Branch' },
+  { city: 'Kisumu', country: 'Kenya', role: 'Branch' },
+  { city: 'Kisii', country: 'Kenya', role: 'Branch' },
+  { city: 'Bungoma', country: 'Kenya', role: 'Branch' },
+];
+
+export const ugandaOffices = offices.filter((office) => office.country === 'Uganda');
+export const kenyaOffices = offices.filter((office) => office.country === 'Kenya');
+
+/**
+ * The ledger. `institutions` counts the logos we actually hold rather than the "20+" CMT states,
+ * because the conveyor below it shows them and the two numbers would otherwise contradict each
+ * other on the same screen. OPEN-ITEMS.md #7 is the gap between them.
+ */
 export const stats = [
-  { value: site.yearsInBusiness, unit: 'years', label: 'Valuing property in Uganda' },
-  { value: '12', unit: 'institutions', label: 'Banks, agencies and corporates instructed us' },
-  { value: '4', unit: 'cities', label: 'Kampala, Gulu, Mbale and Mbarara' },
+  { value: site.yearsInBusiness, unit: 'years', label: 'Valuing property in East Africa' },
+  {
+    value: String(offices.length),
+    unit: 'offices',
+    label: 'Across Uganda and Kenya, head offices in Kampala and Nairobi',
+  },
+  { value: '14', unit: 'institutions', label: 'Banks, agencies and corporates instructed us' },
   { value: 'UIS', unit: 'regulated', label: 'Uganda Institution of Surveyors' },
 ] as const;

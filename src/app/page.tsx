@@ -7,6 +7,7 @@ import { PartnerConveyor } from '@/components/PartnerConveyor';
 import { StatsStrip } from '@/components/StatsStrip';
 import { FeaturedCarousel } from '@/components/property/FeaturedCarousel';
 import { HeroVideo } from '@/components/HeroVideo';
+import { CredentialLine } from '@/components/about/StandingSchedule';
 import { AnimatedHeadline } from '@/components/ui/AnimatedHeadline';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
@@ -81,6 +82,8 @@ export default function HomePage() {
                   Request a valuation
                 </Button>
               </div>
+              {/* Renders nothing until a registration is confirmed — see OPEN-ITEMS.md #1. */}
+              <CredentialLine />
             </div>
           </Container>
 

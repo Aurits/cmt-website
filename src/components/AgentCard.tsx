@@ -14,10 +14,17 @@ function initials(name: string) {
 }
 
 /**
- * Two registers: `profile` for the team section, `contact` for the property detail
- * sidebar. Where CMT has not supplied a headshot we set the colleague's initials on the
- * brand green — we do not stand a stock photograph of an unrelated person in for a
- * named person.
+ * Three registers: `feature` for the directors at the head of /about/people, `profile` for
+ * everyone below them, `contact` for the property detail sidebar.
+ *
+ * Where CMT has not supplied a headshot we set the colleague's initials on the brand green — we do
+ * not stand a stock photograph of an unrelated person in for a named person. In `feature` the
+ * plate takes the same 4:5 portrait ratio as a real photograph would, because a square plate
+ * sitting in a row of portraits is the tell that a picture is missing.
+ *
+ * Qualifications render only once `credentialsConfirmed` is true. Name and role are public record;
+ * a professional qualification is a claim about a person's standing and is theirs to confirm.
+ * See OPEN-ITEMS.md #1.
  */
 export function AgentCard({
   agent,
@@ -26,7 +33,7 @@ export function AgentCard({
   className,
 }: {
   agent: Agent;
-  variant?: 'profile' | 'contact';
+  variant?: 'feature' | 'profile' | 'contact';
   propertyReference?: string;
   className?: string;
 }) {
@@ -36,43 +43,99 @@ export function AgentCard({
   const message = propertyReference
     ? `Hello CMT Realtors, I am interested in property ${propertyReference}.`
     : `Hello CMT Realtors, I would like to speak to ${agent.name}.`;
+  const feature = variant === 'feature';
 
   return (
     <div
       className={cx(
-        'flex flex-col rounded-brand border border-rule bg-paper',
+        'flex flex-col border border-rule bg-paper',
         variant === 'contact' ? 'p-5' : 'p-6',
         className,
       )}
     >
-      <div className="flex items-center gap-4">
-        {agent.photo ? (
-          <Image
-            src={agent.photo}
-            alt={agent.name}
-            width={120}
-            height={120}
-            className="h-16 w-16 rounded-brand object-cover"
-          />
-        ) : (
-          <span
-            aria-hidden="true"
-            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-brand bg-green font-display text-xl text-cream"
-          >
-            {initials(agent.name)}
-          </span>
-        )}
-        <div>
-          <p className="font-display text-[1.1875rem] leading-tight text-green">{agent.name}</p>
-          <p className="mt-1 text-[0.8125rem] text-muted">{agent.role}</p>
+      {feature ? (
+        <>
+          <div className="relative aspect-[4/5] w-full overflow-hidden border border-rule bg-green">
+            {agent.photo ? (
+              <Image
+                src={agent.photo}
+                alt={agent.name}
+                fill
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="object-cover object-top"
+              />
+            ) : (
+              <span
+                aria-hidden="true"
+                className="flex h-full w-full items-center justify-center font-display text-[2.5rem] text-cream"
+              >
+                {initials(agent.name)}
+              </span>
+            )}
+          </div>
+          <p className="mt-5 font-display text-[1.5rem] leading-tight text-green">{agent.name}</p>
+          <p className="mt-1 text-[0.9375rem] text-muted">{agent.role}</p>
+          {agent.based && (
+            <p className="mt-0.5 text-[0.8125rem] text-muted">{agent.based}</p>
+          )}
+        </>
+      ) : (
+        <div className="flex items-center gap-4">
+          {agent.photo ? (
+            <Image
+              src={agent.photo}
+              alt={agent.name}
+              width={120}
+              height={120}
+              className="h-16 w-16 object-cover"
+            />
+          ) : (
+            <span
+              aria-hidden="true"
+              className="flex h-16 w-16 shrink-0 items-center justify-center bg-green font-display text-xl text-cream"
+            >
+              {initials(agent.name)}
+            </span>
+          )}
+          <div>
+            <p className="font-display text-[1.1875rem] leading-tight text-green">{agent.name}</p>
+            <p className="mt-1 text-[0.8125rem] text-muted">{agent.role}</p>
+          </div>
         </div>
-      </div>
+      )}
 
-      {agent.bio && variant === 'profile' && (
+      {agent.bio && variant !== 'contact' && (
         <p className="mt-4 text-[0.9375rem] leading-relaxed text-muted">{agent.bio}</p>
       )}
 
-      <div className="mt-5 space-y-px border-t border-rule pt-4 text-[0.9375rem]">
+      {/* Credentials, gated. */}
+      {agent.qualifications && agent.qualifications.length > 0 && variant !== 'contact' && (
+        <div className="mt-5 border-t border-rule pt-4">
+          <p className="text-[0.75rem] uppercase tracking-[0.1em] text-muted">Qualifications</p>
+          {agent.credentialsConfirmed ? (
+            <ul className="mt-2.5 space-y-1.5">
+              {agent.qualifications.map((qualification) => (
+                <li key={qualification} className="flex gap-2.5 text-[0.875rem] text-ink">
+                  <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 bg-gold" />
+                  {qualification}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 max-w-[44ch] text-[0.8125rem] leading-relaxed text-muted">
+              Held, and awaiting confirmation from {agent.name.split(' ')[0]} before we publish
+              them. We do not put a professional qualification on the page unverified.
+            </p>
+          )}
+        </div>
+      )}
+
+      <div
+        className={cx(
+          'space-y-px border-t border-rule pt-4 text-[0.9375rem]',
+          feature ? 'mt-5' : 'mt-5',
+        )}
+      >
         <a href={phoneHref} className="flex items-center gap-3 py-1.5 text-ink hover:text-green">
           <PhoneIcon width={16} height={16} className="text-green/70" />
           <span className="tnum">{phoneDisplay}</span>
