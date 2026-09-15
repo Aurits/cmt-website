@@ -36,7 +36,7 @@ const reasons = [
   },
   {
     title: 'Already on the panel',
-    body: `${partnerCount} institutions instruct us, most of them repeatedly — the work has stood up to their own review for over fifteen years.`,
+    body: `${partnerCount} institutions instruct us, most of them repeatedly — the work has stood up to their own review for over sixteen years.`,
   },
   {
     title: 'Evidence before opinion',
@@ -66,7 +66,7 @@ export default function HomePage() {
           <Container className="relative z-10 shrink-0 py-8 lg:w-[46%] lg:shrink-0 lg:self-center lg:py-16">
             <div className="hero-rise">
               <h1 className="text-display text-green">
-                <AnimatedHeadline text="15+ years of valuations Uganda’s banks lend against" />
+                <AnimatedHeadline text="16+ years of valuations Uganda’s banks lend against" />
               </h1>
               <p className="mt-6 max-w-[52ch] text-[1.0625rem] leading-relaxed text-muted sm:text-[1.125rem]">
                 CMT Realtors is a Kampala valuation and property consultancy firm, regulated by
@@ -166,7 +166,7 @@ export default function HomePage() {
             <Reveal>
               <SectionHeading
                 title="A valuation firm first, an agency second"
-                lead="Most people meet us through a bank. An offer depends on a figure, the figure depends on a valuer, and the valuer has to be one the lender recognises. That is the work we have built for fifteen years."
+                lead="Most people meet us through a bank. An offer depends on a figure, the figure depends on a valuer, and the valuer has to be one the lender recognises. That is the work we have built for sixteen years."
               />
             </Reveal>
             <dl className="mt-7">

@@ -13,7 +13,7 @@ import { site } from '@/data/site';
 
 export const metadata: Metadata = {
   title: 'About Us',
-  description: `${site.name} is a Kampala valuation and property consultancy firm regulated by the ${site.regulator}, with more than fifteen years of instructions from banks, government bodies and corporate clients.`,
+  description: `${site.name} is a Kampala valuation and property consultancy firm regulated by the ${site.regulator}, with more than sixteen years of instructions from banks, government bodies and corporate clients.`,
 };
 
 /**
@@ -59,7 +59,7 @@ export default function AboutPage() {
         <Container className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
           <div>
             <SectionHeading
-              title="What 15+ years of instructions buys you"
+              title="What 16+ years of instructions buys you"
               lead="Not a longer brochure — a body of evidence. Valuation is a judgement call made under professional liability, and the firms that last are the ones whose judgement holds up when a lender, a court or a tax authority tests it."
             />
             <div className="mt-8 space-y-5 text-[1.0625rem] leading-relaxed text-muted">

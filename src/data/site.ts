@@ -10,7 +10,7 @@ export const site = {
   shortName: 'CMT Realtors',
   tagline: 'Your Trusted Partner in Real Estate Valuation & Consultancy',
   description:
-    'Kampala valuation and property consultancy firm, regulated by the Uganda Institution of Surveyors, instructed by banks, government bodies and corporate clients for more than 15 years.',
+    'Kampala valuation and property consultancy firm, regulated by the Uganda Institution of Surveyors, instructed by banks, government bodies and corporate clients for more than 16 years.',
   url: 'https://cmtrealtors.com',
 
   phone: { display: '+256 414 346 344', href: 'tel:+256414346344' },
@@ -44,7 +44,7 @@ export const site = {
 
   cities: ['Kampala', 'Gulu', 'Mbale', 'Mbarara'],
   regulator: 'Uganda Institution of Surveyors',
-  yearsInBusiness: '15+',
+  yearsInBusiness: '16+',
 } as const;
 
 export const nav = [

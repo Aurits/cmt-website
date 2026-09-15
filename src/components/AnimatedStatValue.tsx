@@ -19,7 +19,7 @@ export function AnimatedStatValue({ value }: { value: string }) {
   const [display, setDisplay] = useState(value);
 
   useEffect(() => {
-    const match = value.match(/^(\d+)(\D*)$/); // "15+" -> ["15+", "15", "+"], "UIS" -> null
+    const match = value.match(/^(\d+)(\D*)$/); // "16+" -> ["16+", "16", "+"], "UIS" -> null
     const el = ref.current;
     if (!match || !el) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
