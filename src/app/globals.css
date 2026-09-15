@@ -209,19 +209,51 @@
   }
 
   /*
-   * A focus ring that survives both grounds.
+   * A focus ring that survives both grounds, as ONE ring.
    *
    * Gold on the brand green is 6.2:1 and reads beautifully; gold on cream is 1.97:1 and is
-   * effectively not there — which meant keyboard focus was invisible across most of the site.
-   * Rather than pick one colour and lose half the pages, the ring is banded: green, gold, green.
-   * On a light ground the green bands carry it (12:1); on green the gold core carries it. The
-   * box-shadow paints the outer band, the outline the core.
+   * effectively not there, which left keyboard focus invisible across most of the site. The
+   * first attempt at fixing that banded three colours into the same ring, so a focused input
+   * carried 2px of green, 2px of gold and 2px of green again. It cleared the contrast bar and
+   * looked like a double border, which is a fair thing to call it.
+   *
+   * The ring is one 2px line now, and it is the ground that decides its colour rather than the
+   * ring trying to cover every case at once. Custom properties inherit, so a control sets its
+   * own value if it has one and otherwise takes the nearest surface's: green by default, gold
+   * once inside a green band, back to green on a gold button sitting in that band.
+   *
+   *   green on cream 12.2:1   gold on green 6.2:1   green on gold 6.2:1
+   *
+   * No border-radius here. The old rule forced every focused element to 1px, which squared off
+   * the 4px corner on every input the moment you tabbed into it; an outline follows the
+   * element's own radius on its own.
    */
+  :root {
+    --focus-ring: var(--color-green);
+  }
+
+  /*
+   * Only SURFACES set this, never controls.
+   *
+   * An outline is painted outside the element, so what it has to contrast with is the thing
+   * behind it, not the thing it is wrapped around. Setting the variable on `.bg-green` outright
+   * got that backwards: a solid green button sitting on a cream page would have given itself a
+   * gold ring, drawn on the cream, at 1.97:1. The element selectors below keep it to the bands
+   * — a section, the masthead, the footer, the mobile drawer — and everything inside them
+   * inherits. A gold button inside a green band correctly keeps the band's gold ring, separated
+   * from the button by the 2px offset.
+   */
+  section.bg-green,
+  header.bg-green,
+  footer.bg-green,
+  aside.bg-green,
+  div.bg-green {
+    --focus-ring: var(--color-gold);
+  }
+
   :focus-visible {
-    outline: 2px solid var(--color-gold);
+    outline: 2px solid var(--focus-ring);
     outline-offset: 2px;
-    box-shadow: 0 0 0 6px var(--color-green);
-    border-radius: 1px;
   }
 
   ::selection {
