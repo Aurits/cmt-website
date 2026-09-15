@@ -245,13 +245,13 @@ export function ListingsExplorer({
             <button
               type="button"
               onClick={resetAll}
-              className="rounded-brand bg-green px-5 py-3 text-[0.9375rem] text-cream hover:bg-green"
+              className="rounded-control bg-green px-5 py-3 text-[0.9375rem] text-cream hover:bg-green"
             >
               Clear filters
             </button>
             <a
               href="/contact?subject=general"
-              className="rounded-brand border border-green/35 px-5 py-3 text-[0.9375rem] text-green hover:bg-green/8"
+              className="rounded-control border border-green/35 px-5 py-3 text-[0.9375rem] text-green hover:bg-green/8"
             >
               Register a requirement
             </a>
@@ -277,7 +277,7 @@ export function ListingsExplorer({
                   onClick={() => setPage(number)}
                   aria-current={number === currentPage ? 'page' : undefined}
                   className={cx(
-                    'tnum h-10 w-10 rounded-brand border text-[0.9375rem]',
+                    'tnum h-10 w-10 rounded-control border text-[0.9375rem]',
                     number === currentPage
                       ? 'border-green bg-green text-cream'
                       : 'border-rule bg-paper text-ink hover:border-green/50',
@@ -303,7 +303,7 @@ export function ListingsExplorer({
 }
 
 const pagerClass =
-  'rounded-brand border border-rule bg-paper px-4 py-2.5 text-[0.875rem] text-ink hover:border-green/50 disabled:cursor-not-allowed disabled:opacity-45';
+  'rounded-control border border-rule bg-paper px-4 py-2.5 text-[0.875rem] text-ink hover:border-green/50 disabled:cursor-not-allowed disabled:opacity-45';
 
 function Field({
   label,

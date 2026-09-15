@@ -38,14 +38,33 @@
   --text-h3: clamp(1.2rem, 1.6vw, 1.45rem);
 
   /*
-   * ONE RADIUS, same idea as ONE GREEN above: every rounded rectangle on the site — cards,
-   * buttons, inputs, photo frames, popups — takes this one value (`rounded-brand`), so the
-   * whole site reads as one material rather than a mix of sharp and soft edges. Previously
-   * a near-square 2px, at the client's request for something more modern; still restrained
-   * rather than bubbly, which is the one thing the pill-shaped nav (Header.tsx) is deliber-
-   * ately allowed to break, as the one shape on the page that says "this is different".
+   * TWO RADII, and the split is the point: a surface is sharp, a control is not.
+   *
+   * --radius-brand (0) is every surface that PRESENTS something the way a valuation report
+   * does — cards, panels, photo frames, the map, popups, badges. Sharp, because that is
+   * what a schedule, a certificate and a ruled table are, and those edges carry part of
+   * the same argument the hairlines and the tabular numerals carry. This was a literal 2px
+   * before, which is the worst of both: too round to read as a crisp document edge, too
+   * tight to read as a decision. 0 is the honest version of what 2px was reaching for.
+   *
+   * --radius-control (4px) is anything you PRESS OR TYPE INTO — buttons, the Select
+   * trigger, inputs, pagers, chips. Against a field of genuinely sharp surfaces, 4px is
+   * all it takes to read as "this one is a control": the contrast does the work, so the
+   * radius does not have to. It also keeps the gold top rule (the hero counter, the open
+   * Select) effectively straight, where a larger radius curved it into a highlight and
+   * cost us the stamp.
+   *
+   * Read it as one rule: sharp means read this, softened means press this.
+   *
+   * The pill-shaped nav (PillNav.tsx) still breaks both, deliberately, as the one shape on
+   * the page that says "this is different" — and it reads as far more of an exception
+   * against 0 and 4px than it ever did against a uniform 10px.
+   *
+   * The radius the client asked to modernise is still tunable from one place: raise
+   * --radius-brand and every surface follows, exactly as before.
    */
-  --radius-brand: 0.625rem;
+  --radius-brand: 0;
+  --radius-control: 0.25rem;
 }
 
 @layer base {

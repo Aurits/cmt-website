@@ -5,7 +5,7 @@ type Variant = 'primary' | 'gold' | 'outline' | 'onDark' | 'quiet';
 type Size = 'sm' | 'md' | 'lg';
 
 const base =
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-brand font-medium transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-60';
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-control font-medium transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-60';
 
 const variants: Record<Variant, string> = {
   primary: 'bg-green text-cream hover:text-gold',

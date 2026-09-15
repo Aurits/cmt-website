@@ -5,7 +5,7 @@ import { Select } from '@/components/ui/Select';
 import { cx } from '@/lib/cx';
 
 export const inputClass =
-  'w-full rounded-brand border border-rule bg-paper px-3.5 py-3 text-[0.9375rem] text-ink placeholder:text-muted/60 transition-colors hover:border-green/40 focus:border-green';
+  'w-full rounded-control border border-rule bg-paper px-3.5 py-3 text-[0.9375rem] text-ink placeholder:text-muted/60 transition-colors hover:border-green/40 focus:border-green';
 
 export function Label({
   htmlFor,

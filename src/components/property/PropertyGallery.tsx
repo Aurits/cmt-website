@@ -40,7 +40,7 @@ export function PropertyGallery({
             <button
               type="button"
               onClick={() => go(index - 1)}
-              className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-brand bg-paper/90 text-green transition-colors hover:bg-paper"
+              className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-control bg-paper/90 text-green transition-colors hover:bg-paper"
             >
               <ChevronIcon className="rotate-180" />
               <span className="sr-only">Previous photograph</span>
@@ -48,7 +48,7 @@ export function PropertyGallery({
             <button
               type="button"
               onClick={() => go(index + 1)}
-              className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-brand bg-paper/90 text-green transition-colors hover:bg-paper"
+              className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-control bg-paper/90 text-green transition-colors hover:bg-paper"
             >
               <ChevronIcon />
               <span className="sr-only">Next photograph</span>

@@ -18,10 +18,11 @@ type Rect = { left: number; width: number };
 
 /**
  * The desktop nav, as a pill: one rounded-full track holding every link, with a single gold
- * capsule sliding beneath whichever one is the current page. Where every other rounded
- * corner on the site takes the same --radius-brand (globals.css), this is the one element
- * deliberately allowed to go all the way to a pill: a signature shape rather than the house
- * style repeated.
+ * capsule sliding beneath whichever one is the current page. Where every surface on the site
+ * is square and every control takes a 4px --radius-control (globals.css), this is the one
+ * element deliberately allowed to go all the way to a pill: a signature shape rather than
+ * the house style repeated, and the sharper everything around it is, the more it reads as
+ * the exception it was meant to be.
  *
  * The capsule tracks the ROUTE only, never the pointer. An earlier version also slid to
  * whatever link was under the cursor, which sounds nice in the abstract but felt exactly as

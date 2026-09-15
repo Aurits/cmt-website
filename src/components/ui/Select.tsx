@@ -19,7 +19,9 @@ export interface SelectOption {
  * blue, with different metrics. On a page this deliberate that is the one control that
  * always looks borrowed. This is the ARIA combobox/listbox pattern instead, so the open
  * menu belongs to the design system too — paper ground, hairline-ruled rows, a gold marker
- * against the chosen one, the same 2px radius as every other surface.
+ * against the chosen one. The trigger takes --radius-control, like every other control; the
+ * open list stays square, so its gold top rule reads as a straight ruled edge rather than
+ * curving into a highlight.
  *
  * Keyboard support matches what people expect from a native select, because that is the
  * bargain when you replace one: Enter, Space, Up and Down open it; Up and Down move;
@@ -193,7 +195,7 @@ export function Select({
         onClick={() => (open ? close(false) : openList())}
         onKeyDown={onTriggerKeyDown}
         className={cx(
-          'flex w-full items-center justify-between gap-3 rounded-brand border text-left transition-colors duration-150',
+          'flex w-full items-center justify-between gap-3 rounded-control border text-left transition-colors duration-150',
           heights,
           tone === 'cream' ? 'bg-cream' : 'bg-paper',
           open ? 'border-green' : 'border-rule hover:border-green/45',
