@@ -43,7 +43,7 @@ export function PropertyCard({
     <article
       className={cx(
         'group flex flex-col overflow-hidden rounded-brand border border-rule bg-paper',
-        'transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(27,54,28,0.5)]',
+        'transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(17,52,27,0.5)]',
         className,
       )}
     >
@@ -113,7 +113,7 @@ export function PropertyCard({
           >
             Contact agent
           </Link>
-          <span className="tnum ml-auto text-[0.75rem] text-muted/80">{listing.reference}</span>
+          <span className="tnum ml-auto text-[0.75rem] text-muted">{listing.reference}</span>
         </div>
       </div>
     </article>

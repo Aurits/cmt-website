@@ -24,6 +24,11 @@ function ConveyorItem({ partner, clone }: { partner: Partner; clone: boolean }) 
     // Clones exist only to make the loop seamless. With motion off they are hidden, or
     // the belt would collapse into a wall of the same logos repeated.
     <div className="conveyor__item" data-clone={clone ? 'true' : undefined}>
+      {/*
+        The only pure white on the site, and deliberately so: these are other organisations'
+        trademarks, and several are supplied as logos drawn for a white ground. Tinting them to
+        cream would alter marks we do not own. The plate is white; everything around it is not.
+      */}
       <div className="flex h-[92px] w-[190px] items-center justify-center rounded-brand border border-rule bg-white px-5 sm:h-[104px] sm:w-[220px]">
         {partner.logo ? (
           <Image

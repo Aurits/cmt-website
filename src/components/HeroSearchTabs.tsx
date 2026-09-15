@@ -74,7 +74,7 @@ export function HeroSearchTabs() {
   const current = tabs.find((tab) => tab.id === active)!;
 
   return (
-    <div className="bg-paper shadow-[0_-1px_0_rgba(27,54,28,0.08)]">
+    <div className="bg-paper shadow-[0_-1px_0_rgba(17,52,27,0.08)]">
       <div role="tablist" aria-label="What would you like to do" className="flex border-b border-rule">
         {tabs.map((tab, index) => (
           <button

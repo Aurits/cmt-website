@@ -53,10 +53,16 @@ pagination), `PropertyGallery`, `PropertyMap`, `HeroSearchTabs`, `Reveal`, `Cont
 
 ## Design decisions worth knowing
 
-- **Colour tokens** live in `src/app/globals.css`: green `#1b361c`, gold `#daa706`, cream
+- **Colour tokens** live in `src/app/globals.css`: green `#11341b`, gold `#daa706`, cream
   `#f7f2dd` — gold and cream exactly as the brief sets them. Body text is a warm near-black
   `#171612` rather than pure black, which reads harsh on cream.
-- **One green, everywhere**: `#1b361c`, the green inside the supplied logo tile, is the
+- **The gold comes in a pair, and they are not interchangeable.** `--color-gold` (`#daa706`) is
+  the brief's value and is used as a fill under dark text, or as text on the brand green — 6.2:1
+  both ways. It is never text on a light ground, where it measures 1.97:1 and simply is not there.
+  `--color-gold-deep` (`#816304`) is the readable half: words and icons on cream or paper, and
+  fills with cream text over them. Every pair on the site was measured; the audit is in the commit
+  that introduced this line.
+- **One green, everywhere**: `#11341b`, the green inside the supplied logo tile, is the
   only green on the site. Masthead, footer, page headers, stats, CTA bands, buttons and map
   pins all use it, so the logo merges into any surface and the site reads as one material.
   Depth comes from alpha of that same green (`green/8`, `green/85`) and from gold hairlines,

@@ -84,7 +84,7 @@ export default function ValuationsPage() {
             {steps.map((step, index) => (
               <Reveal as="li" key={step.title} delay={index * 70} className="flex">
                 <div className="flex w-full flex-col bg-paper p-5 lg:p-6">
-                  <span className="tnum font-display text-[1.75rem] leading-none text-gold">
+                  <span className="tnum font-display text-[1.75rem] leading-none text-gold-deep">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <h3 className="mt-4 text-[1.0625rem] text-green">{step.title}</h3>

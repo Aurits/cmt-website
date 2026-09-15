@@ -164,7 +164,7 @@ export default function AboutPage() {
             {chapters.map((chapter, index) => (
               <Reveal as="li" key={chapter.stage} delay={index * 70}>
                 <div className="grid gap-2 border-b border-rule py-6 md:grid-cols-[4rem_14rem_1fr] md:gap-8">
-                  <span className="tnum font-display text-[1.75rem] leading-none text-gold">
+                  <span className="tnum font-display text-[1.75rem] leading-none text-gold-deep">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <div>

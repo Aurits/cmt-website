@@ -22,13 +22,40 @@
 @theme {
   --color-green: #11341b;
   --color-gold: #daa706;
-  --color-gold-deep: #a67f05;
+  /*
+   * The gold that can be READ, as opposed to the gold that can be SEEN.
+   *
+   * --color-gold is the brief's value and is unchanged. It works in the two places it is used as
+   * a mass: as a fill under dark text (green on gold, 6.2:1) and as text on the brand green
+   * (6.2:1). What it cannot do is be text on a light ground — gold on cream is 1.97:1, which is
+   * not a contrast problem so much as an invisibility one.
+   *
+   * gold-deep is that missing half of the pair, and it was previously #a67f05, which only reached
+   * 3.3:1 on cream and so failed AA everywhere it was used for words rather than icons. At
+   * #816304 it clears AA on every ground the site puts it on — 5.03 on cream, 5.55 on paper, 4.55
+   * on cream-deep — and it also works the other way round, as a fill with cream text over it,
+   * which is what the gold button's hover state needs.
+   *
+   * The rule: gold for fills and for dark grounds, gold-deep for words and icons on light ones.
+   */
+  --color-gold-deep: #816304;
   --color-cream: #f7f2dd;
   --color-cream-deep: #efe7c9;
   --color-paper: #fffdf7;
   --color-ink: #171612;
   --color-muted: #5c6353;
   --color-rule: #ded5b6;
+  /*
+   * Hairlines versus control boundaries.
+   *
+   * --color-rule is a divider: it separates a schedule row from the next one and carries no
+   * information on its own, so its 1.4:1 against paper is a deliberate lightness rather than a
+   * failure. The border of an input or a Select IS information — it is the thing telling you
+   * where the control is — and WCAG asks for 3:1 on those. At --color-rule they were effectively
+   * invisible. rule-strong is the same warm sand stepped down until it clears that bar (3.66 on
+   * paper, 3.32 on cream) and is used only on things you can type into or open.
+   */
+  --color-rule-strong: #918455;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
@@ -127,9 +154,19 @@
     text-wrap: pretty;
   }
 
+  /*
+   * A focus ring that survives both grounds.
+   *
+   * Gold on the brand green is 6.2:1 and reads beautifully; gold on cream is 1.97:1 and is
+   * effectively not there — which meant keyboard focus was invisible across most of the site.
+   * Rather than pick one colour and lose half the pages, the ring is banded: green, gold, green.
+   * On a light ground the green bands carry it (12:1); on green the gold core carries it. The
+   * box-shadow paints the outer band, the outline the core.
+   */
   :focus-visible {
     outline: 2px solid var(--color-gold);
-    outline-offset: 3px;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px var(--color-green);
     border-radius: 1px;
   }
 
@@ -316,7 +353,7 @@
   border-radius: var(--radius-brand);
   background: var(--color-paper);
   color: var(--color-ink);
-  box-shadow: 0 8px 24px rgb(27 54 28 / 0.18);
+  box-shadow: 0 8px 24px rgb(17 52 27 / 0.18);
 }
 
 .leaflet-bar a {

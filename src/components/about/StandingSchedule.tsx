@@ -22,16 +22,16 @@ export function StandingSchedule({ className }: { className?: string }) {
           key={registration.authority}
           className="flex items-baseline justify-between gap-5 border-t border-cream/20 py-3"
         >
-          <dt className="text-[0.9375rem] text-cream/70">
+          <dt className="text-[0.9375rem] text-cream/85">
             {registration.authorityFull}
-            <span className="mt-0.5 block text-[0.8125rem] text-cream/50">
+            <span className="mt-0.5 block text-[0.8125rem] text-cream/70">
               {registration.jurisdiction}
             </span>
           </dt>
           <dd
             className={cx(
               'tnum shrink-0 text-right text-[0.9375rem]',
-              registration.confirmed ? 'text-cream' : 'text-cream/45',
+              registration.confirmed ? 'text-cream' : 'text-cream/70',
             )}
           >
             {registration.confirmed && registration.number

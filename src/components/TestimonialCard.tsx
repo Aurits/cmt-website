@@ -5,7 +5,7 @@ export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
     <figure className="flex h-full flex-col justify-between rounded-brand border border-rule bg-paper p-6">
       <blockquote className="font-display text-[1.1875rem] leading-snug text-green">
-        <span aria-hidden="true" className="mr-1 text-gold">
+        <span aria-hidden="true" className="mr-1 text-gold-deep">
           &ldquo;
         </span>
         {testimonial.quote}
