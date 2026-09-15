@@ -123,7 +123,7 @@ export default async function ContactPage({
                 <Button href="/contact?subject=listing" variant="primary" size="sm">
                   List your property
                 </Button>
-                <Button href="/services#listing-and-sales-management" variant="quiet" size="sm">
+                <Button href="/advisory#acquisition-and-disposal" variant="quiet" size="sm">
                   How listing works
                 </Button>
               </div>

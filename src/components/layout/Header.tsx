@@ -47,8 +47,14 @@ export function Header() {
     };
   }, [open]);
 
-  const isActive = (href: string) =>
-    href === '/' ? pathname === '/' : pathname.startsWith(href);
+  // A nav item lights up for its own href and for any extra prefixes it claims (see `nav` in
+  // data/site.ts — "Properties" points at /listings but owns /properties/[slug] too).
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    const item = nav.find((entry) => entry.href === href);
+    const extra = (item as { match?: readonly string[] } | undefined)?.match ?? [];
+    return pathname.startsWith(href) || extra.some((prefix) => pathname.startsWith(prefix));
+  };
 
   return (
     <>
@@ -105,7 +111,7 @@ export function Header() {
           <div className="hidden items-center gap-3 lg:flex">
             <a
               href={whatsappHref('Hello CMT Realtors, I have a property enquiry.')}
-              className="flex h-10 w-10 items-center justify-center rounded-brand border border-cream/30 text-cream transition-colors hover:border-gold hover:text-gold"
+              className="flex h-10 w-10 items-center justify-center rounded-control border border-cream/30 text-cream transition-colors hover:border-gold hover:text-gold"
               aria-label={
                 site.whatsapp
                   ? 'Message us on WhatsApp'
@@ -114,15 +120,16 @@ export function Header() {
             >
               <WhatsAppIcon width={18} height={18} />
             </a>
-            <Button href="/contact?subject=listing" variant="gold" size="sm">
-              List Your Property
+            {/* Valuation is the business; listing is a service. The masthead says so. */}
+            <Button href="/contact?subject=valuation" variant="gold" size="sm">
+              Request a valuation
             </Button>
           </div>
 
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="flex h-11 w-11 items-center justify-center rounded-brand border border-cream/30 text-cream lg:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-control border border-cream/30 text-cream lg:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
           >
@@ -149,7 +156,7 @@ export function Header() {
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="flex h-11 w-11 items-center justify-center rounded-brand border border-cream/30"
+            className="flex h-11 w-11 items-center justify-center rounded-control border border-cream/30"
           >
             <CloseIcon />
             <span className="sr-only">Close menu</span>
@@ -177,11 +184,11 @@ export function Header() {
 
           <div className="mt-8 grid gap-3">
             <Link
-              href="/contact?subject=listing"
+              href="/contact?subject=valuation"
               onClick={() => setOpen(false)}
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-brand bg-gold px-6 py-3.5 text-base font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-control bg-gold px-6 py-3.5 text-base font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
             >
-              List Your Property
+              Request a valuation
             </Link>
             <Button href={site.phone.href} variant="onDark" size="lg" fullWidth>
               <PhoneIcon width={18} height={18} />

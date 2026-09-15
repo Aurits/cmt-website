@@ -95,3 +95,52 @@ export interface Service {
   /** True until CMT confirms the full service list (open item in the brief). */
   provisional: boolean;
 }
+
+/* ---------------------------------------------------------------------------
+   Valuations
+   Two axes, exactly as CMT's own services page organises the work: what is
+   being valued, and what the figure is for. The matrix on /valuations is the
+   cross-product, and a purpose lists the assets it actually applies to — an
+   absent combination is rendered as inert rather than hidden, so the page
+   states the scope honestly. See SITE-STRATEGY.md and LAYOUT-SPECS.md A-03.
+   --------------------------------------------------------------------------- */
+
+export type ValuationAssetSlug = 'property' | 'plant-and-machinery' | 'business-and-shares';
+
+export type ValuationPurposeSlug =
+  | 'for-lending'
+  | 'financial-reporting'
+  | 'insurance'
+  | 'tax-and-litigation'
+  | 'compensation';
+
+export interface ValuationAsset {
+  slug: ValuationAssetSlug;
+  name: string;
+  /** Column header in the matrix, where space is tight. */
+  short: string;
+  description: string;
+}
+
+export interface ValuationPurpose {
+  slug: ValuationPurposeSlug;
+  name: string;
+  /** Second person, naming the reader's actual situation. Carries the page. */
+  situation: string;
+  /** Terms of art, each with a plain definition — defining them is a service. */
+  basis: { term: string; meaning: string }[];
+  /** Which asset classes this purpose applies to. Drives the matrix. */
+  assets: ValuationAssetSlug[];
+  /** Working days, from the date of inspection. Stated with its caveat. */
+  turnaround: string;
+  deliverables: string[];
+}
+
+export interface AdvisoryService {
+  slug: string;
+  name: string;
+  /** Who this is for — the 'for:' line in the index. */
+  audience: string;
+  summary: string;
+  deliverables: string[];
+}

@@ -5,7 +5,6 @@ import { CategoryCard } from '@/components/CategoryCard';
 import { HeroSearchTabs } from '@/components/HeroSearchTabs';
 import { PartnerConveyor } from '@/components/PartnerConveyor';
 import { StatsStrip } from '@/components/StatsStrip';
-import { TestimonialCard, TestimonialsPending } from '@/components/TestimonialCard';
 import { FeaturedCarousel } from '@/components/property/FeaturedCarousel';
 import { HeroVideo } from '@/components/HeroVideo';
 import { AnimatedHeadline } from '@/components/ui/AnimatedHeadline';
@@ -16,9 +15,9 @@ import { SectionHeading } from '@/components/ui/SectionHeading';
 import { categories } from '@/data/categories';
 import { featuredListings, listings, listingsByCategory } from '@/data/listings';
 import { allPartners, partnerCount } from '@/data/partners';
-import { services } from '@/data/services';
+import { advisoryServices } from '@/data/advisory';
+import { featuredPurposes, purposeBySlug } from '@/data/valuations';
 import { site } from '@/data/site';
-import { testimonials } from '@/data/testimonials';
 
 /**
  * Homepage.
@@ -26,7 +25,7 @@ import { testimonials } from '@/data/testimonials';
  * Section order follows the brief. Each section is kept to the shortest form that still
  * does its job, because the whole page has to be scrollable on a phone on mobile data:
  * the featured stock is a single full-bleed carousel rather than a grid, the client list
- * is one belt (the categorised belts live on /clients), and the identity section carries
+ * is one belt (the categorised belts live on /about/clients), and the identity section carries
  * three claims rather than four.
  */
 const reasons = [
@@ -231,23 +230,64 @@ export default function HomePage() {
         </Container>
       </section>
 
+      {/* The three reasons people instruct us most, routing into the /valuations matrix. */}
+      <section className="py-12 lg:py-16">
+        <Container>
+          <Reveal>
+            <SectionHeading
+              title="What we are usually asked to do"
+              lead="Most instructions start with one of these. Each one needs a different basis of value, and that changes the figure — so we settle it before anyone travels."
+              action={
+                <Button href="/valuations" variant="outline" size="md">
+                  All valuation services
+                </Button>
+              }
+            />
+          </Reveal>
+          <ul className="mt-8 grid gap-4 sm:grid-cols-3">
+            {featuredPurposes.map((slug, index) => {
+              const purpose = purposeBySlug[slug];
+              return (
+                <Reveal as="li" key={slug} delay={index * 80} className="flex">
+                  <Link
+                    href={`/valuations/${purpose.slug}`}
+                    className="group flex w-full flex-col border border-rule bg-paper p-5 transition-colors duration-300 hover:border-green/40"
+                  >
+                    <span aria-hidden="true" className="mb-4 block h-[3px] w-8 bg-gold" />
+                    <h3 className="font-display text-[1.125rem] text-green group-hover:text-gold-deep">
+                      {purpose.name}
+                    </h3>
+                    <p className="mt-2.5 flex-1 text-[0.875rem] leading-relaxed text-muted">
+                      {purpose.situation}
+                    </p>
+                    <span className="tnum mt-4 border-t border-rule pt-3 text-[0.8125rem] text-muted">
+                      {purpose.turnaround}
+                    </span>
+                  </Link>
+                </Reveal>
+              );
+            })}
+          </ul>
+        </Container>
+      </section>
+
       {/* Services */}
       <section className="bg-green py-14 text-cream lg:py-20">
         <Container>
           <Reveal>
             <SectionHeading
               onDark
-              title="What we are usually asked to do"
-              lead="Four kinds of instruction cover most of our work. Each starts with an inspection and ends with something in writing."
+              title="Advice before you commit"
+              lead="Beyond the report: what a site can carry, what to pay for it, and how to run it once it is yours. Every engagement is scoped in writing before it starts."
               action={
-                <Button href="/services" variant="onDark" size="md">
-                  All services
+                <Button href="/advisory" variant="onDark" size="md">
+                  All advisory work
                 </Button>
               }
             />
           </Reveal>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {services.map((service, index) => (
+            {advisoryServices.slice(0, 4).map((service, index) => (
               <Reveal as="li" key={service.slug} delay={index * 80} className="flex">
                 <div className="flex w-full flex-col border border-cream/20 p-5 transition-colors duration-300 hover:border-gold/60">
                   <h3 className="text-[1.125rem] text-cream">{service.name}</h3>
@@ -255,10 +295,10 @@ export default function HomePage() {
                     {service.summary}
                   </p>
                   <Link
-                    href={service.cta.href}
+                    href={`/advisory#${service.slug}`}
                     className="mt-4 self-start text-[0.875rem] text-gold underline decoration-gold/50 decoration-2 underline-offset-4 hover:decoration-gold"
                   >
-                    {service.cta.label}
+                    What this involves
                   </Link>
                 </div>
               </Reveal>
@@ -267,7 +307,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Clients: one belt here, the categorised belts live on /clients. */}
+      {/* Clients: one belt here, the categorised belts live on /about/clients. */}
       <section className="py-12 lg:py-16">
         <Container>
           <Reveal>
@@ -275,7 +315,7 @@ export default function HomePage() {
               title="Who instructs us"
               lead="Institutions send repeat work to valuers whose reports survive their own review. These are ours."
               action={
-                <Button href="/clients" variant="outline" size="md">
+                <Button href="/about/clients" variant="outline" size="md">
                   Our clients in full
                 </Button>
               }
@@ -285,57 +325,6 @@ export default function HomePage() {
         <Reveal className="mt-9">
           <PartnerConveyor partners={allPartners} label="CMT Realtors clients" />
         </Reveal>
-      </section>
-
-      {/* Testimonials */}
-      <section className="bg-cream-deep/45 py-12 lg:py-16">
-        <Container>
-          <Reveal>
-            <SectionHeading
-              title={'In our clients’ words'}
-              lead="References from the institutions we work for, named and with their permission."
-            />
-          </Reveal>
-          <Reveal className="mt-8" delay={80}>
-            {testimonials.length > 0 ? (
-              <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {testimonials.map((testimonial) => (
-                  <li key={testimonial.name} className="flex">
-                    <TestimonialCard testimonial={testimonial} />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <TestimonialsPending />
-            )}
-          </Reveal>
-        </Container>
-      </section>
-
-      {/* Market insights: a slim band, not a section. */}
-      <section className="py-12 lg:py-16">
-        <Container>
-          <Reveal>
-            <div className="flex flex-col gap-6 rounded-brand border border-rule bg-paper p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
-              <div>
-                <span aria-hidden="true" className="mb-4 block h-[3px] w-10 bg-gold" />
-                <h2 className="text-[clamp(1.5rem,2.4vw,2rem)] text-green">
-                  Market notes, starting soon
-                </h2>
-                <p className="mt-3 max-w-[62ch] text-[0.9375rem] leading-relaxed text-muted">
-                  Short quarterly notes on what we are actually seeing: where prices moved,
-                  what banks are lending against, and which corridors are absorbing new
-                  stock. The first issue is being written now.
-                </p>
-              </div>
-              <div className="shrink-0">
-                <Button href="/contact?subject=general" variant="primary" size="md">
-                  Ask for the first issue
-                </Button>
-              </div>
-            </div>
-          </Reveal>
-        </Container>
       </section>
 
       <CTABanner

@@ -47,12 +47,28 @@ export const site = {
   yearsInBusiness: '16+',
 } as const;
 
+/**
+ * Five items, identity first.
+ *
+ * Identity leads because the brief requires it and because this firm sells standing — see
+ * SITE-STRATEGY.md §4. Valuations is promoted out of the old "Services" bucket, which used to
+ * carry both the valuation work and the consultancy work on one page; Advisory now takes the
+ * rest. "Property Listings" becomes "Properties": the label changes, the routes do not, because
+ * /properties/[slug] already serves property detail and a second dynamic segment at that level
+ * would collide.
+ *
+ * Insights is deliberately absent until the first market note exists. An empty Insights section
+ * advertises that the firm started something and stopped.
+ *
+ * `match` lists any additional path prefixes that should light this item up — property detail
+ * lives under /properties while the nav points at /listings, and both are the same destination
+ * as far as a visitor is concerned.
+ */
 export const nav = [
-  { label: 'Home', href: '/' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Services', href: '/services' },
-  { label: 'Property Listings', href: '/listings' },
-  { label: 'Our Clients', href: '/clients' },
+  { label: 'About', href: '/about' },
+  { label: 'Valuations', href: '/valuations' },
+  { label: 'Advisory', href: '/advisory' },
+  { label: 'Properties', href: '/listings', match: ['/properties'] },
   { label: 'Contact', href: '/contact' },
 ] as const;
 

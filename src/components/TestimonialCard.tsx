@@ -38,7 +38,7 @@ export function TestimonialsPending() {
         rather than from the placeholder quotes on the current site.
       </p>
       <div className="mt-6 flex flex-wrap gap-3">
-        <Button href="/clients" variant="outline" size="sm">
+        <Button href="/about/clients" variant="outline" size="sm">
           See who we work for
         </Button>
         <Button href="/contact?subject=general" variant="quiet" size="sm">

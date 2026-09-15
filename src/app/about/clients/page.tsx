@@ -20,7 +20,11 @@ export default function ClientsPage() {
       <PageHeader
         title="The institutions that instruct us"
         lead={`${partnerCount} organisations across banking, government and corporate sectors. Most valuation work arrives as repeat instruction, which is the only recommendation that really counts in this trade.`}
-        breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Our Clients' }]}
+        breadcrumbs={[
+          { label: 'Home', href: '/' },
+          { label: 'About', href: '/about' },
+          { label: 'Our Clients' },
+        ]}
       />
 
       <section className="py-14 lg:py-20">
@@ -73,7 +77,7 @@ export default function ClientsPage() {
         title="Talk to us"
         lead="Panel enquiries, framework instructions and one-off institutional work all start the same way: a conversation about scope and turnaround."
         primary={{ label: 'Talk to us', href: '/contact?subject=general' }}
-        secondary={{ label: 'See our services', href: '/services' }}
+        secondary={{ label: 'See our valuation work', href: '/valuations' }}
         image="/images/cta-skyline.jpg"
       />
     </>
