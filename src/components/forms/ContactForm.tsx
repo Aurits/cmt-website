@@ -22,8 +22,8 @@ export function ContactForm() {
   if (submitted) {
     return (
       <div className="border border-green/25 bg-green/8 p-6">
-        <h3 className="text-[1.375rem] text-green">Your details are not sent yet</h3>
-        <p className="mt-3 max-w-[54ch] text-[0.9375rem] leading-relaxed text-muted">
+        <h3 className="text-h4 text-green">Your details are not sent yet</h3>
+        <p className="mt-3 max-w-[54ch] text-body leading-relaxed text-muted">
           This form is part of a site still in build, so nothing has been delivered to CMT. Until it
           goes live, reach the office directly and a valuer will pick it up the same working day.
         </p>
@@ -38,7 +38,7 @@ export function ContactForm() {
         <button
           type="button"
           onClick={() => setSubmitted(false)}
-          className="mt-5 text-[0.875rem] text-green underline decoration-gold decoration-2 underline-offset-4"
+          className="mt-5 text-body text-green underline decoration-gold decoration-2 underline-offset-4"
         >
           Back to the form
         </button>
@@ -65,8 +65,8 @@ export function ContactForm() {
       <TextArea id="message" label="Your message" placeholder="How can we help?" />
 
       <div className="flex flex-col gap-4 border-t border-rule pt-5 sm:flex-row sm:items-center sm:justify-between">
-        <p className="max-w-[38ch] text-[0.8125rem] leading-relaxed text-muted">
-          Form not connected yet — this page is a prototype.
+        <p className="max-w-[38ch] text-micro leading-relaxed text-muted">
+          Form not connected yet. This page is a prototype.
         </p>
         <Button type="submit" variant="primary" size="lg">
           Send enquiry

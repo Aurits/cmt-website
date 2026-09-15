@@ -43,20 +43,20 @@ export default function AdvisoryPage() {
                   className="group scroll-mt-32 border-b border-rule border-l-[3px] border-l-transparent py-7 pl-0 transition-[border-color,padding] duration-200 hover:border-l-gold hover:pl-4 md:grid md:grid-cols-[20ch_1fr] md:gap-10"
                 >
                   <div>
-                    <h2 className="font-display text-[1.1875rem] leading-snug text-green transition-colors group-hover:text-gold-deep">
+                    <h2 className="font-display text-h4 leading-snug text-green transition-colors group-hover:text-gold-deep">
                       {service.name}
                     </h2>
-                    <p className="mt-1.5 text-[0.8125rem] leading-snug text-muted">
+                    <p className="mt-1.5 text-micro leading-snug text-muted">
                       For: {service.audience}
                     </p>
                   </div>
                   <div className="mt-3 md:mt-0">
-                    <p className="max-w-[62ch] text-[0.9375rem] leading-relaxed text-ink/85">
+                    <p className="max-w-[62ch] text-body leading-relaxed text-ink/85">
                       {service.summary}
                     </p>
                     <dl className="mt-4">
                       {service.deliverables.map((item) => (
-                        <dd key={item} className="schedule-row text-[0.875rem] text-muted">
+                        <dd key={item} className="schedule-row text-body text-muted">
                           <span>{item}</span>
                         </dd>
                       ))}
@@ -93,7 +93,7 @@ export default function AdvisoryPage() {
                 {[
                   [
                     'Scoped in writing first',
-                    'What we will do, what you receive and what it costs — agreed before any work starts.',
+                    'What we will do, what you receive and what it costs, agreed before any work starts.',
                   ],
                   [
                     'Fee basis stated',
@@ -109,8 +109,8 @@ export default function AdvisoryPage() {
                   ],
                 ].map(([title, body]) => (
                   <div key={title} className="border-t border-rule py-4">
-                    <dt className="font-display text-[1.0625rem] text-green">{title}</dt>
-                    <dd className="mt-1.5 max-w-[58ch] text-[0.9375rem] leading-relaxed text-muted">
+                    <dt className="font-display text-lead text-green">{title}</dt>
+                    <dd className="mt-1.5 max-w-[58ch] text-body leading-relaxed text-muted">
                       {body}
                     </dd>
                   </div>
@@ -134,7 +134,7 @@ export default function AdvisoryPage() {
               <Reveal as="li" key={category.slug} delay={index * 50}>
                 <a
                   href={`/listings/${category.slug}`}
-                  className="inline-block border border-rule bg-paper px-3.5 py-2 text-[0.875rem] text-green transition-colors hover:border-green/50"
+                  className="inline-block border border-rule bg-paper px-3.5 py-2 text-body text-green transition-colors hover:border-green/50"
                 >
                   {category.name}
                 </a>

@@ -60,9 +60,46 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
 
-  --text-display: clamp(2.4rem, 6.2vw, 4.3rem);
-  --text-h2: clamp(1.75rem, 3.4vw, 2.6rem);
-  --text-h3: clamp(1.2rem, 1.6vw, 1.45rem);
+  /*
+   * THE SCALE. Eleven steps, each with one job.
+   *
+   * Three of these existed before and two of them were used a combined three times across the
+   * whole site, while every page reached for an arbitrary text-[...] instead. That left 22
+   * distinct sizes doing the work of about eight, and six different clamps for "page title" —
+   * so an h1 on /about was a different size from an h1 on /valuations, for no reason anyone
+   * chose. The worst of it was two sizes doing one job: 14px and 15px, whose single most common
+   * use was the identical string `leading-relaxed text-muted`.
+   *
+   * Everything in src/ now resolves to one of these. If a new size is needed, it is added here
+   * with a role, or the design is using an existing step wrongly.
+   */
+  --text-display: clamp(2.4rem, 6.2vw, 4.3rem); /* the homepage hero, and nowhere else */
+  --text-h1: clamp(2rem, 4.6vw, 3.25rem);       /* every interior page title */
+  --text-h2: clamp(1.75rem, 3.4vw, 2.6rem);     /* section headings */
+  --text-h3: 1.5rem;                            /* 24px — sub-sections within a page */
+  --text-h4: 1.1875rem;                         /* 19px — panel, card and index headings */
+  --text-subhead: clamp(1.25rem, 2.4vw, 1.6rem);/* the editorial lead sentence (A-04) */
+  --text-stat: clamp(2.5rem, 4vw, 3rem);        /* the ledger strip */
+  --text-figure: 1.75rem;                       /* 28px — numerals, counts, turnarounds */
+  --text-lead: 1.0625rem;                       /* 17px — primary body, and small headings */
+  --text-body: 0.9375rem;                       /* 15px — secondary body, the workhorse */
+  --text-micro: 0.8125rem;                      /* 13px — captions, notes, sub-labels */
+  --text-label: 0.75rem;                        /* 12px, uppercase labels and eyebrows */
+
+  /*
+   * Which step a heading takes is decided by how deep it sits, not by its tag. An <h2> that
+   * opens a full section and an <h2> that opens a sidebar panel are the same level in the
+   * document and different weights on the page, and that is correct: the tag describes
+   * structure, the step describes emphasis.
+   *
+   *   text-h3     opens a block: a panel, a full-width section within a page
+   *   text-h4     a card in a grid, an entry in an index, a numbered stage
+   *   text-lead   a heading nested inside another panel, or a title in a dense row
+   *
+   * Before this was written down there were six steps between 17px and 28px doing these three
+   * jobs, and the same component role took two different sizes depending on which page it was
+   * on.
+   */
 
   /*
    * TWO RADII, and the split is the point: a surface is sharp, a control is not.
@@ -141,13 +178,30 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* Headlines carry the personality: Fraunces, tight, optically sized. */
-  h1, h2, h3 {
+  /*
+   * Headlines carry the personality: Fraunces, tight, optically sized.
+   *
+   * `.font-display` is in this selector deliberately. The rule used to name only h1-h3, so a
+   * small heading written as a <dt>, a <p> or a <span> — which is most of the schedule labels,
+   * card titles and index entries on the site — got the typeface at weight 400 and none of the
+   * tracking, while the same heading one section away, written as an <h3>, got 600. Same size,
+   * same role, visibly different weight, and nobody chose it. Twenty-three elements were on the
+   * wrong side of that line.
+   *
+   * Line height is split: h1-h3 are display sizes and take 1.06, everything else takes 1.2,
+   * which is tight for a heading without setting solid at body sizes. Any explicit leading-*
+   * utility still wins over both, which is what the multi-line pull quotes rely on.
+   */
+  h1, h2, h3, h4, .font-display {
     font-family: var(--font-display);
     font-weight: 600;
     letter-spacing: -0.015em;
-    line-height: 1.06;
+    line-height: 1.2;
     text-wrap: balance;
+  }
+
+  h1, h2, h3 {
+    line-height: 1.06;
   }
 
   p {

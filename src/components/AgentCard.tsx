@@ -67,16 +67,16 @@ export function AgentCard({
             ) : (
               <span
                 aria-hidden="true"
-                className="flex h-full w-full items-center justify-center font-display text-[2.5rem] text-cream"
+                className="flex h-full w-full items-center justify-center font-display text-stat text-cream"
               >
                 {initials(agent.name)}
               </span>
             )}
           </div>
-          <p className="mt-5 font-display text-[1.5rem] leading-tight text-green">{agent.name}</p>
-          <p className="mt-1 text-[0.9375rem] text-muted">{agent.role}</p>
+          <p className="mt-5 font-display text-h3 leading-tight text-green">{agent.name}</p>
+          <p className="mt-1 text-body text-muted">{agent.role}</p>
           {agent.based && (
-            <p className="mt-0.5 text-[0.8125rem] text-muted">{agent.based}</p>
+            <p className="mt-0.5 text-micro text-muted">{agent.based}</p>
           )}
         </>
       ) : (
@@ -98,31 +98,31 @@ export function AgentCard({
             </span>
           )}
           <div>
-            <p className="font-display text-[1.1875rem] leading-tight text-green">{agent.name}</p>
-            <p className="mt-1 text-[0.8125rem] text-muted">{agent.role}</p>
+            <p className="font-display text-h4 leading-tight text-green">{agent.name}</p>
+            <p className="mt-1 text-micro text-muted">{agent.role}</p>
           </div>
         </div>
       )}
 
       {agent.bio && variant !== 'contact' && (
-        <p className="mt-4 text-[0.9375rem] leading-relaxed text-muted">{agent.bio}</p>
+        <p className="mt-4 text-body leading-relaxed text-muted">{agent.bio}</p>
       )}
 
       {/* Credentials, gated. */}
       {agent.qualifications && agent.qualifications.length > 0 && variant !== 'contact' && (
         <div className="mt-5 border-t border-rule pt-4">
-          <p className="text-[0.75rem] uppercase tracking-[0.1em] text-muted">Qualifications</p>
+          <p className="text-label uppercase tracking-[0.1em] text-muted">Qualifications</p>
           {agent.credentialsConfirmed ? (
             <ul className="mt-2.5 space-y-1.5">
               {agent.qualifications.map((qualification) => (
-                <li key={qualification} className="flex gap-2.5 text-[0.875rem] text-ink">
+                <li key={qualification} className="flex gap-2.5 text-body text-ink">
                   <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 bg-gold" />
                   {qualification}
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="mt-2 max-w-[44ch] text-[0.8125rem] leading-relaxed text-muted">
+            <p className="mt-2 max-w-[44ch] text-micro leading-relaxed text-muted">
               Held, and awaiting confirmation from {agent.name.split(' ')[0]} before we publish
               them. We do not put a professional qualification on the page unverified.
             </p>
@@ -132,7 +132,7 @@ export function AgentCard({
 
       <div
         className={cx(
-          'space-y-px border-t border-rule pt-4 text-[0.9375rem]',
+          'space-y-px border-t border-rule pt-4 text-body',
           feature ? 'mt-5' : 'mt-5',
         )}
       >
@@ -146,7 +146,7 @@ export function AgentCard({
         >
           <WhatsAppIcon width={16} height={16} className="text-green/70" />
           WhatsApp
-          {!site.whatsapp && <span className="text-[0.75rem] text-muted">(number pending)</span>}
+          {!site.whatsapp && <span className="text-label text-muted">(number pending)</span>}
         </a>
         <a href={emailHref} className="flex items-center gap-3 py-1.5 text-ink hover:text-green">
           <MailIcon width={16} height={16} className="text-green/70" />

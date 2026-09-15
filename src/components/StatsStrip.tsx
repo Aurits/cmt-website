@@ -25,12 +25,12 @@ export function StatsStrip({ className }: { className?: string }) {
               <dt className="sr-only">{stat.label}</dt>
               <dd>
                 <span className="flex items-baseline gap-2">
-                  <span className="font-display text-[2.5rem] leading-none text-gold lg:text-[3rem]">
+                  <span className="font-display text-stat leading-none text-gold">
                     <AnimatedStatValue value={stat.value} />
                   </span>
                   <span className="text-sm text-cream/70">{stat.unit}</span>
                 </span>
-                <span className="mt-3 block max-w-[22ch] text-[0.8125rem] leading-snug text-cream/80">
+                <span className="mt-3 block max-w-[22ch] text-micro leading-snug text-cream/80">
                   {stat.label}
                 </span>
               </dd>

@@ -32,7 +32,7 @@ export function Badge({
   return (
     <span
       className={cx(
-        'inline-flex items-center rounded-brand px-3 py-1.5 text-[0.75rem]',
+        'inline-flex items-center rounded-brand px-3 py-1.5 text-label',
         tones[tone],
         className,
       )}

@@ -40,10 +40,10 @@ export function CategoryCard({
         className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-green via-green/55 to-transparent"
       />
       <div className="relative p-5">
-        <h3 className="text-[1.375rem] text-cream">{category.name}</h3>
-        <p className="mt-1.5 text-[0.8125rem] leading-snug text-cream/80">{category.label}</p>
+        <h3 className="text-h3 text-cream">{category.name}</h3>
+        <p className="mt-1.5 text-micro leading-snug text-cream/80">{category.label}</p>
         {count !== undefined && (
-          <p className="tnum mt-3 inline-block border-t-2 border-gold pt-2 text-[0.8125rem] text-gold">
+          <p className="tnum mt-3 inline-block border-t-2 border-gold pt-2 text-micro text-gold">
             {count} {count === 1 ? 'listing' : 'listings'}
           </p>
         )}

@@ -21,7 +21,7 @@ export function PageHeader({
       <Container className="py-12 lg:py-16">
         {breadcrumbs && breadcrumbs.length > 0 && (
           <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] text-cream/70">
+            <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-micro text-cream/70">
               {breadcrumbs.map((crumb, index) => (
                 <li key={crumb.label} className="flex items-center gap-2">
                   {index > 0 && (
@@ -45,9 +45,9 @@ export function PageHeader({
         )}
 
         <span aria-hidden="true" className="mb-5 block h-[3px] w-10 bg-gold" />
-        <h1 className="max-w-[30ch] text-[clamp(2rem,4.6vw,3.25rem)] text-cream">{title}</h1>
+        <h1 className="max-w-[30ch] text-h1 text-cream">{title}</h1>
         {lead && (
-          <p className="mt-5 max-w-[62ch] text-[1.0625rem] leading-relaxed text-cream/80">
+          <p className="mt-5 max-w-[62ch] text-lead leading-relaxed text-cream/80">
             {lead}
           </p>
         )}

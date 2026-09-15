@@ -60,7 +60,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
       <div className="border-b border-rule bg-cream-deep/40">
         <Container className="py-4">
           <nav aria-label="Breadcrumb">
-            <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] text-muted">
+            <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-micro text-muted">
               <li>
                 <Link href="/" className="hover:text-green">
                   Home
@@ -95,15 +95,15 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
                 <Badge tone="category">{category.name}</Badge>
                 <Badge tone="type">{listingTypeLabel(listing)}</Badge>
               </div>
-              <h1 className="mt-4 max-w-[26ch] text-[clamp(1.875rem,3.6vw,2.75rem)] text-green">
+              <h1 className="mt-4 max-w-[26ch] text-h1 text-green">
                 {listing.title}
               </h1>
-              <p className="mt-3 flex items-center gap-2 text-[0.9375rem] text-muted">
+              <p className="mt-3 flex items-center gap-2 text-body text-muted">
                 <PinIcon width={16} height={16} className="text-gold-deep" />
                 {listing.area}, {listing.city}
               </p>
             </div>
-            <p className="tnum font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-none text-green">
+            <p className="tnum font-display text-h2 leading-none text-green">
               {priceWithPeriod(listing)}
             </p>
           </div>
@@ -119,12 +119,12 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
             />
 
             <div className="mt-10">
-              <h2 className="text-[1.5rem] text-green">Key facts</h2>
+              <h2 className="text-h3 text-green">Key facts</h2>
               <dl className="mt-4 sm:grid sm:grid-cols-2 sm:gap-x-10">
                 {facts.map((fact) => (
                   <div key={fact.label} className="schedule-row">
-                    <dt className="text-[0.875rem] text-muted">{fact.label}</dt>
-                    <dd className="tnum text-right text-[0.9375rem] font-medium text-ink">
+                    <dt className="text-body text-muted">{fact.label}</dt>
+                    <dd className="tnum text-right text-body font-medium text-ink">
                       {fact.value}
                     </dd>
                   </div>
@@ -133,8 +133,8 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
             </div>
 
             <div className="mt-10">
-              <h2 className="text-[1.5rem] text-green">About this property</h2>
-              <div className="mt-4 space-y-4 text-[1.0625rem] leading-relaxed text-ink/85">
+              <h2 className="text-h3 text-green">About this property</h2>
+              <div className="mt-4 space-y-4 text-lead leading-relaxed text-ink/85">
                 {listing.description.map((paragraph) => (
                   <p key={paragraph.slice(0, 40)}>{paragraph}</p>
                 ))}
@@ -142,12 +142,12 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
             </div>
 
             <div className="mt-10">
-              <h2 className="text-[1.5rem] text-green">Included</h2>
+              <h2 className="text-h3 text-green">Included</h2>
               <ul className="mt-4 grid gap-x-10 sm:grid-cols-2">
                 {listing.features.map((feature) => (
                   <li
                     key={feature}
-                    className="flex items-baseline gap-3 border-t border-rule py-3 text-[0.9375rem] text-ink"
+                    className="flex items-baseline gap-3 border-t border-rule py-3 text-body text-ink"
                   >
                     <span aria-hidden="true" className="mt-1 h-1.5 w-1.5 shrink-0 bg-gold" />
                     {feature}
@@ -157,7 +157,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
             </div>
 
             <div className="mt-10">
-              <h2 className="text-[1.5rem] text-green">Where it is</h2>
+              <h2 className="text-h3 text-green">Where it is</h2>
               <PropertyMap
                 className="mt-4"
                 center={listing.coords}
@@ -178,8 +178,8 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
               id="enquire"
               className="mt-6 scroll-mt-32 rounded-brand border border-rule bg-paper p-5"
             >
-              <h2 className="text-[1.25rem] text-green">Enquire about {listing.reference}</h2>
-              <p className="mt-2 text-[0.875rem] leading-relaxed text-muted">
+              <h2 className="text-h4 text-green">Enquire about {listing.reference}</h2>
+              <p className="mt-2 text-body leading-relaxed text-muted">
                 Send your details and the agent handling this property will come back to you.
               </p>
               <div className="mt-5">
@@ -188,10 +188,10 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
             </div>
 
             <div className="mt-6 rounded-brand border border-green/25 bg-green/8 p-5">
-              <h2 className="font-display text-[1.125rem] text-green">
+              <h2 className="font-display text-h4 text-green">
                 Want this valued instead?
               </h2>
-              <p className="mt-2 text-[0.875rem] leading-relaxed text-muted">
+              <p className="mt-2 text-body leading-relaxed text-muted">
                 If you own something similar and need a figure for a bank, that is the other
                 half of what we do.
               </p>

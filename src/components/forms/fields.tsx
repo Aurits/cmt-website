@@ -5,7 +5,7 @@ import { Select } from '@/components/ui/Select';
 import { cx } from '@/lib/cx';
 
 export const inputClass =
-  'w-full rounded-control border border-rule-strong bg-paper px-3.5 py-3 text-[0.9375rem] text-ink placeholder:text-muted transition-colors hover:border-green/60 focus:border-green';
+  'w-full rounded-control border border-rule-strong bg-paper px-3.5 py-3 text-body text-ink placeholder:text-muted transition-colors hover:border-green/60 focus:border-green';
 
 export function Label({
   htmlFor,
@@ -17,9 +17,9 @@ export function Label({
   optional?: boolean;
 }) {
   return (
-    <label htmlFor={htmlFor} className="mb-1.5 block text-[0.875rem] text-ink">
+    <label htmlFor={htmlFor} className="mb-1.5 block text-body text-ink">
       {children}
-      {optional && <span className="ml-1.5 text-[0.8125rem] text-muted">(optional)</span>}
+      {optional && <span className="ml-1.5 text-micro text-muted">(optional)</span>}
     </label>
   );
 }

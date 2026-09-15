@@ -79,30 +79,30 @@ export default function CredentialsPage() {
                       aria-hidden="true"
                     />
                     <div>
-                      <h3 className="font-display text-[1.125rem] leading-snug text-green">
+                      <h3 className="font-display text-h4 leading-snug text-green">
                         {registration.authorityFull}
                         {registration.postNominals && (
-                          <span className="ml-2 text-[0.875rem] text-muted">
+                          <span className="ml-2 text-body text-muted">
                             {registration.postNominals}
                           </span>
                         )}
                       </h3>
-                      <p className="mt-1.5 max-w-[56ch] text-[0.9375rem] leading-relaxed text-muted">
+                      <p className="mt-1.5 max-w-[56ch] text-body leading-relaxed text-muted">
                         {registration.jurisdiction}
                       </p>
-                      <p className="mt-1.5 text-[0.8125rem] text-muted">Held by {holder.name}</p>
+                      <p className="mt-1.5 text-micro text-muted">Held by {holder.name}</p>
                     </div>
                   </div>
                   <p
                     className={cx(
-                      'tnum shrink-0 self-center text-[0.9375rem] md:text-right',
+                      'tnum shrink-0 self-center text-body md:text-right',
                       registration.confirmed ? 'text-ink' : 'text-muted',
                     )}
                   >
                     {registration.confirmed && registration.number ? (
                       registration.number
                     ) : (
-                      <span className="inline-block border border-rule bg-cream-deep/50 px-2.5 py-1 text-[0.8125rem]">
+                      <span className="inline-block border border-rule bg-cream-deep/50 px-2.5 py-1 text-micro">
                         Awaiting confirmation
                       </span>
                     )}
@@ -113,11 +113,11 @@ export default function CredentialsPage() {
           </ul>
 
           <div className="mt-6 max-w-[68ch] border-l-[3px] border-gold bg-cream-deep/40 p-5">
-            <p className="text-[0.9375rem] leading-relaxed text-muted">
+            <p className="text-body leading-relaxed text-muted">
               <span className="font-medium text-ink">Why these say &ldquo;awaiting
               confirmation&rdquo;.</span>{' '}
-              We know these registrations are held — they are published across CMT&rsquo;s own
-              material — but a registration number is a verifiable fact and the person it belongs to
+              We know these registrations are held, because they are published across CMT&rsquo;s own
+              material. But a registration number is a verifiable fact, and the person it belongs to
               should confirm it before it goes on a website. When CMT sends them, every number on
               this page and the credential line in the homepage hero switch on together.
             </p>
@@ -138,8 +138,8 @@ export default function CredentialsPage() {
             {standards.map((standard, index) => (
               <Reveal as="li" key={standard.title} delay={index * 70} className="flex">
                 <div className="flex w-full flex-col border border-cream/20 p-6">
-                  <h3 className="text-[1.0625rem] text-cream">{standard.title}</h3>
-                  <p className="mt-2.5 text-[0.875rem] leading-relaxed text-cream/80">
+                  <h3 className="text-h4 text-cream">{standard.title}</h3>
+                  <p className="mt-2.5 text-body leading-relaxed text-cream/80">
                     {standard.body}
                   </p>
                 </div>
@@ -181,8 +181,8 @@ export default function CredentialsPage() {
                   ],
                 ].map(([label, detail]) => (
                   <div key={label} className="border-b border-rule py-4">
-                    <dt className="font-display text-[1.0625rem] text-green">{label}</dt>
-                    <dd className="mt-1.5 max-w-[52ch] text-[0.9375rem] leading-relaxed text-muted">
+                    <dt className="font-display text-lead text-green">{label}</dt>
+                    <dd className="mt-1.5 max-w-[52ch] text-body leading-relaxed text-muted">
                       {detail}
                     </dd>
                   </div>

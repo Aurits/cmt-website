@@ -19,7 +19,7 @@ export function StickyMobileCTA() {
       icon: <WhatsAppIcon width={18} height={18} />,
       srLabel: site.whatsapp
         ? 'Message us on WhatsApp'
-        : 'WhatsApp number pending — opens the contact page',
+        : 'WhatsApp number pending. Opens the contact page',
     },
     {
       href: '/contact/request-a-valuation',
@@ -36,7 +36,7 @@ export function StickyMobileCTA() {
           <li key={item.label}>
             <a
               href={item.href}
-              className="flex h-14 flex-col items-center justify-center gap-1 text-[0.6875rem] text-cream active:brightness-125"
+              className="flex h-14 flex-col items-center justify-center gap-1 text-label text-cream active:brightness-125"
             >
               <span className="text-gold">{item.icon}</span>
               <span>{item.label}</span>

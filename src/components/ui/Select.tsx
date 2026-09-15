@@ -178,7 +178,7 @@ export function Select({
     }
   };
 
-  const heights = size === 'sm' ? 'min-h-[40px] px-3 py-2 text-[0.875rem]' : 'min-h-[46px] px-3.5 py-2.5 text-[0.9375rem]';
+  const heights = size === 'sm' ? 'min-h-[40px] px-3 py-2 text-body' : 'min-h-[46px] px-3.5 py-2.5 text-body';
 
   return (
     <div ref={wrapperRef} className={cx('relative', className)}>
@@ -242,7 +242,7 @@ export function Select({
                 onClick={() => commit(index)}
                 onMouseEnter={() => setActiveIndex(index)}
                 className={cx(
-                  'flex cursor-pointer items-center justify-between gap-3 border-l-[3px] px-3.5 py-2.5 text-[0.9375rem] transition-colors duration-100',
+                  'flex cursor-pointer items-center justify-between gap-3 border-l-[3px] px-3.5 py-2.5 text-body transition-colors duration-100',
                   'border-b border-b-rule/60 last:border-b-0',
                   isSelected ? 'border-l-gold text-green' : 'border-l-transparent text-ink',
                   isActive && 'bg-green/8',
@@ -250,7 +250,7 @@ export function Select({
               >
                 <span className="truncate">{option.label}</span>
                 {option.hint && (
-                  <span className="tnum shrink-0 text-[0.8125rem] text-muted">{option.hint}</span>
+                  <span className="tnum shrink-0 text-micro text-muted">{option.hint}</span>
                 )}
               </li>
             );

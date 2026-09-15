@@ -44,9 +44,9 @@ export default function OfficesPage() {
           <Reveal>
             <SectionHeading title="Uganda" lead="The practice you are contacting from this site." />
             <div className="mt-7 border border-rule bg-paper p-6">
-              <p className="text-[0.75rem] uppercase tracking-[0.1em] text-muted">Head office</p>
-              <h3 className="mt-2 font-display text-[1.25rem] text-green">Kampala</h3>
-              <address className="mt-4 space-y-4 text-[0.9375rem] not-italic">
+              <p className="text-label uppercase tracking-[0.1em] text-muted">Head office</p>
+              <h3 className="mt-2 font-display text-h4 text-green">Kampala</h3>
+              <address className="mt-4 space-y-4 text-body not-italic">
                 <p className="flex gap-3.5">
                   <PinIcon width={18} height={18} className="mt-0.5 shrink-0 text-gold-deep" />
                   <span className="text-ink">
@@ -72,18 +72,18 @@ export default function OfficesPage() {
               </address>
 
               <div className="mt-6 border-t border-rule pt-5">
-                <p className="text-[0.75rem] uppercase tracking-[0.1em] text-muted">Branches</p>
+                <p className="text-label uppercase tracking-[0.1em] text-muted">Branches</p>
                 <dl className="mt-3">
                   {ugandaOffices
                     .filter((office) => office.role === 'Branch')
                     .map((office) => (
-                      <div key={office.city} className="schedule-row text-[0.9375rem]">
+                      <div key={office.city} className="schedule-row text-body">
                         <dt className="text-ink">{office.city}</dt>
-                        <dd className="text-[0.8125rem] text-muted">Inspections and instructions</dd>
+                        <dd className="text-micro text-muted">Inspections and instructions</dd>
                       </div>
                     ))}
                 </dl>
-                <p className="mt-4 text-[0.8125rem] leading-relaxed text-muted">
+                <p className="mt-4 text-micro leading-relaxed text-muted">
                   Branch addresses and direct lines are not published. All instructions come through
                   the Kampala office and are allocated to the nearest valuer.
                 </p>
@@ -98,23 +98,23 @@ export default function OfficesPage() {
               lead="A second practice, incorporated in Nairobi in 2010, working to the same reporting standard."
             />
             <div className="mt-7 border border-rule bg-paper p-6">
-              <p className="text-[0.75rem] uppercase tracking-[0.1em] text-muted">Head office</p>
-              <h3 className="mt-2 font-display text-[1.25rem] text-green">Nairobi</h3>
-              <p className="mt-3 max-w-[48ch] text-[0.9375rem] leading-relaxed text-muted">
+              <p className="text-label uppercase tracking-[0.1em] text-muted">Head office</p>
+              <h3 className="mt-2 font-display text-h4 text-green">Nairobi</h3>
+              <p className="mt-3 max-w-[48ch] text-body leading-relaxed text-muted">
                 Kenyan instructions are handled by the Nairobi practice. A director works across
                 both, which is what lets a client with assets either side of the border receive one
                 consistent basis of value rather than two.
               </p>
 
               <div className="mt-6 border-t border-rule pt-5">
-                <p className="text-[0.75rem] uppercase tracking-[0.1em] text-muted">Branches</p>
+                <p className="text-label uppercase tracking-[0.1em] text-muted">Branches</p>
                 <ul className="mt-3 flex flex-wrap gap-2">
                   {kenyaOffices
                     .filter((office) => office.role === 'Branch')
                     .map((office) => (
                       <li
                         key={office.city}
-                        className="border border-rule bg-cream px-3 py-1.5 text-[0.875rem] text-ink"
+                        className="border border-rule bg-cream px-3 py-1.5 text-body text-ink"
                       >
                         {office.city}
                       </li>
@@ -123,7 +123,7 @@ export default function OfficesPage() {
               </div>
 
               {!site.regionConfirmed && (
-                <p className="mt-6 border-t border-rule pt-5 text-[0.8125rem] leading-relaxed text-muted">
+                <p className="mt-6 border-t border-rule pt-5 text-micro leading-relaxed text-muted">
                   How the two practices relate as legal entities is being confirmed with CMT before
                   we describe them as one firm. Until then this page says what can be seen: two
                   practices, a shared director, one standard of report.

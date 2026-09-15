@@ -63,8 +63,8 @@ export default function ClientsPage() {
               },
             ].map((item) => (
               <div key={item.title} className="border-t border-rule py-4">
-                <dt className="font-display text-[1.0625rem] text-green">{item.title}</dt>
-                <dd className="mt-1.5 max-w-[58ch] text-[0.9375rem] leading-relaxed text-muted">
+                <dt className="font-display text-lead text-green">{item.title}</dt>
+                <dd className="mt-1.5 max-w-[58ch] text-body leading-relaxed text-muted">
                   {item.body}
                 </dd>
               </div>

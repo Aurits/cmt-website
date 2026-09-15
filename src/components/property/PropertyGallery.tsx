@@ -55,7 +55,7 @@ export function PropertyGallery({
             </button>
             <p
               aria-live="polite"
-              className="tnum absolute bottom-3 right-3 rounded-brand bg-green/90 px-2.5 py-1 text-[0.75rem] text-cream"
+              className="tnum absolute bottom-3 right-3 rounded-brand bg-green/90 px-2.5 py-1 text-label text-cream"
             >
               {index + 1} of {images.length}
             </p>
@@ -85,7 +85,7 @@ export function PropertyGallery({
       )}
 
       {note && (
-        <figcaption className="mt-3 text-[0.8125rem] leading-relaxed text-muted">{note}</figcaption>
+        <figcaption className="mt-3 text-micro leading-relaxed text-muted">{note}</figcaption>
       )}
     </figure>
   );

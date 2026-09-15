@@ -94,7 +94,7 @@ export function ValuationMatrix() {
         <div
           role="columnheader"
           aria-hidden="true"
-          className="hidden bg-cream-deep/60 px-4 py-3 font-sans text-[0.75rem] uppercase tracking-[0.12em] text-muted md:block"
+          className="hidden bg-cream-deep/60 px-4 py-3 font-sans text-label uppercase tracking-[0.12em] text-muted md:block"
         >
           Purpose / asset
         </div>
@@ -103,7 +103,7 @@ export function ValuationMatrix() {
             key={asset.slug}
             role="columnheader"
             className={cx(
-              'hidden px-4 py-3 text-[0.8125rem] leading-snug transition-colors duration-150 md:block',
+              'hidden px-4 py-3 text-micro leading-snug transition-colors duration-150 md:block',
               colLit(asset.slug) ? 'bg-gold/20 text-green' : 'bg-green text-cream',
             )}
           >
@@ -121,8 +121,8 @@ export function ValuationMatrix() {
               rowLit(purpose.slug) ? 'bg-gold/20' : 'bg-cream-deep/60',
             )}
           >
-            <span className="font-display text-[1.0625rem] text-green">{purpose.name}</span>
-            <span className="mt-0.5 block text-[0.8125rem] text-muted md:hidden">
+            <span className="font-display text-lead text-green">{purpose.name}</span>
+            <span className="mt-0.5 block text-micro text-muted md:hidden">
               {purpose.turnaround}
             </span>
           </div>
@@ -138,7 +138,7 @@ export function ValuationMatrix() {
                   role="gridcell"
                   className="flex min-h-[3.5rem] items-center gap-3 bg-cream-deep/25 px-4 py-3 text-muted md:min-h-[4.5rem] md:justify-center"
                 >
-                  <span className="text-[0.8125rem] md:hidden">{asset.short}</span>
+                  <span className="text-micro md:hidden">{asset.short}</span>
                   <span aria-hidden="true" className="md:mx-auto">
                     &mdash;
                   </span>
@@ -165,15 +165,15 @@ export function ValuationMatrix() {
                   isLead ? 'bg-green text-cream' : 'bg-paper text-ink hover:bg-green/8',
                 )}
               >
-                <span className={cx('text-[0.8125rem] md:hidden', isLead ? 'text-cream/75' : 'text-muted')}>
+                <span className={cx('text-micro md:hidden', isLead ? 'text-cream/75' : 'text-muted')}>
                   {asset.short}
                 </span>
-                <span className="text-[0.875rem] font-medium">
+                <span className="text-body font-medium">
                   {isLead ? 'Our largest line' : 'We value this'}
                 </span>
                 <span
                   className={cx(
-                    'text-[0.75rem]',
+                    'text-label',
                     isLead ? 'text-gold' : 'text-muted',
                   )}
                 >

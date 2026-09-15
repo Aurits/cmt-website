@@ -37,7 +37,7 @@ export function PropertyMap({
         <LeafletMap center={center} label={label} zoom={zoom} />
       </div>
       {caption && (
-        <figcaption className="border-t border-rule bg-paper px-4 py-3 text-[0.8125rem] text-muted">
+        <figcaption className="border-t border-rule bg-paper px-4 py-3 text-micro text-muted">
           {caption}
         </figcaption>
       )}

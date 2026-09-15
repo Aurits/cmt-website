@@ -91,7 +91,7 @@ export function HeroSearchTabs() {
             onKeyDown={(event) => onTabKey(event, index)}
             className={cx(
               // Two-line labels are normal at 390px, so the row centres rather than clips.
-              'relative flex min-h-[52px] flex-1 items-center justify-center px-2 py-3 text-center text-[0.8125rem] leading-tight transition-colors sm:px-3 sm:text-[0.9375rem]',
+              'relative flex min-h-[52px] flex-1 items-center justify-center px-2 py-3 text-center text-micro leading-tight transition-colors sm:px-3 sm:text-body',
               active === tab.id
                 ? 'bg-green text-cream'
                 : 'text-ink/75 hover:bg-cream-deep/60 hover:text-green',
@@ -115,14 +115,14 @@ export function HeroSearchTabs() {
         )}
       >
         {active === 'talk' ? (
-          <p className="max-w-[54ch] text-[0.9375rem] leading-relaxed text-muted">
+          <p className="max-w-[54ch] text-body leading-relaxed text-muted">
             No form to start with. Tell us what you are dealing with and a valuer will tell you
             whether it needs an inspection, a desktop opinion, or nothing at all.
           </p>
         ) : (
           <>
             <div>
-              <label htmlFor="hero-category" className="mb-1.5 block text-[0.8125rem] text-muted">
+              <label htmlFor="hero-category" className="mb-1.5 block text-micro text-muted">
                 Property type
               </label>
               <Select
@@ -137,7 +137,7 @@ export function HeroSearchTabs() {
             </div>
 
             <div>
-              <label htmlFor="hero-city" className="mb-1.5 block text-[0.8125rem] text-muted">
+              <label htmlFor="hero-city" className="mb-1.5 block text-micro text-muted">
                 {active === 'value' ? 'Where it is' : 'Location'}
               </label>
               <Select
@@ -155,7 +155,7 @@ export function HeroSearchTabs() {
 
         {active === 'browse' && (
           <div className="sm:col-span-2 lg:col-span-1">
-            <label htmlFor="hero-type" className="mb-1.5 block text-[0.8125rem] text-muted">
+            <label htmlFor="hero-type" className="mb-1.5 block text-micro text-muted">
               Buying or renting
             </label>
             <Select
@@ -172,15 +172,15 @@ export function HeroSearchTabs() {
 
         <button
           type="submit"
-          className="rounded-control bg-gold px-6 py-3 text-[0.9375rem] font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
+          className="rounded-control bg-gold px-6 py-3 text-body font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
         >
           {active === 'value' ? 'Request a valuation' : active === 'talk' ? 'Contact us' : 'Search'}
-          <span className="sr-only"> — {current.action}</span>
+          <span className="sr-only">. {current.action}</span>
         </button>
       </form>
 
       {active === 'value' && (
-        <p className="border-t border-rule px-4 pb-4 text-[0.8125rem] leading-relaxed text-muted sm:px-5 sm:pb-5">
+        <p className="border-t border-rule px-4 pb-4 text-micro leading-relaxed text-muted sm:px-5 sm:pb-5">
           Valuing plant, machinery or a shareholding instead? Those start from the{' '}
           <Link href="/valuations" className="text-green underline decoration-gold decoration-2 underline-offset-4">
             full list of {valuationPurposes.length} valuation purposes

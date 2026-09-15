@@ -28,7 +28,7 @@ export function Footer() {
           </div>
 
           <nav aria-label="Footer">
-            <h2 className="font-sans text-[0.9375rem] font-semibold tracking-normal text-gold">
+            <h2 className="font-sans text-label font-semibold uppercase tracking-[0.12em] text-gold">
               Site
             </h2>
             <ul className="mt-4 space-y-2.5 text-sm">
@@ -56,7 +56,7 @@ export function Footer() {
           </nav>
 
           <div>
-            <h2 className="font-sans text-[0.9375rem] font-semibold tracking-normal text-gold">
+            <h2 className="font-sans text-label font-semibold uppercase tracking-[0.12em] text-gold">
               Property types
             </h2>
             <ul className="mt-4 space-y-2.5 text-sm">
@@ -71,7 +71,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h2 className="font-sans text-[0.9375rem] font-semibold tracking-normal text-gold">
+            <h2 className="font-sans text-label font-semibold uppercase tracking-[0.12em] text-gold">
               Office
             </h2>
             <address className="mt-4 space-y-3 text-sm not-italic text-cream/80">
@@ -99,7 +99,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-cream/15 pt-6 text-[0.8125rem] text-cream/60 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-3 border-t border-cream/15 pt-6 text-micro text-cream/60 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {year} {site.name}. All rights reserved.
           </p>

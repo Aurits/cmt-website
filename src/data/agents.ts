@@ -28,7 +28,7 @@ export const agents: Agent[] = [
     based: 'Kenya and Uganda',
     bio: 'Leads valuation and consultancy across both practices. More than twenty years in East African real estate, covering valuation, property and facilities management, life-cycle costing, site acquisition and investment performance analysis.',
     qualifications: [
-      'MRICS — chartered valuation surveyor',
+      'MRICS, chartered valuation surveyor',
       'MSc Real Estate (United Kingdom, distinction)',
       'BA Land Economics, University of Nairobi',
       'Postgraduate Certificate in Corporate Governance',
@@ -37,7 +37,7 @@ export const agents: Agent[] = [
       {
         authority: 'RICS',
         authorityFull: 'Royal Institution of Chartered Surveyors',
-        jurisdiction: 'Chartered — registered to practise valuation internationally',
+        jurisdiction: 'Chartered, and registered to practise valuation internationally',
         postNominals: 'MRICS',
         confirmed: false,
       },
@@ -64,7 +64,7 @@ export const agents: Agent[] = [
     rank: 'director',
     based: 'Kampala',
     bio: 'More than twenty years in valuation, agency and property management across the East African region, in both the public and private sectors.',
-    qualifications: ['FISU — Fellow, Institution of Surveyors of Uganda', 'BSc Land Management'],
+    qualifications: ['FISU, Fellow of the Institution of Surveyors of Uganda', 'BSc Land Management'],
     registrations: [
       {
         authority: 'ISU',

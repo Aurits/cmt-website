@@ -18,9 +18,9 @@ export function ListPropertyForm({ defaultCategory }: { defaultCategory?: string
   if (submitted) {
     return (
       <div className="border border-green/25 bg-green/8 p-6">
-        <h3 className="text-[1.25rem] text-green">Not sent — the site is still in build</h3>
-        <p className="mt-3 max-w-[54ch] text-[0.9375rem] leading-relaxed text-muted">
-          Nothing has reached CMT. Call the office and ask for the agency desk — they will arrange
+        <h3 className="text-h4 text-green">Not sent: the site is still in build</h3>
+        <p className="mt-3 max-w-[54ch] text-body leading-relaxed text-muted">
+          Nothing has reached CMT. Call the office and ask for the agency desk. They will arrange
           the inspection that sets the asking price.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
@@ -34,7 +34,7 @@ export function ListPropertyForm({ defaultCategory }: { defaultCategory?: string
         <button
           type="button"
           onClick={() => setSubmitted(false)}
-          className="mt-5 text-[0.875rem] text-green underline decoration-gold decoration-2 underline-offset-4"
+          className="mt-5 text-body text-green underline decoration-gold decoration-2 underline-offset-4"
         >
           Back to the form
         </button>
@@ -84,7 +84,7 @@ export function ListPropertyForm({ defaultCategory }: { defaultCategory?: string
         label="What you hope it is worth"
         optional
         inputMode="numeric"
-        placeholder="UGX — a rough figure is fine, and it is fine to leave blank"
+        placeholder="UGX. A rough figure is fine, and so is leaving it blank"
       />
 
       <TextArea
@@ -96,8 +96,8 @@ export function ListPropertyForm({ defaultCategory }: { defaultCategory?: string
       />
 
       <div className="flex flex-col gap-4 border-t border-rule pt-5 sm:flex-row sm:items-center sm:justify-between">
-        <p className="max-w-[38ch] text-[0.8125rem] leading-relaxed text-muted">
-          Form not connected yet — this page is a prototype.
+        <p className="max-w-[38ch] text-micro leading-relaxed text-muted">
+          Form not connected yet. This page is a prototype.
         </p>
         <Button type="submit" variant="primary" size="lg">
           Send the details

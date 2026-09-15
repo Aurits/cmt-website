@@ -16,7 +16,7 @@ import { site } from '@/data/site';
 export const metadata: Metadata = {
   title: 'Valuations',
   description:
-    'Property, plant and machinery, and business valuations for lending, financial reporting, insurance, tax and litigation, and compensation — across Uganda and Kenya.',
+    'Property, plant and machinery, and business valuations for lending, financial reporting, insurance, tax and litigation, and compensation. Across Uganda and Kenya.',
 };
 
 /**
@@ -59,13 +59,13 @@ export default function ValuationsPage() {
       <section className="py-12 lg:py-16">
         <Container>
           <ValuationMatrix />
-          <p className="mt-4 max-w-[68ch] text-[0.9375rem] leading-relaxed text-muted">
+          <p className="mt-4 max-w-[68ch] text-body leading-relaxed text-muted">
             <span className="font-medium text-ink">
               {lead.name} on {leadAsset.short.toLowerCase()}
             </span>{' '}
             is the majority of what we are instructed to do, and the reason most people are on this
             page. Every combination above leads to what the report contains, what it is based on and
-            how long it takes. A dash means we do not offer it — we would rather say so than take the
+            how long it takes. A dash means we do not offer it. We would rather say so than take the
             instruction.
           </p>
         </Container>
@@ -84,11 +84,11 @@ export default function ValuationsPage() {
             {steps.map((step, index) => (
               <Reveal as="li" key={step.title} delay={index * 70} className="flex">
                 <div className="flex w-full flex-col bg-paper p-5 lg:p-6">
-                  <span className="tnum font-display text-[1.75rem] leading-none text-gold-deep">
+                  <span className="tnum font-display text-figure leading-none text-gold-deep">
                     {String(index + 1).padStart(2, '0')}
                   </span>
-                  <h3 className="mt-4 text-[1.0625rem] text-green">{step.title}</h3>
-                  <p className="mt-2 text-[0.875rem] leading-relaxed text-muted">{step.body}</p>
+                  <h3 className="mt-4 text-h4 text-green">{step.title}</h3>
+                  <p className="mt-2 text-body leading-relaxed text-muted">{step.body}</p>
                 </div>
               </Reveal>
             ))}
@@ -114,23 +114,23 @@ export default function ValuationsPage() {
                 ['A name', 'The registered valuer who signs it and answers for it'],
               ].map(([label, detail]) => (
                 <div key={label} className="schedule-row">
-                  <dt className="text-[0.9375rem] text-ink">{label}</dt>
-                  <dd className="max-w-[34ch] text-right text-[0.8125rem] text-muted">{detail}</dd>
+                  <dt className="text-body text-ink">{label}</dt>
+                  <dd className="max-w-[34ch] text-right text-micro text-muted">{detail}</dd>
                 </div>
               ))}
             </dl>
           </Reveal>
           <Reveal delay={80}>
             <div className="border border-rule bg-paper p-6 lg:p-8">
-              <p className="font-display text-[1.25rem] leading-snug text-green">
+              <p className="font-display text-h4 leading-snug text-green">
                 A sample report, redacted, will sit here.
               </p>
-              <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">
+              <p className="mt-3 text-body leading-relaxed text-muted">
                 No firm in this market shows one, and a single redacted contents page answers
                 &ldquo;what do I actually get&rdquo; better than any paragraph could. We have asked CMT
                 for one rather than mocking up a document that does not exist.
               </p>
-              <p className="mt-4 text-[0.8125rem] text-muted">See OPEN-ITEMS.md, item 9.</p>
+              <p className="mt-4 text-micro text-muted">See OPEN-ITEMS.md, item 9.</p>
             </div>
           </Reveal>
         </Container>

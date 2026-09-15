@@ -168,11 +168,11 @@ export function ListingsExplorer({
               onClick={() => setMoreOpen((open) => !open)}
               aria-expanded={moreOpen}
               aria-controls="more-filters"
-              className="flex min-h-[46px] w-full items-center justify-between gap-3 rounded-control border border-rule bg-cream px-3.5 py-2.5 text-[0.9375rem] text-ink transition-colors hover:border-green/45 lg:w-auto"
+              className="flex min-h-[46px] w-full items-center justify-between gap-3 rounded-control border border-rule bg-cream px-3.5 py-2.5 text-body text-ink transition-colors hover:border-green/45 lg:w-auto"
             >
               More filters
               {extraCount > 0 && (
-                <span className="tnum bg-green px-1.5 py-0.5 text-[0.75rem] text-cream">
+                <span className="tnum bg-green px-1.5 py-0.5 text-label text-cream">
                   {extraCount}
                 </span>
               )}
@@ -218,7 +218,7 @@ export function ListingsExplorer({
       </div>
 
       <div className="mt-6 flex flex-col gap-4 border-b border-rule pb-4 sm:flex-row sm:items-center sm:justify-between">
-        <p aria-live="polite" className="text-[0.9375rem] text-muted">
+        <p aria-live="polite" className="text-body text-muted">
           <span className="tnum font-medium text-ink">{filtered.length}</span>{' '}
           {filtered.length === 1 ? 'property' : 'properties'}
           {filtersApplied && (
@@ -236,7 +236,7 @@ export function ListingsExplorer({
           )}
         </p>
 
-        <div className="flex items-center gap-2.5 text-[0.875rem] text-muted">
+        <div className="flex items-center gap-2.5 text-body text-muted">
           <label htmlFor="filter-sort" className="shrink-0">
             Sort by
           </label>
@@ -266,10 +266,10 @@ export function ListingsExplorer({
         </ul>
       ) : (
         <div className="mt-8 border border-dashed border-green/30 bg-cream-deep/50 p-8 text-center">
-          <p className="font-display text-[1.375rem] text-green">
+          <p className="font-display text-h3 text-green">
             Nothing on our books matches that yet
           </p>
-          <p className="mx-auto mt-3 max-w-[46ch] text-[0.9375rem] leading-relaxed text-muted">
+          <p className="mx-auto mt-3 max-w-[46ch] text-body leading-relaxed text-muted">
             Widen the filters, or tell us what you are looking for and we will call you when
             something comes in.
           </p>
@@ -277,13 +277,13 @@ export function ListingsExplorer({
             <button
               type="button"
               onClick={resetAll}
-              className="rounded-control bg-green px-5 py-3 text-[0.9375rem] text-cream hover:bg-green"
+              className="rounded-control bg-green px-5 py-3 text-body text-cream hover:bg-green"
             >
               Clear filters
             </button>
             <a
               href="/contact"
-              className="rounded-control border border-green/35 px-5 py-3 text-[0.9375rem] text-green hover:bg-green/8"
+              className="rounded-control border border-green/35 px-5 py-3 text-body text-green hover:bg-green/8"
             >
               Register a requirement
             </a>
@@ -309,7 +309,7 @@ export function ListingsExplorer({
                   onClick={() => setPage(number)}
                   aria-current={number === currentPage ? 'page' : undefined}
                   className={cx(
-                    'tnum h-10 w-10 rounded-control border text-[0.9375rem]',
+                    'tnum h-10 w-10 rounded-control border text-body',
                     number === currentPage
                       ? 'border-green bg-green text-cream'
                       : 'border-rule bg-paper text-ink hover:border-green/50',
@@ -335,7 +335,7 @@ export function ListingsExplorer({
 }
 
 const pagerClass =
-  'rounded-control border border-rule bg-paper px-4 py-2.5 text-[0.875rem] text-ink hover:border-green/50 disabled:cursor-not-allowed disabled:opacity-45';
+  'rounded-control border border-rule bg-paper px-4 py-2.5 text-body text-ink hover:border-green/50 disabled:cursor-not-allowed disabled:opacity-45';
 
 function Field({
   label,
@@ -348,7 +348,7 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1.5 block text-[0.8125rem] text-muted">
+      <label htmlFor={id} className="mb-1.5 block text-micro text-muted">
         {label}
       </label>
       {children}

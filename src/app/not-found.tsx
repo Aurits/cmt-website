@@ -10,10 +10,10 @@ export default function NotFound() {
     <section className="py-20 lg:py-28">
       <Container>
         <span aria-hidden="true" className="mb-5 block h-[3px] w-10 bg-gold" />
-        <h1 className="max-w-[24ch] text-[clamp(2rem,4.4vw,3rem)] text-green">
+        <h1 className="max-w-[24ch] text-h1 text-green">
           That page is not here
         </h1>
-        <p className="mt-5 max-w-[54ch] text-[1.0625rem] leading-relaxed text-muted">
+        <p className="mt-5 max-w-[54ch] text-lead leading-relaxed text-muted">
           The link may be from the previous version of the site, or the property may have
           been sold or let. Start from the listings, or call the office and we will point you
           to the right place.
@@ -29,7 +29,7 @@ export default function NotFound() {
         </div>
 
         <div className="mt-12 border-t border-rule pt-6">
-          <h2 className="font-sans text-[0.9375rem] font-semibold text-ink">
+          <h2 className="font-sans text-label font-semibold uppercase tracking-[0.12em] text-muted">
             Or pick a property type
           </h2>
           <ul className="mt-4 flex flex-wrap gap-2">
@@ -37,7 +37,7 @@ export default function NotFound() {
               <li key={category.slug}>
                 <a
                   href={`/listings/${category.slug}`}
-                  className="inline-block rounded-control border border-rule bg-paper px-3.5 py-2 text-[0.875rem] text-green transition-colors hover:border-green/50"
+                  className="inline-block rounded-control border border-rule bg-paper px-3.5 py-2 text-body text-green transition-colors hover:border-green/50"
                 >
                   {category.name}
                 </a>

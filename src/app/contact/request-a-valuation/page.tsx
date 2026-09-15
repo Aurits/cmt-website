@@ -8,7 +8,7 @@ import type { ValuationAssetSlug, ValuationPurposeSlug } from '@/lib/types';
 export const metadata: Metadata = {
   title: 'Request a valuation',
   description:
-    'Tell us what needs valuing and what the figure is for. Property, plant and machinery, or a shareholding — for lending, financial reporting, insurance, tax, litigation or compensation.',
+    'Tell us what needs valuing and what the figure is for. Property, plant and machinery, or a shareholding. For lending, financial reporting, insurance, tax, litigation or compensation.',
 };
 
 /**
@@ -34,7 +34,7 @@ export default async function RequestValuationPage({
   const validPurpose = purposeBySlug[purpose] ? purpose : undefined;
 
   const lead = validPurpose
-    ? `You are asking about ${purposeBySlug[validPurpose].name.toLowerCase()}. We have filled that in — change it if we have guessed wrong.`
+    ? `You are asking about ${purposeBySlug[validPurpose].name.toLowerCase()}. We have filled that in. Change it if we have guessed wrong.`
     : 'Two questions decide the whole instruction: what is being valued, and what the figure is for. Everything else we can settle on the phone.';
 
   return (

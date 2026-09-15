@@ -36,7 +36,7 @@ const reasons = [
   },
   {
     title: 'Already on the panel',
-    body: `${partnerCount} institutions instruct us, most of them repeatedly — the work has stood up to their own review for over sixteen years.`,
+    body: `${partnerCount} institutions instruct us, most of them repeatedly, and the work has stood up to their own review for over sixteen years.`,
   },
   {
     title: 'Evidence before opinion',
@@ -68,7 +68,7 @@ export default function HomePage() {
               <h1 className="text-display text-green">
                 <AnimatedHeadline text="16+ years of valuations Uganda’s banks lend against" />
               </h1>
-              <p className="mt-6 max-w-[52ch] text-[1.0625rem] leading-relaxed text-muted sm:text-[1.125rem]">
+              <p className="mt-6 max-w-[52ch] text-lead leading-relaxed text-muted sm:text-h4">
                 CMT Realtors is a Kampala valuation and property consultancy firm, regulated by
                 the {site.regulator}. Banks, government bodies and corporate clients instruct us
                 when a figure has to hold up to scrutiny. We sell and let property too, priced
@@ -140,7 +140,7 @@ export default function HomePage() {
 
       <section className="border-b border-rule bg-paper py-4">
         <Container className="flex flex-wrap items-center justify-between gap-4">
-          <p className="text-[0.9375rem] text-muted">
+          <p className="text-body text-muted">
             {featured.length} of{' '}
             <span className="tnum font-medium text-ink">{listings.length}</span> current
             instructions, across five property classes and four cities.
@@ -175,8 +175,8 @@ export default function HomePage() {
               {reasons.map((reason, index) => (
                 <Reveal as="div" key={reason.title} delay={index * 90}>
                   <div className="border-t border-rule py-4">
-                    <dt className="font-display text-[1.0625rem] text-green">{reason.title}</dt>
-                    <dd className="mt-1.5 max-w-[60ch] text-[0.9375rem] leading-relaxed text-muted">
+                    <dt className="font-display text-lead text-green">{reason.title}</dt>
+                    <dd className="mt-1.5 max-w-[60ch] text-body leading-relaxed text-muted">
                       {reason.body}
                     </dd>
                   </div>
@@ -215,8 +215,8 @@ export default function HomePage() {
             <Reveal as="li" delay={350} className="flex">
               <div className="flex min-h-[190px] w-full flex-col justify-between rounded-brand border border-green/25 bg-paper p-5">
                 <div>
-                  <h3 className="text-[1.375rem] text-green">Not sure which it is?</h3>
-                  <p className="mt-2.5 max-w-[32ch] text-[0.9375rem] leading-relaxed text-muted">
+                  <h3 className="text-h3 text-green">Not sure which it is?</h3>
+                  <p className="mt-2.5 max-w-[32ch] text-body leading-relaxed text-muted">
                     Mixed-use buildings, farmland with a house on it, a plot with an
                     unfinished structure: the class affects the figure. Describe it and a
                     valuer will tell you.
@@ -239,7 +239,7 @@ export default function HomePage() {
           <Reveal>
             <SectionHeading
               title="What we are usually asked to do"
-              lead="Most instructions start with one of these. Each one needs a different basis of value, and that changes the figure — so we settle it before anyone travels."
+              lead="Most instructions start with one of these. Each one needs a different basis of value, and that changes the figure, so we settle it before anyone travels."
               action={
                 <Button href="/valuations" variant="outline" size="md">
                   All valuation services
@@ -257,13 +257,13 @@ export default function HomePage() {
                     className="group flex w-full flex-col border border-rule bg-paper p-5 transition-colors duration-300 hover:border-green/40"
                   >
                     <span aria-hidden="true" className="mb-4 block h-[3px] w-8 bg-gold" />
-                    <h3 className="font-display text-[1.125rem] text-green group-hover:text-gold-deep">
+                    <h3 className="font-display text-h4 text-green group-hover:text-gold-deep">
                       {purpose.name}
                     </h3>
-                    <p className="mt-2.5 flex-1 text-[0.875rem] leading-relaxed text-muted">
+                    <p className="mt-2.5 flex-1 text-body leading-relaxed text-muted">
                       {purpose.situation}
                     </p>
-                    <span className="tnum mt-4 border-t border-rule pt-3 text-[0.8125rem] text-muted">
+                    <span className="tnum mt-4 border-t border-rule pt-3 text-micro text-muted">
                       {purpose.turnaround}
                     </span>
                   </Link>
@@ -293,13 +293,13 @@ export default function HomePage() {
             {advisoryServices.slice(0, 4).map((service, index) => (
               <Reveal as="li" key={service.slug} delay={index * 80} className="flex">
                 <div className="flex w-full flex-col border border-cream/20 p-5 transition-colors duration-300 hover:border-gold/60">
-                  <h3 className="text-[1.125rem] text-cream">{service.name}</h3>
-                  <p className="mt-2.5 flex-1 text-[0.875rem] leading-relaxed text-cream/80">
+                  <h3 className="text-h4 text-cream">{service.name}</h3>
+                  <p className="mt-2.5 flex-1 text-body leading-relaxed text-cream/80">
                     {service.summary}
                   </p>
                   <Link
                     href={`/advisory#${service.slug}`}
-                    className="mt-4 self-start text-[0.875rem] text-gold underline decoration-gold/50 decoration-2 underline-offset-4 hover:decoration-gold"
+                    className="mt-4 self-start text-body text-gold underline decoration-gold/50 decoration-2 underline-offset-4 hover:decoration-gold"
                   >
                     What this involves
                   </Link>

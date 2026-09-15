@@ -56,7 +56,7 @@ export default function PeoplePage() {
           <Reveal>
             <SectionHeading
               title="Valuers and agents"
-              lead="Who you will deal with day to day — on an inspection, a viewing or a title check."
+              lead="Who you will deal with day to day: on an inspection, a viewing or a title check."
             />
           </Reveal>
           <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -73,22 +73,22 @@ export default function PeoplePage() {
       <section className="py-12 lg:py-16">
         <Container>
           <div className="max-w-[68ch] border border-dashed border-green/30 bg-paper p-6 sm:p-8">
-            <h2 className="font-display text-[1.375rem] text-green">
+            <h2 className="font-display text-h3 text-green">
               What is still missing from this page
             </h2>
-            <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">
+            <p className="mt-3 text-body leading-relaxed text-muted">
               Headshots. We show initials on brand green rather than standing a stock photograph of
               an unrelated person in for a named colleague, which is what most firms do and what we
               would rather not.
             </p>
-            <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">
-              Qualifications and registration numbers. They are held — several of the people above
-              are chartered or fellows of their institution — but a professional credential belongs
+            <p className="mt-3 text-body leading-relaxed text-muted">
+              Qualifications and registration numbers. They are held, and several of the people above
+              are chartered or fellows of their institution. But a professional credential belongs
               to the person who earned it, and we publish none of them until CMT confirms the exact
               wording and the numbers.
             </p>
             {fromDirectory.length > 0 && (
-              <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">
+              <p className="mt-3 text-body leading-relaxed text-muted">
                 {fromDirectory.length === 1 ? 'One entry' : `${fromDirectory.length} entries`} above
                 (
                 {fromDirectory.map((agent) => agent.name).join(', ')}) came from a business

@@ -66,7 +66,7 @@ export const advisoryServices: AdvisoryService[] = [
     name: 'Market research',
     audience: 'Investors, developers and institutions entering a market',
     summary:
-      'What is actually happening in a submarket — rents achieved, absorption, supply coming through — gathered from instructions rather than from press releases.',
+      'What is actually happening in a submarket: rents achieved, absorption, and supply coming through, gathered from instructions rather than from press releases.',
     deliverables: [
       'Submarket supply and demand studies',
       'Rent and yield evidence',

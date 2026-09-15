@@ -41,7 +41,7 @@ export function SectionHeading({
         {lead && (
           <p
             className={cx(
-              'mt-4 max-w-[54ch] text-[1.0625rem] leading-relaxed',
+              'mt-4 max-w-[54ch] text-lead leading-relaxed',
               onDark ? 'text-cream/80' : 'text-muted',
             )}
           >

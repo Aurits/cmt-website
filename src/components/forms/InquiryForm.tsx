@@ -21,8 +21,8 @@ export function InquiryForm({
   if (submitted) {
     return (
       <div className="rounded-brand border border-green/25 bg-green/8 p-6">
-        <h3 className="text-[1.25rem] text-green">Not sent — the site is still in build</h3>
-        <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">
+        <h3 className="text-h4 text-green">Not sent: the site is still in build</h3>
+        <p className="mt-3 text-body leading-relaxed text-muted">
           Nothing has reached CMT. Quote reference{' '}
           <span className="tnum font-medium text-ink">{reference}</span> when you call or
           message, and the agent will have the file open.
@@ -42,7 +42,7 @@ export function InquiryForm({
         <button
           type="button"
           onClick={() => setSubmitted(false)}
-          className="mt-5 text-[0.875rem] text-green underline decoration-gold decoration-2 underline-offset-4"
+          className="mt-5 text-body text-green underline decoration-gold decoration-2 underline-offset-4"
         >
           Back to the form
         </button>
@@ -94,8 +94,8 @@ export function InquiryForm({
       <Button type="submit" variant="primary" size="lg" fullWidth>
         Send enquiry
       </Button>
-      <p className="text-[0.8125rem] leading-relaxed text-muted">
-        Form not connected yet — this page is a prototype.
+      <p className="text-micro leading-relaxed text-muted">
+        Form not connected yet. This page is a prototype.
       </p>
     </form>
   );

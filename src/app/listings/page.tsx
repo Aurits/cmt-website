@@ -43,10 +43,10 @@ export default async function ListingsPage({
             <li key={item.slug}>
               <Link
                 href={`/listings/${item.slug}`}
-                className="inline-flex items-baseline gap-2 rounded-control border border-cream/30 px-3.5 py-2 text-[0.875rem] text-cream transition-colors hover:border-gold hover:text-gold"
+                className="inline-flex items-baseline gap-2 rounded-control border border-cream/30 px-3.5 py-2 text-body text-cream transition-colors hover:border-gold hover:text-gold"
               >
                 {item.name}
-                <span className="tnum text-[0.75rem] text-cream/60">
+                <span className="tnum text-label text-cream/60">
                   {listingsByCategory(item.slug).length}
                 </span>
               </Link>

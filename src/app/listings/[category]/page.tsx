@@ -62,25 +62,25 @@ export default async function CategoryPage({
             />
           </div>
           <div>
-            <p className="max-w-[60ch] text-[1.0625rem] leading-relaxed text-ink/85">
+            <p className="max-w-[60ch] text-lead leading-relaxed text-ink/85">
               {category.description}
             </p>
             <dl className="mt-7 flex flex-wrap gap-x-10 gap-y-4">
               <div>
-                <dt className="text-[0.8125rem] text-muted">On our books</dt>
-                <dd className="tnum font-display text-[1.75rem] leading-none text-green">
+                <dt className="text-micro text-muted">On our books</dt>
+                <dd className="tnum font-display text-figure leading-none text-green">
                   {categoryListings.length}
                 </dd>
               </div>
               <div>
-                <dt className="text-[0.8125rem] text-muted">For sale</dt>
-                <dd className="tnum font-display text-[1.75rem] leading-none text-green">
+                <dt className="text-micro text-muted">For sale</dt>
+                <dd className="tnum font-display text-figure leading-none text-green">
                   {categoryListings.filter((listing) => listing.listingType === 'sale').length}
                 </dd>
               </div>
               <div>
-                <dt className="text-[0.8125rem] text-muted">To let</dt>
-                <dd className="tnum font-display text-[1.75rem] leading-none text-green">
+                <dt className="text-micro text-muted">To let</dt>
+                <dd className="tnum font-display text-figure leading-none text-green">
                   {categoryListings.filter((listing) => listing.listingType === 'rent').length}
                 </dd>
               </div>

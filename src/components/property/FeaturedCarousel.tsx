@@ -127,7 +127,7 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
                   <Badge tone="categoryOnDark">{category.name}</Badge>
                 </div>
 
-                <h3 className="mt-5 text-[clamp(1.875rem,4vw,3rem)] text-cream">
+                <h2 className="mt-5 text-h1 text-cream">
                   <Link
                     href={`/properties/${listing.slug}`}
                     tabIndex={active ? 0 : -1}
@@ -135,14 +135,14 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
                   >
                     {listing.title}
                   </Link>
-                </h3>
+                </h2>
 
-                <p className="mt-3 flex items-center gap-2 text-[0.9375rem] text-cream/85">
+                <p className="mt-3 flex items-center gap-2 text-body text-cream/85">
                   <PinIcon width={16} height={16} className="text-gold" />
                   {listing.area}, {listing.city}
                 </p>
 
-                <p className="tnum mt-5 font-display text-[clamp(1.625rem,3vw,2.25rem)] leading-none text-gold">
+                <p className="tnum mt-5 font-display text-h2 leading-none text-gold">
                   {priceWithPeriod(listing)}
                 </p>
 
@@ -158,8 +158,8 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
                       const item = spec as { label: string; value: string };
                       return (
                         <div key={item.label}>
-                          <dt className="text-[0.75rem] text-cream/65">{item.label}</dt>
-                          <dd className="tnum text-[0.9375rem] text-cream">{item.value}</dd>
+                          <dt className="text-label text-cream/65">{item.label}</dt>
+                          <dd className="tnum text-body text-cream">{item.value}</dd>
                         </div>
                       );
                     })}
@@ -209,7 +209,7 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
           </ol>
 
           <div className="flex items-center gap-2">
-            <p className="tnum mr-2 text-[0.8125rem] text-cream/70" aria-live="polite">
+            <p className="tnum mr-2 text-micro text-cream/70" aria-live="polite">
               {index + 1} / {count}
             </p>
             <button

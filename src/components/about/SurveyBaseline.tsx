@@ -31,22 +31,22 @@ function Station({ office, vertical }: { office: Office; vertical?: boolean }) {
             isHead ? 'h-1.5 w-1.5 bg-green' : 'h-px w-2.5 bg-green/60',
           )}
         />
-        <span className="text-[0.9375rem] text-ink">{office.city}</span>
-        <span className="text-[0.75rem] text-muted">{office.role}</span>
+        <span className="text-body text-ink">{office.city}</span>
+        <span className="text-label text-muted">{office.role}</span>
       </li>
     );
   }
 
   return (
     <li className="flex flex-col items-center gap-2">
-      <span className="text-[0.6875rem] uppercase tracking-[0.1em] text-muted">
+      <span className="text-label uppercase tracking-[0.1em] text-muted">
         {isHead ? 'Head' : ''}
       </span>
       <span
         aria-hidden="true"
         className={cx(isHead ? 'h-1.5 w-1.5 bg-green' : 'h-2.5 w-px bg-green/60')}
       />
-      <span className="text-[0.8125rem] text-ink">{office.city}</span>
+      <span className="text-micro text-ink">{office.city}</span>
     </li>
   );
 }
@@ -71,9 +71,9 @@ export function SurveyBaseline() {
 
             {/* The border. */}
             <div className="flex flex-col items-center gap-1.5">
-              <span className="text-[0.6875rem] tracking-[0.12em] text-gold-deep">UG</span>
+              <span className="text-label tracking-[0.12em] text-gold-deep">UG</span>
               <span aria-hidden="true" className="h-8 w-0.5 bg-gold" />
-              <span className="text-[0.6875rem] tracking-[0.12em] text-gold-deep">KE</span>
+              <span className="text-label tracking-[0.12em] text-gold-deep">KE</span>
             </div>
 
             <ul className="flex items-center justify-between">
@@ -89,13 +89,13 @@ export function SurveyBaseline() {
       <div className="mx-auto w-full max-w-[1200px] px-4 md:hidden">
         <div className="relative pl-3">
           <span aria-hidden="true" className="absolute bottom-2 left-3 top-2 w-px bg-rule" />
-          <p className="mb-2 text-[0.6875rem] tracking-[0.12em] text-gold-deep">UG</p>
+          <p className="mb-2 text-label tracking-[0.12em] text-gold-deep">UG</p>
           <ul>
             {ugandaOffices.map((office) => (
               <Station key={office.city} office={office} vertical />
             ))}
           </ul>
-          <p className="mb-2 mt-4 border-t-2 border-gold pt-3 text-[0.6875rem] tracking-[0.12em] text-gold-deep">
+          <p className="mb-2 mt-4 border-t-2 border-gold pt-3 text-label tracking-[0.12em] text-gold-deep">
             KE
           </p>
           <ul>

@@ -60,7 +60,7 @@ export function Header() {
     <>
       {/* Utility strip: scrolls away, unlike the nav bar, but shares its green. */}
       <div className="hidden bg-green text-cream/85 md:block">
-        <Container className="flex h-9 items-center justify-between border-b border-cream/12 text-[0.8125rem]">
+        <Container className="flex h-9 items-center justify-between border-b border-cream/12 text-micro">
           <div className="flex items-center gap-6">
             <a href={site.phone.href} className="flex items-center gap-2 hover:text-gold">
               <PhoneIcon width={14} height={14} />
@@ -115,7 +115,7 @@ export function Header() {
               aria-label={
                 site.whatsapp
                   ? 'Message us on WhatsApp'
-                  : 'WhatsApp — number pending, opens contact page'
+                  : 'WhatsApp, number pending. Opens the contact page'
               }
             >
               <WhatsAppIcon width={18} height={18} />

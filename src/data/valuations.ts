@@ -79,7 +79,7 @@ export const valuationPurposes: ValuationPurpose[] = [
       {
         term: 'Fair value',
         meaning:
-          'The IFRS 13 basis — an exit price in an orderly transaction between market participants, with the inputs and the valuation hierarchy level disclosed.',
+          'The IFRS 13 basis: an exit price in an orderly transaction between market participants, with the inputs and the valuation hierarchy level disclosed.',
       },
       {
         term: 'Depreciated replacement cost',
@@ -100,7 +100,7 @@ export const valuationPurposes: ValuationPurpose[] = [
     slug: 'insurance',
     name: 'Insurance',
     situation:
-      'You need a sum insured that would actually rebuild the property — not the price you paid for it, and not a figure carried forward from an old policy.',
+      'You need a sum insured that would actually rebuild the property, not the price you paid for it, and not a figure carried forward from an old policy.',
     basis: [
       {
         term: 'Reinstatement cost',
@@ -120,12 +120,12 @@ export const valuationPurposes: ValuationPurpose[] = [
     slug: 'tax-and-litigation',
     name: 'Tax and litigation',
     situation:
-      'A figure is being contested — in an estate, a shareholder dispute, a matrimonial matter, or with a tax authority — and it has to withstand someone whose job is to disagree with it.',
+      'A figure is being contested: in an estate, a shareholder dispute, a matrimonial matter, or with a tax authority, and it has to withstand someone whose job is to disagree with it.',
     basis: [
       {
         term: 'Market value at a stated date',
         meaning:
-          'Often a date in the past — the date of death, of separation, or of a transaction under review. The evidence has to be contemporaneous with that date, not with today.',
+          'Often a date in the past: the date of death, of separation, or of a transaction under review. The evidence has to be contemporaneous with that date, not with today.',
       },
     ],
     assets: ['property', 'plant-and-machinery', 'business-and-shares'],

@@ -48,7 +48,7 @@ export function CTABanner({
           <span aria-hidden="true" className="mb-5 block h-[3px] w-10 bg-gold" />
           <h2 className="text-h2 text-cream">{title}</h2>
           {lead && (
-            <p className="mt-4 max-w-[52ch] text-[1.0625rem] leading-relaxed text-cream/80">
+            <p className="mt-4 max-w-[52ch] text-lead leading-relaxed text-cream/80">
               {lead}
             </p>
           )}

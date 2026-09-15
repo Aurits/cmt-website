@@ -22,15 +22,15 @@ export function StandingSchedule({ className }: { className?: string }) {
           key={registration.authority}
           className="flex items-baseline justify-between gap-5 border-t border-cream/20 py-3"
         >
-          <dt className="text-[0.9375rem] text-cream/85">
+          <dt className="text-body text-cream/85">
             {registration.authorityFull}
-            <span className="mt-0.5 block text-[0.8125rem] text-cream/70">
+            <span className="mt-0.5 block text-micro text-cream/70">
               {registration.jurisdiction}
             </span>
           </dt>
           <dd
             className={cx(
-              'tnum shrink-0 text-right text-[0.9375rem]',
+              'tnum shrink-0 text-right text-body',
               registration.confirmed ? 'text-cream' : 'text-cream/70',
             )}
           >
@@ -58,7 +58,7 @@ export function CredentialLine({ className }: { className?: string }) {
   return (
     <p
       className={cx(
-        'mt-7 flex flex-col gap-1 border-t border-rule pt-5 text-[0.8125rem] tracking-[0.06em] text-muted sm:flex-row sm:items-center sm:gap-0',
+        'mt-7 flex flex-col gap-1 border-t border-rule pt-5 text-micro tracking-[0.06em] text-muted sm:flex-row sm:items-center sm:gap-0',
         className,
       )}
     >

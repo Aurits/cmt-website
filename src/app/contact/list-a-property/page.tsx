@@ -33,7 +33,7 @@ export default async function ListPropertyPage({
           <ListPropertyForm defaultCategory={category} />
         </div>
         <div className="mt-8 border-t border-rule pt-6">
-          <p className="max-w-[56ch] text-[0.9375rem] leading-relaxed text-muted">
+          <p className="max-w-[56ch] text-body leading-relaxed text-muted">
             Selling is only half of what we do with an owner&rsquo;s property. If you want the figure
             before you decide whether to sell at all, that is a valuation rather than a listing.
           </p>

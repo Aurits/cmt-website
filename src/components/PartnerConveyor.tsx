@@ -40,7 +40,7 @@ function ConveyorItem({ partner, clone }: { partner: Partner; clone: boolean }) 
           />
         ) : (
           // No file yet: the name still holds the slot rather than leaving a gap.
-          <span className="text-center font-display text-[0.9375rem] leading-tight text-green">
+          <span className="text-center font-display text-body leading-tight text-green">
             {partner.shortName ?? partner.name}
           </span>
         )}
@@ -123,11 +123,11 @@ export function PartnerConveyorGroups({
       {groups.map((group, index) => (
         <section key={group.id} aria-labelledby={`clients-${group.id}`}>
           <div className="flex flex-col gap-2 border-b border-rule pb-3">
-            <Heading id={`clients-${group.id}`} className="font-display text-[1.25rem] text-green">
+            <Heading id={`clients-${group.id}`} className="font-display text-h4 text-green">
               {group.title}
             </Heading>
             {showDescriptions && (
-              <p className="max-w-[64ch] text-[0.9375rem] leading-relaxed text-muted">
+              <p className="max-w-[64ch] text-body leading-relaxed text-muted">
                 {group.description}
               </p>
             )}
