@@ -201,7 +201,7 @@ export default function CredentialsPage() {
       <CTABanner
         title="Put it to the test"
         lead="Instruct us on something that matters and see whether the report holds up to your own review. That is how most of our clients started."
-        primary={{ label: 'Request a valuation', href: '/contact?subject=valuation' }}
+        primary={{ label: 'Request a valuation', href: '/contact/request-a-valuation' }}
         secondary={{ label: 'Who instructs us', href: '/about/clients' }}
         image="/images/cta-skyline.jpg"
       />

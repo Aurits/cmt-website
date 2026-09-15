@@ -161,7 +161,7 @@ export default function OfficesPage() {
       <CTABanner
         title="Wherever the asset is"
         lead="Tell us where the property sits and we will tell you which office takes it and how soon someone can inspect."
-        primary={{ label: 'Request a valuation', href: '/contact?subject=valuation' }}
+        primary={{ label: 'Request a valuation', href: '/contact/request-a-valuation' }}
         secondary={{ label: 'Our credentials', href: '/about/credentials' }}
       />
     </>

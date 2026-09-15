@@ -78,7 +78,7 @@ export default function HomePage() {
                 <Button href="/listings" variant="primary" size="lg">
                   Browse properties
                 </Button>
-                <Button href="/contact?subject=valuation" variant="outline" size="lg">
+                <Button href="/contact/request-a-valuation" variant="outline" size="lg">
                   Request a valuation
                 </Button>
               </div>
@@ -223,7 +223,7 @@ export default function HomePage() {
                   </p>
                 </div>
                 <div className="mt-5">
-                  <Button href="/contact?subject=valuation" variant="outline" size="sm">
+                  <Button href="/contact/request-a-valuation" variant="outline" size="sm">
                     Ask a valuer
                   </Button>
                 </div>
@@ -333,8 +333,8 @@ export default function HomePage() {
       <CTABanner
         title="Start with the figure, not the guess"
         lead="Book an inspection, or send us the property you want listed. Either way you speak to a valuer, not a call centre."
-        primary={{ label: 'Request a valuation', href: '/contact?subject=valuation' }}
-        secondary={{ label: 'List your property', href: '/contact?subject=listing' }}
+        primary={{ label: 'Request a valuation', href: '/contact/request-a-valuation' }}
+        secondary={{ label: 'List your property', href: '/contact/list-a-property' }}
         image="/images/cta-skyline.jpg"
         imageAlt=""
       />

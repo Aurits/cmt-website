@@ -45,6 +45,15 @@ export interface Listing {
   features: string[];
   agentId: string;
   featured?: boolean;
+  /**
+   * Month and year CMT valued this property, where they did.
+   *
+   * The one claim on a property portal in this market that a pure estate agent structurally
+   * cannot make, and the thing that makes the agency arm an argument for the valuation arm
+   * rather than a distraction from it. Omitted where we did not value it — an unqualified
+   * badge on every card would be worth nothing.
+   */
+  valuedOn?: string;
 }
 
 /**

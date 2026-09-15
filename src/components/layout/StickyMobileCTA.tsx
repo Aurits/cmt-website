@@ -22,7 +22,7 @@ export function StickyMobileCTA() {
         : 'WhatsApp number pending — opens the contact page',
     },
     {
-      href: '/contact?subject=valuation',
+      href: '/contact/request-a-valuation',
       label: 'Valuation',
       icon: <ShieldIcon width={18} height={18} />,
       srLabel: 'Request a valuation',

@@ -103,7 +103,7 @@ export default function PeoplePage() {
       <CTABanner
         title="Talk to a valuer"
         lead="Your instruction goes to the person who will inspect the property, not to a queue."
-        primary={{ label: 'Request a valuation', href: '/contact?subject=valuation' }}
+        primary={{ label: 'Request a valuation', href: '/contact/request-a-valuation' }}
         secondary={{ label: 'Our credentials', href: '/about/credentials' }}
       />
     </>

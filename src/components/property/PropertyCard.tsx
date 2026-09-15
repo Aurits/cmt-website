@@ -69,6 +69,14 @@ export function PropertyCard({
           {priceWithPeriod(listing, true)}
         </p>
 
+        {/* Provenance. Only where CMT actually valued it — see Listing.valuedOn. */}
+        {listing.valuedOn && (
+          <p className="mt-2 inline-flex items-center gap-2 self-start border-l-2 border-gold pl-2 text-[0.75rem] text-muted">
+            <span className="font-medium text-green">Valued by CMT</span>
+            <span className="tnum">{listing.valuedOn}</span>
+          </p>
+        )}
+
         <h3 className="mt-3 text-[1.0625rem] leading-snug">
           <Link href={`/properties/${listing.slug}`} className="text-ink hover:text-green">
             {listing.title}

@@ -184,7 +184,7 @@ export default function ValuationsPage() {
       <CTABanner
         title="Request a valuation"
         lead={`Tell us what needs valuing and what the figure is for. There are ${valuationPurposes.length} routes through the practice and a valuer will tell you which one you are on.`}
-        primary={{ label: 'Request a valuation', href: '/contact?subject=valuation' }}
+        primary={{ label: 'Request a valuation', href: '/contact/request-a-valuation' }}
         secondary={{ label: 'See our advisory work', href: '/advisory' }}
         image="/images/cta-skyline.jpg"
       />

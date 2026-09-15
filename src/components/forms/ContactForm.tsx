@@ -2,34 +2,30 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { SelectField, TextArea, TextField } from '@/components/forms/fields';
+import { TextArea, TextField } from '@/components/forms/fields';
 import { site } from '@/data/site';
 
-const subjects = [
-  { value: 'general', label: 'General enquiry' },
-  { value: 'valuation', label: 'Request a valuation' },
-  { value: 'listing', label: 'List a property with CMT' },
-];
-
 /**
- * UI only this phase — there is no endpoint yet, and we say so rather than showing a
- * "message sent" toast that would be a lie. When the backend lands, replace the
- * submit handler with the real action and swap the notice for a true confirmation.
+ * The general door. Three fields.
+ *
+ * This used to be the site's only form, with a subject dropdown that asked the visitor to file
+ * themselves before the page had helped them — and then asked everyone the union of every
+ * intent's questions. Valuation requests and listing enquiries now have their own routes and
+ * their own fields, which leaves this one free to be as short as a question deserves.
+ *
+ * UI only this phase — the submitted state says so rather than showing a confirmation that would
+ * be a lie.
  */
-export function ContactForm({ defaultSubject = 'general' }: { defaultSubject?: string }) {
+export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
-  const subject = subjects.some((item) => item.value === defaultSubject)
-    ? defaultSubject
-    : 'general';
 
   if (submitted) {
     return (
-      <div className="rounded-brand border border-green/25 bg-green/8 p-6">
+      <div className="border border-green/25 bg-green/8 p-6">
         <h3 className="text-[1.375rem] text-green">Your details are not sent yet</h3>
         <p className="mt-3 max-w-[54ch] text-[0.9375rem] leading-relaxed text-muted">
-          This form is part of a site still in build, so nothing has been delivered to CMT.
-          Until it goes live, reach the office directly and a valuer will pick it up the
-          same working day.
+          This form is part of a site still in build, so nothing has been delivered to CMT. Until it
+          goes live, reach the office directly and a valuer will pick it up the same working day.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <Button href={site.phone.href} variant="primary" size="md">
@@ -58,18 +54,7 @@ export function ContactForm({ defaultSubject = 'general' }: { defaultSubject?: s
         setSubmitted(true);
       }}
     >
-      <div className="grid gap-5 sm:grid-cols-2">
-        <TextField id="name" label="Your name" autoComplete="name" placeholder="Full name" />
-        <TextField
-          id="phone"
-          label="Phone number"
-          type="tel"
-          autoComplete="tel"
-          inputMode="tel"
-          placeholder="+256"
-        />
-      </div>
-
+      <TextField id="name" label="Your name" autoComplete="name" placeholder="Full name" />
       <TextField
         id="email"
         label="Email address"
@@ -77,14 +62,7 @@ export function ContactForm({ defaultSubject = 'general' }: { defaultSubject?: s
         autoComplete="email"
         placeholder="you@example.com"
       />
-
-      <SelectField id="subject" label="What is this about" options={subjects} defaultValue={subject} />
-
-      <TextArea
-        id="message"
-        label="Your message"
-        placeholder="Tell us about the property, or what you need valued."
-      />
+      <TextArea id="message" label="Your message" placeholder="How can we help?" />
 
       <div className="flex flex-col gap-4 border-t border-rule pt-5 sm:flex-row sm:items-center sm:justify-between">
         <p className="max-w-[38ch] text-[0.8125rem] leading-relaxed text-muted">

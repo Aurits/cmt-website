@@ -214,7 +214,7 @@ export default function AboutPage() {
       <CTABanner
         title="Talk to our team"
         lead="Tell us what you need valued or listed. You will speak to the valuer who would handle it, not a switchboard."
-        primary={{ label: 'Request a valuation', href: '/contact?subject=valuation' }}
+        primary={{ label: 'Request a valuation', href: '/contact/request-a-valuation' }}
         secondary={{ label: 'Who instructs us', href: '/about/clients' }}
       />
     </>

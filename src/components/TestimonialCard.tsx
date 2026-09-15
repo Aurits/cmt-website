@@ -41,7 +41,7 @@ export function TestimonialsPending() {
         <Button href="/about/clients" variant="outline" size="sm">
           See who we work for
         </Button>
-        <Button href="/contact?subject=general" variant="quiet" size="sm">
+        <Button href="/contact" variant="quiet" size="sm">
           Send us a reference to publish
         </Button>
       </div>

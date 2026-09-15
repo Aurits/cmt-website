@@ -1,0 +1,19 @@
+# Normalise line endings.
+#
+# This repo is worked on from Windows through WSL, and without this every file that gets
+# rewritten picks up CRLF endings, which git then reports as a whole-file change. At one point
+# all 71 tracked files were "modified" with 14,097 insertions and 14,097 deletions and not a
+# single changed character — enough noise to bury a real diff completely.
+#
+# `text=auto eol=lf` stores everything as LF in git and checks it out as LF, which is what the
+# toolchain (node, next, eslint) expects on both platforms. Binary assets are listed explicitly
+# so nothing tries to translate them.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.mp4 binary
+*.woff binary
+*.woff2 binary

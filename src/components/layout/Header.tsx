@@ -121,7 +121,7 @@ export function Header() {
               <WhatsAppIcon width={18} height={18} />
             </a>
             {/* Valuation is the business; listing is a service. The masthead says so. */}
-            <Button href="/contact?subject=valuation" variant="gold" size="sm">
+            <Button href="/contact/request-a-valuation" variant="gold" size="sm">
               Request a valuation
             </Button>
           </div>
@@ -184,7 +184,7 @@ export function Header() {
 
           <div className="mt-8 grid gap-3">
             <Link
-              href="/contact?subject=valuation"
+              href="/contact/request-a-valuation"
               onClick={() => setOpen(false)}
               className="inline-flex items-center justify-center whitespace-nowrap rounded-control bg-gold px-6 py-3.5 text-base font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
             >

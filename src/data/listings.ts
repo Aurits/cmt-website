@@ -45,6 +45,7 @@ export const listings: Listing[] = [
       'Parking for six cars',
     ],
     agentId: 'kanshabe-lindah',
+    valuedOn: 'Mar 2026',
     featured: true,
   },
   {
@@ -80,6 +81,7 @@ export const listings: Listing[] = [
       'Fitted kitchen',
     ],
     agentId: 'kanshabe-lindah',
+    valuedOn: 'Feb 2026',
     featured: true,
   },
   {
@@ -216,6 +218,7 @@ export const listings: Listing[] = [
       'Standby generator',
     ],
     agentId: 'kanshabe-lindah',
+    valuedOn: 'Jan 2026',
     featured: true,
   },
   {
@@ -313,6 +316,7 @@ export const listings: Listing[] = [
       'Articulated vehicle access',
     ],
     agentId: 'waniala-andrew',
+    valuedOn: 'Apr 2026',
     featured: true,
   },
   {
@@ -404,6 +408,7 @@ export const listings: Listing[] = [
       'Level, ready to build',
     ],
     agentId: 'waniala-andrew',
+    valuedOn: 'Feb 2026',
     featured: true,
   },
   {

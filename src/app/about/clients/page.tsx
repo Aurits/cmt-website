@@ -76,7 +76,7 @@ export default function ClientsPage() {
       <CTABanner
         title="Talk to us"
         lead="Panel enquiries, framework instructions and one-off institutional work all start the same way: a conversation about scope and turnaround."
-        primary={{ label: 'Talk to us', href: '/contact?subject=general' }}
+        primary={{ label: 'Talk to us', href: '/contact' }}
         secondary={{ label: 'See our valuation work', href: '/valuations' }}
         image="/images/cta-skyline.jpg"
       />

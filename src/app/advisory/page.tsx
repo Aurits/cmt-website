@@ -147,7 +147,7 @@ export default function AdvisoryPage() {
       <CTABanner
         title="Request a consultation"
         lead="Bring us the property and the decision you are trying to make. We will tell you what the work involves and what it costs before it starts."
-        primary={{ label: 'Request a consultation', href: '/contact?subject=general' }}
+        primary={{ label: 'Request a consultation', href: '/contact' }}
         secondary={{ label: 'See our valuation work', href: '/valuations' }}
         image="/images/cta-skyline.jpg"
       />

@@ -67,8 +67,8 @@ export default async function ListingsPage({
       <CTABanner
         title="Have a property to sell or let?"
         lead="We value it first, then price it from evidence. That is usually the difference between a property that moves and one that sits."
-        primary={{ label: 'List your property', href: '/contact?subject=listing' }}
-        secondary={{ label: 'Request a valuation', href: '/contact?subject=valuation' }}
+        primary={{ label: 'List your property', href: '/contact/list-a-property' }}
+        secondary={{ label: 'Request a valuation', href: '/contact/request-a-valuation' }}
       />
     </>
   );

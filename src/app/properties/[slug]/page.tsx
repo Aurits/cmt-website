@@ -196,7 +196,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
                 half of what we do.
               </p>
               <div className="mt-4">
-                <Button href="/contact?subject=valuation" variant="outline" size="sm">
+                <Button href="/contact/request-a-valuation" variant="outline" size="sm">
                   Request a valuation
                 </Button>
               </div>
@@ -231,7 +231,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
         title="Schedule a viewing"
         lead={`Arrange to see ${listing.reference} with the agent handling it. Weekday and Saturday morning viewings both work.`}
         primary={{ label: 'Schedule a viewing', href: '#enquire' }}
-        secondary={{ label: 'Talk to us first', href: '/contact?subject=general' }}
+        secondary={{ label: 'Talk to us first', href: '/contact' }}
       />
     </>
   );

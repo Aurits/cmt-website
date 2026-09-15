@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { CTABanner } from '@/components/CTABanner';
-import { InquiryForm } from '@/components/forms/InquiryForm';
+import { ValuationRequestForm } from '@/components/forms/ValuationRequestForm';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
@@ -157,10 +157,8 @@ export default async function ValuationPurposePage({
               <div className="mt-5 border-t border-rule pt-5">
                 <h2 className="text-[1.125rem] text-green">Request this valuation</h2>
                 <div className="mt-4">
-                  <InquiryForm
-                    reference={purpose.name}
-                    title={`valuation ${purpose.name.toLowerCase()}`}
-                  />
+                  {/* Purpose is locked: the page you are on has already answered that question. */}
+                  <ValuationRequestForm lockedPurpose={purpose.slug} compact />
                 </div>
               </div>
             </div>
@@ -212,7 +210,10 @@ export default async function ValuationPurposePage({
       <CTABanner
         title={`Request a valuation ${purpose.name.toLowerCase()}`}
         lead="Tell us what needs valuing and when you need the report. You speak to a valuer, not a call centre."
-        primary={{ label: 'Request a valuation', href: '/contact?subject=valuation' }}
+        primary={{
+          label: 'Request a valuation',
+          href: `/contact/request-a-valuation?purpose=${purpose.slug}`,
+        }}
         secondary={{ label: 'All valuation services', href: '/valuations' }}
       />
     </>

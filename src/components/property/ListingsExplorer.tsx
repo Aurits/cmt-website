@@ -43,6 +43,7 @@ export function ListingsExplorer({
   const [beds, setBeds] = useState<number | 'any'>('any');
   const [sort, setSort] = useState<Sort>('featured');
   const [page, setPage] = useState(1);
+  const [moreOpen, setMoreOpen] = useState(false);
 
   const priceLadder =
     type === 'rent'
@@ -91,6 +92,9 @@ export function ListingsExplorer({
     setPage(1);
   };
 
+  /** How many of the tier-two filters are set — shown on the disclosure so nothing hides. */
+  const extraCount = [maxPrice !== 'any', beds !== 'any'].filter(Boolean).length;
+
   const filtersApplied =
     (!lockedCategory && category !== 'any') ||
     type !== 'any' ||
@@ -100,11 +104,16 @@ export function ListingsExplorer({
 
   return (
     <div>
-      <div className="rounded-brand border border-rule bg-paper p-4 sm:p-5">
+      {/*
+        Two tiers. The three filters that actually narrow a search stay visible; price and
+        bedrooms sit behind a disclosure that carries a count, so nothing is hidden silently.
+        Five dropdowns in a row was a wall in front of the stock.
+      */}
+      <div className="border border-rule bg-paper p-4 sm:p-5">
         <div
           className={cx(
             'grid gap-4 sm:grid-cols-2',
-            lockedCategory ? 'lg:grid-cols-4' : 'lg:grid-cols-5',
+            lockedCategory ? 'lg:grid-cols-[1fr_1fr_auto]' : 'lg:grid-cols-[1fr_1fr_1fr_auto]',
           )}
         >
           {!lockedCategory && (
@@ -153,6 +162,29 @@ export function ListingsExplorer({
             />
           </Field>
 
+          <div className="flex items-end">
+            <button
+              type="button"
+              onClick={() => setMoreOpen((open) => !open)}
+              aria-expanded={moreOpen}
+              aria-controls="more-filters"
+              className="flex min-h-[46px] w-full items-center justify-between gap-3 rounded-control border border-rule bg-cream px-3.5 py-2.5 text-[0.9375rem] text-ink transition-colors hover:border-green/45 lg:w-auto"
+            >
+              More filters
+              {extraCount > 0 && (
+                <span className="tnum bg-green px-1.5 py-0.5 text-[0.75rem] text-cream">
+                  {extraCount}
+                </span>
+              )}
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="more-filters"
+          hidden={!moreOpen}
+          className="mt-4 grid gap-4 border-t border-rule pt-4 sm:grid-cols-2 lg:grid-cols-4"
+        >
           <Field label="Price up to" id="filter-price">
             <Select
               id="filter-price"
@@ -233,7 +265,7 @@ export function ListingsExplorer({
           ))}
         </ul>
       ) : (
-        <div className="mt-8 rounded-brand border border-dashed border-green/30 bg-cream-deep/50 p-8 text-center">
+        <div className="mt-8 border border-dashed border-green/30 bg-cream-deep/50 p-8 text-center">
           <p className="font-display text-[1.375rem] text-green">
             Nothing on our books matches that yet
           </p>
@@ -250,7 +282,7 @@ export function ListingsExplorer({
               Clear filters
             </button>
             <a
-              href="/contact?subject=general"
+              href="/contact"
               className="rounded-control border border-green/35 px-5 py-3 text-[0.9375rem] text-green hover:bg-green/8"
             >
               Register a requirement
