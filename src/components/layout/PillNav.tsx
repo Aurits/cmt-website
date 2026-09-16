@@ -94,7 +94,7 @@ export function PillNav({ isActive }: { isActive: (href: string) => boolean }) {
               href={item.href}
               aria-current={isActive(item.href) ? 'page' : undefined}
               className={cx(
-                'relative z-10 block rounded-full px-4 py-2 text-body transition-colors duration-200',
+                'relative z-10 block rounded-full px-3 py-2 text-body transition-colors duration-200 xl:px-4',
                 item.href === active ? 'text-green' : 'text-cream/85 hover:text-cream',
               )}
             >

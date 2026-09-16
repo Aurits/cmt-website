@@ -58,7 +58,12 @@ export const site = {
 } as const;
 
 /**
- * Five items, identity first.
+ * Six items, identity first, which is the ceiling Plan.md sets.
+ *
+ * Home earns its slot on a site people arrive at sideways: most visitors land on a valuation
+ * page from a search or a bank's referral rather than on the homepage, and the logo alone is a
+ * convention they should not have to know. It also gives the mobile drawer a route home, which
+ * it did not have.
  *
  * Identity leads because the brief requires it and because this firm sells standing — see
  * SITE-STRATEGY.md §4. Valuations is promoted out of the old "Services" bucket, which used to
@@ -75,6 +80,7 @@ export const site = {
  * as far as a visitor is concerned.
  */
 export const nav = [
+  { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
   { label: 'Valuations', href: '/valuations' },
   { label: 'Advisory', href: '/advisory' },
