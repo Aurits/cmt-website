@@ -122,6 +122,9 @@ Two documents drive the current direction, written after a review of CMT's own p
   concept, visitor flow, section order and exact dimensions, all resolving against the tokens in
   `globals.css`.
 
+- **`WORKPLAN.md`** — the 17 to 30 September delivery plan: what the Phase 1 scope list is
+  missing, the day by day, the critical path and the definition of done.
+
 `Plan.md` remains the client's original brief and is not edited — where the strategy supersedes it, the
 strategy says so and gives the reason.
 
