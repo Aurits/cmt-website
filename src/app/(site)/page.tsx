@@ -6,7 +6,6 @@ import { HeroSearchTabs } from '@/components/HeroSearchTabs';
 import { PartnerConveyor } from '@/components/PartnerConveyor';
 import { StatsStrip } from '@/components/StatsStrip';
 import { FeaturedCarousel } from '@/components/property/FeaturedCarousel';
-import { HeroVideo } from '@/components/HeroVideo';
 import { CredentialLine } from '@/components/about/StandingSchedule';
 import { AnimatedHeadline } from '@/components/ui/AnimatedHeadline';
 import { Button } from '@/components/ui/Button';
@@ -51,16 +50,14 @@ export default function HomePage() {
     <>
       {/* Hero: identity first, product second — the nav order makes the same argument,
           and the text stays first in document order so that holds on mobile too. The
-          photograph (now a looping video of the same building — see HeroVideo, which
-          falls back to the still photograph for anyone who shouldn't get the video) is
-          full-bleed at every width, edge to edge with no card, no rounding and no side
-          margin — the one deliberate break from the page's 1200px measure — and the whole
-          band is sized to `--header-h` (globals.css) so it fills exactly what's left of
-          the first screen below the sticky masthead: no cream gap before the fold, on a
-          phone or a desktop monitor. flex-col stacks text over a bottom-anchored
-          photograph on a phone; flex-row at lg runs the photograph floor-to-ceiling on
-          the right, both simply children stretched or grown to fill a height that is
-          never guessed at, only ever computed. */}
+          photograph is full-bleed at every width, edge to edge with no card, no rounding
+          and no side margin — the one deliberate break from the page's 1200px measure —
+          and the whole band is sized to `--header-h` (globals.css) so it fills exactly
+          what's left of the first screen below the sticky masthead: no cream gap before
+          the fold, on a phone or a desktop monitor. flex-col stacks text over a
+          bottom-anchored photograph on a phone; flex-row at lg runs the photograph
+          floor-to-ceiling on the right, both simply children stretched or grown to fill a
+          height that is never guessed at, only ever computed. */}
       <section className="relative overflow-hidden bg-cream">
         <div className="flex min-h-[calc(100dvh_-_var(--header-h)_-_var(--mobile-cta-h))] flex-col lg:min-h-[calc(100dvh_-_var(--header-h))] lg:flex-row lg:items-stretch">
           <Container className="relative z-10 shrink-0 py-8 lg:w-[46%] lg:shrink-0 lg:self-center lg:py-16">
@@ -101,14 +98,13 @@ export default function HomePage() {
               intentional, never clipped) do the rest of the work of tying it to the page
               around it. */}
           <div className="relative min-h-[240px] flex-1 overflow-hidden lg:min-h-0 lg:w-[54%] lg:flex-none">
-            <HeroVideo
-              posterSrc="/images/hero-home.jpg"
-              posterAlt="Wavy, ribbon-like balconies rippling down an apartment facade"
-              desktopSrc="/videos/hero-loop.mp4"
-              mobileSrc="/videos/hero-loop-mobile.mp4"
+            <Image
+              src="/images/hero-home.jpg"
+              alt="Wavy, ribbon-like balconies rippling down an apartment facade"
+              fill
+              priority
               sizes="(min-width: 1024px) 54vw, 100vw"
-              className="object-cover"
-              gradeClassName="hue-rotate-[20deg] saturate-[1.25] contrast-[1.05]"
+              className="object-cover hue-rotate-[20deg] saturate-[1.25] contrast-[1.05]"
             />
             <span
               aria-hidden="true"
