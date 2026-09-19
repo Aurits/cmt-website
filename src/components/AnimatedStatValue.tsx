@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
  * Counts a stat's numeric value up from zero once it scrolls into view — "12" arrives as
  * 0, 1, 2... 12, not just as a number sitting there.
  *
- * Same posture as Reveal and HeroVideo: the server HTML already carries the true final
+ * Same posture as Reveal: the server HTML already carries the true final
  * value, and this only intercepts it on the client, after mount, for a visitor who scrolls
  * to it with JavaScript and motion both available. Anyone else — no JS, a failed bundle,
  * prefers-reduced-motion, or simply catching the page before the observer fires — reads the

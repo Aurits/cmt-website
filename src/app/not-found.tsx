@@ -1,3 +1,6 @@
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+import { StickyMobileCTA } from '@/components/layout/StickyMobileCTA';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { categories } from '@/data/categories';
@@ -5,9 +8,17 @@ import { site } from '@/data/site';
 
 export const metadata = { title: 'Page not found' };
 
+/**
+ * The one route outside both the (site) and (admin) route groups, so it renders before
+ * either layout resolves — a truly unmatched URL (a typo, an old link) has no group to
+ * inherit chrome from. Header and Footer are imported directly here rather than relied on
+ * from a layout, so a 404 still looks like the rest of the site instead of a bare page.
+ */
 export default function NotFound() {
   return (
-    <section className="py-20 lg:py-28">
+    <div className="flex min-h-screen flex-col pb-14 lg:pb-0">
+      <Header />
+      <main className="flex-1 py-20 lg:py-28">
       <Container>
         <span aria-hidden="true" className="mb-5 block h-[3px] w-10 bg-gold" />
         <h1 className="max-w-[24ch] text-h1 text-green">
@@ -46,6 +57,9 @@ export default function NotFound() {
           </ul>
         </div>
       </Container>
-    </section>
+      </main>
+      <Footer />
+      <StickyMobileCTA />
+    </div>
   );
 }

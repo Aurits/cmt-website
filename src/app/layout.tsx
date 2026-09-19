@@ -1,9 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Fraunces, Inter } from 'next/font/google';
 import './globals.css';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { StickyMobileCTA } from '@/components/layout/StickyMobileCTA';
 import { site } from '@/data/site';
 
 /**
@@ -76,15 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        {/* Bottom padding clears the sticky mobile CTA bar. */}
-        <div className="flex min-h-screen flex-col pb-14 lg:pb-0">
-          <Header />
-          <main id="main" className="flex-1">
-            {children}
-          </main>
-          <Footer />
-        </div>
-        <StickyMobileCTA />
+        {children}
       </body>
     </html>
   );
