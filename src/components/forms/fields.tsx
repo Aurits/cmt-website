@@ -19,13 +19,15 @@ export function Label({
   htmlFor,
   children,
   optional = false,
+  className,
 }: {
   htmlFor: string;
   children: React.ReactNode;
   optional?: boolean;
+  className?: string;
 }) {
   return (
-    <label htmlFor={htmlFor} className="mb-1.5 block text-body text-ink">
+    <label htmlFor={htmlFor} className={cx('mb-1.5 block text-body text-ink', className)}>
       {children}
       {optional && <span className="ml-1.5 text-micro text-muted">(optional)</span>}
     </label>
