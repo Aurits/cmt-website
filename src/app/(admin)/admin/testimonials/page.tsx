@@ -8,7 +8,7 @@ import type { AdminTestimonial } from '@/lib/admin/types';
 import { cx } from '@/lib/cx';
 
 /**
- * The brief forbids invented testimonials — see data/testimonials.ts and OPEN-ITEMS.md #6.
+ * The brief forbids invented testimonials — see data/testimonials.ts and docs/OPEN-ITEMS.md #6.
  * This module exists so a real, named quote can be added the moment CMT supplies one; it
  * does not pre-fill anything.
  */

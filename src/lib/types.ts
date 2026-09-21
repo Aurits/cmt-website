@@ -161,7 +161,7 @@ export interface Service {
    being valued, and what the figure is for. The matrix on /valuations is the
    cross-product, and a purpose lists the assets it actually applies to — an
    absent combination is rendered as inert rather than hidden, so the page
-   states the scope honestly. See SITE-STRATEGY.md and LAYOUT-SPECS.md A-03.
+   states the scope honestly. See docs/SITE-STRATEGY.md and docs/LAYOUT-SPECS.md A-03.
    --------------------------------------------------------------------------- */
 
 export type ValuationAssetSlug = 'property' | 'plant-and-machinery' | 'business-and-shares';

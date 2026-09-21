@@ -25,7 +25,7 @@ export const metadata: Metadata = {
  * Built as the cover sheet of a valuation report: every report CMT issues opens by stating who
  * prepared it and under what authority, and this page is that page. It now sits first in the
  * navigation, so it opens on registrations rather than on a mission statement and has to establish
- * standing in one screen. See LAYOUT-SPECS.md A-02.
+ * standing in one screen. See docs/LAYOUT-SPECS.md A-02.
  */
 const chapters = [
   {
@@ -182,7 +182,7 @@ export default function AboutPage() {
           </ol>
           <p className="mt-5 max-w-[62ch] text-micro leading-relaxed text-muted">
             Written as stages rather than dated milestones: CMT has not published a Uganda founding
-            year and we would rather not invent one. See OPEN-ITEMS.md.
+            year and we would rather not invent one. See docs/OPEN-ITEMS.md.
           </p>
         </Container>
       </section>

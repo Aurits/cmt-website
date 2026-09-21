@@ -12,7 +12,7 @@ import { cx } from '@/lib/cx';
  * CMT's offer has two axes — what is being valued, and what the figure is for — and every
  * competitor in this market flattens them into a bullet list. As a grid it is instantly legible,
  * it does the visitor's filing for them, and it cannot be copied by a firm without the same depth
- * of service. See LAYOUT-SPECS.md A-03.
+ * of service. See docs/LAYOUT-SPECS.md A-03.
  *
  * Three things are deliberate:
  *

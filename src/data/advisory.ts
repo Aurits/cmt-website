@@ -6,7 +6,7 @@ import type { AdvisoryService } from '@/lib/types';
  * Taken from the five consultancy lines CMT publishes, ordered highest-value first rather than
  * alphabetically. Advisory work is scoped, priced and negotiated — it is not bought off a card —
  * so /advisory renders these as a ruled index rather than a product grid, and each entry names
- * who it is for before it says what it is. See LAYOUT-SPECS.md A-05.
+ * who it is for before it says what it is. See docs/LAYOUT-SPECS.md A-05.
  */
 export const advisoryServices: AdvisoryService[] = [
   {

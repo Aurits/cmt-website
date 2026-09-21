@@ -14,7 +14,7 @@ import type {
  * integral assets group as 'plant-and-machinery'; land, buildings and development sites as
  * 'property'.
  *
- * OPEN ITEM (OPEN-ITEMS.md #4): CMT needs to tell us which of these lines they actually want work
+ * OPEN ITEM (docs/OPEN-ITEMS.md #4): CMT needs to tell us which of these lines they actually want work
  * in. `LEAD` below is our assumption, stated here so it can be corrected in one edit rather than
  * hunted through the pages.
  */
@@ -161,7 +161,7 @@ export const valuationPurposes: ValuationPurpose[] = [
 /**
  * The lead line: the cell the matrix opens on, and the one the homepage pushes.
  * Secured lending is the majority of instructions and the most common reason someone is on the
- * page at all. ASSUMPTION — see OPEN-ITEMS.md #4.
+ * page at all. ASSUMPTION — see docs/OPEN-ITEMS.md #4.
  */
 export const LEAD: { purpose: ValuationPurposeSlug; asset: ValuationAssetSlug } = {
   purpose: 'for-lending',

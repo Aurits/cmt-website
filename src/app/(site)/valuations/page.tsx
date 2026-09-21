@@ -24,7 +24,7 @@ export const metadata: Metadata = {
  *
  * The matrix is the lead, so there is no lead paragraph above it — a page that explains its own
  * table before showing it has already lost the reader who arrived with a specific question. See
- * LAYOUT-SPECS.md A-03.
+ * docs/LAYOUT-SPECS.md A-03.
  */
 const steps = [
   {
@@ -130,7 +130,7 @@ export default function ValuationsPage() {
                 &ldquo;what do I actually get&rdquo; better than any paragraph could. We have asked CMT
                 for one rather than mocking up a document that does not exist.
               </p>
-              <p className="mt-4 text-micro text-muted">See OPEN-ITEMS.md, item 9.</p>
+              <p className="mt-4 text-micro text-muted">See docs/OPEN-ITEMS.md, item 9.</p>
             </div>
           </Reveal>
         </Container>

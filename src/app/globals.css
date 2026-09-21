@@ -11,7 +11,7 @@
 
   This supersedes the brief's #143d1e, at the client's direction: the mark cannot be
   recoloured, so matching the site to the mark was the only way to get a continuous
-  masthead. Recorded in OPEN-ITEMS.md. Re-measured from cmt-logo-gold.png when that export
+  masthead. Recorded in docs/OPEN-ITEMS.md. Re-measured from cmt-logo-gold.png when that export
   replaced the original white-on-tile mark — see scripts/prepare-images.mjs — since the two
   exports' tiles turned out to be a few RGB steps apart; this is the second value, not the
   first.

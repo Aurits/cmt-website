@@ -5,7 +5,7 @@ import type { Office } from '@/lib/types';
  *
  * Contact details are the firm's own published details (cmtrealtors.com). Nothing here
  * is invented: where CMT has not published something it is left null or flagged, and the
- * UI degrades honestly rather than showing a made-up number. See OPEN-ITEMS.md.
+ * UI degrades honestly rather than showing a made-up number. See docs/OPEN-ITEMS.md.
  */
 export const site = {
   name: 'CMT Realtors Limited',
@@ -46,7 +46,7 @@ export const site = {
 
   cities: ['Kampala', 'Gulu', 'Mbale', 'Mbarara'],
   /**
-   * OPEN ITEM (OPEN-ITEMS.md #2): CMT Realtors is incorporated in Kenya (2010) as well as
+   * OPEN ITEM (docs/OPEN-ITEMS.md #2): CMT Realtors is incorporated in Kenya (2010) as well as
    * practising in Uganda, and we do not yet know whether that is one firm with two arms or two
    * firms sharing a director. Until it is settled the site leads with Uganda and presents Kenya
    * as a linked practice rather than claiming a single regional entity. Flip `regionConfirmed`
@@ -58,7 +58,7 @@ export const site = {
 } as const;
 
 /**
- * Six items, identity first, which is the ceiling Plan.md sets.
+ * Six items, identity first, which is the ceiling docs/Plan.md sets.
  *
  * Home earns its slot on a site people arrive at sideways: most visitors land on a valuation
  * page from a search or a bank's referral rather than on the homepage, and the logo alone is a
@@ -66,7 +66,7 @@ export const site = {
  * it did not have.
  *
  * Identity leads because the brief requires it and because this firm sells standing — see
- * SITE-STRATEGY.md §4. Valuations is promoted out of the old "Services" bucket, which used to
+ * docs/SITE-STRATEGY.md §4. Valuations is promoted out of the old "Services" bucket, which used to
  * carry both the valuation work and the consultancy work on one page; Advisory now takes the
  * rest. "Property Listings" becomes "Properties": the label changes, the routes do not, because
  * /properties/[slug] already serves property detail and a second dynamic segment at that level
@@ -139,7 +139,7 @@ export const kenyaOffices = offices.filter((office) => office.country === 'Kenya
 /**
  * The ledger. `institutions` counts the logos we actually hold rather than the "20+" CMT states,
  * because the conveyor below it shows them and the two numbers would otherwise contradict each
- * other on the same screen. OPEN-ITEMS.md #7 is the gap between them.
+ * other on the same screen. docs/OPEN-ITEMS.md #7 is the gap between them.
  */
 export const stats = [
   { value: site.yearsInBusiness, unit: 'years', label: 'Valuing property in East Africa' },

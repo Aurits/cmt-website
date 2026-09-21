@@ -79,7 +79,7 @@ export default function HomePage() {
                   Request a valuation
                 </Button>
               </div>
-              {/* Renders nothing until a registration is confirmed — see OPEN-ITEMS.md #1. */}
+              {/* Renders nothing until a registration is confirmed — see docs/OPEN-ITEMS.md #1. */}
               <CredentialLine />
             </div>
           </Container>

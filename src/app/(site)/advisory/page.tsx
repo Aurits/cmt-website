@@ -22,7 +22,7 @@ export const metadata: Metadata = {
  * off a card, so the page is built as the contents page of a capability statement — and the
  * restraint is itself the positioning. One photograph on the whole page, deliberately: the old
  * Services page alternated four stock shots of hands and blueprints, which said nothing and
- * tripled the page height. See LAYOUT-SPECS.md A-05.
+ * tripled the page height. See docs/LAYOUT-SPECS.md A-05.
  */
 export default function AdvisoryPage() {
   return (
