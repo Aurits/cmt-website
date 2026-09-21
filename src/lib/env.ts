@@ -52,9 +52,20 @@ export function databaseUrl(): string {
   );
 }
 
-/** The unpooled connection. Migrations want a real session, not a transaction-mode pool. */
+/**
+ * The connection migrations should use.
+ *
+ * Prefers the direct one and falls back to the pool, because Supabase's direct host resolves
+ * over IPv6 only unless the IPv4 add-on is bought, and most machines cannot reach it at all.
+ * The pooler on port 5432 is session mode and runs DDL perfectly well; port 6543 is transaction
+ * mode and cannot, which is why scripts/migrate.mjs refuses that one outright rather than
+ * failing halfway through a migration.
+ */
 export function migrationUrl(): string {
-  return require_('DATABASE_URL', 'Migrations need a direct Postgres connection.');
+  return (
+    read('DATABASE_URL') ??
+    require_('DATABASE_POOL_URL', 'Migrations need a Postgres connection.')
+  );
 }
 
 export function hasStorage(): boolean {

@@ -2,6 +2,8 @@ import 'server-only';
 import { Kysely, PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
 import { databaseUrl } from '@/lib/env';
+import type { Agent, BlogPost, Listing } from '@/lib/types';
+import type { Inquiry } from '@/lib/admin/types';
 import type { Repository } from '@/lib/data/repository';
 import { UnsupportedOperation } from '@/lib/data/repository';
 
@@ -17,10 +19,14 @@ import { UnsupportedOperation } from '@/lib/data/repository';
  * Only reached when DATABASE_URL is set (see ../index.ts), so `pg` never loads on a machine
  * without a database and the static build stays as light as it is today.
  *
- * STATUS: connection and types are live. Query bodies land on day two of docs/BUILD-PLAN.md,
- * once the migrations have been run. Each one throws until then rather than returning empty
- * arrays, because a method that silently answers "nothing here" is how an empty site gets
- * deployed without anyone noticing.
+ * MAPPING. The database speaks snake_case, uuids and strings; the domain speaks camelCase,
+ * slugs and numbers. The two vocabularies meet only in the map* functions below, so nothing
+ * above src/lib/data ever sees a column name. Note particularly that Listing.agentId holds an
+ * agent SLUG while the column holds a uuid, which is why every listing query joins agents: the
+ * public type is the one the site was written against and it does not change to suit storage.
+ *
+ * pg returns bigint and numeric as strings to avoid silent precision loss, so price and
+ * coordinates are converted explicitly rather than trusted.
  */
 
 // Column shapes, written the way the database actually stores them: snake_case, dates as
@@ -153,7 +159,32 @@ interface InquiryRow {
   created_at: Date;
 }
 
+interface SiteSettingsRow {
+  id: number;
+  name: string;
+  short_name: string;
+  tagline: string;
+  description: string;
+  url: string;
+  phone_display: string;
+  phone_href: string;
+  email: string;
+  whatsapp: string | null;
+  address: unknown;
+  address_lat: string;
+  address_lng: string;
+  nairobi_address: string | null;
+  cities: string[];
+  regulator: string;
+  region_confirmed: boolean;
+  hours: unknown;
+  hours_confirmed: boolean;
+  years_in_business: string;
+  stats: unknown;
+}
+
 export interface Database {
+  site_settings: SiteSettingsRow;
   listings: ListingRow;
   listing_images: ListingImageRow;
   agents: AgentRow;
@@ -179,87 +210,344 @@ export function getDb(): Kysely<Database> {
   return db;
 }
 
-const pending = (what: string) => {
-  throw new UnsupportedOperation(`${what} (Postgres adapter, not implemented yet)`);
-};
+/* ── row to domain ──────────────────────────────────────────────────────────────────────── */
+
+type ListingWithAgent = ListingRow & { agent_slug: string | null };
+
+function mapListing(row: ListingWithAgent, images: ListingImageRow[]): Listing {
+  return {
+    slug: row.slug,
+    reference: row.reference,
+    title: row.title,
+    category: row.category as Listing['category'],
+    listingType: row.listing_type as Listing['listingType'],
+    price: Number(row.price),
+    ...(row.rent_period ? { rentPeriod: 'month' as const } : {}),
+    city: row.city,
+    area: row.area,
+    coords: [Number(row.lat), Number(row.lng)],
+    ...(row.beds !== null ? { beds: row.beds } : {}),
+    ...(row.baths !== null ? { baths: row.baths } : {}),
+    size: row.size,
+    sizeLabel: row.size_label as Listing['sizeLabel'],
+    tenure: row.tenure as Listing['tenure'],
+    images: images.map((image) => ({ src: image.path, alt: image.alt })),
+    summary: row.summary,
+    description: row.description,
+    features: row.features,
+    agentId: row.agent_slug ?? '',
+    featured: row.featured,
+    ...(row.valued_on ? { valuedOn: row.valued_on } : {}),
+  };
+}
+
+function mapAgent(row: AgentRow, registrations: AgentRegistrationRow[]): Agent {
+  return {
+    id: row.slug,
+    name: row.name,
+    role: row.role_title,
+    rank: row.rank as Agent['rank'],
+    ...(row.based ? { based: row.based } : {}),
+    ...(row.bio ? { bio: row.bio } : {}),
+    ...(row.photo_path ? { photo: row.photo_path } : {}),
+    ...(row.phone ? { phone: row.phone } : {}),
+    ...(row.email ? { email: row.email } : {}),
+    qualifications: row.qualifications,
+    registrations: registrations.map((reg) => ({
+      authority: reg.authority,
+      authorityFull: reg.authority_full,
+      jurisdiction: reg.jurisdiction,
+      ...(reg.post_nominals ? { postNominals: reg.post_nominals } : {}),
+      ...(reg.number ? { number: reg.number } : {}),
+      confirmed: reg.confirmed,
+    })),
+    credentialsConfirmed: row.credentials_confirmed,
+    sourcedFrom: row.sourced_from as Agent['sourcedFrom'],
+  };
+}
+
+function mapPost(row: BlogPostRow & { author_slug: string | null }): BlogPost {
+  return {
+    slug: row.slug,
+    title: row.title,
+    finding: row.finding,
+    excerpt: row.excerpt,
+    body: row.body,
+    ...(row.pull_figure ? { pullFigure: row.pull_figure } : {}),
+    ...(row.pull_caption ? { pullCaption: row.pull_caption } : {}),
+    keyFigures: row.key_figures ?? [],
+    ...(row.author_slug ? { authorId: row.author_slug } : {}),
+    ...(row.cover_path ? { coverImage: row.cover_path } : {}),
+    tags: row.tags,
+    publishedAt: (row.published_at ?? new Date()).toISOString().slice(0, 10),
+  };
+}
+
+async function loadListings(options: {
+  slug?: string;
+  category?: string;
+  featured?: boolean;
+  includeUnpublished?: boolean;
+}): Promise<Listing[]> {
+  const kysely = getDb();
+
+  let query = kysely
+    .selectFrom('listings')
+    .leftJoin('agents', 'agents.id', 'listings.agent_id')
+    .selectAll('listings')
+    .select('agents.slug as agent_slug');
+
+  if (options.slug) query = query.where('listings.slug', '=', options.slug);
+  if (options.category) query = query.where('listings.category', '=', options.category);
+  if (options.featured) query = query.where('listings.featured', '=', true);
+  if (!options.includeUnpublished) query = query.where('listings.status', '=', 'published');
+
+  const rows = (await query
+    .orderBy('listings.featured', 'desc')
+    .orderBy('listings.created_at', 'desc')
+    .execute()) as ListingWithAgent[];
+
+  if (rows.length === 0) return [];
+
+  // One query for every image rather than one per listing. Sixteen listings is not a lot, but
+  // a per-row query is the kind of thing that is invisible until the stock is real.
+  const images = await kysely
+    .selectFrom('listing_images')
+    .selectAll()
+    .where(
+      'listing_id',
+      'in',
+      rows.map((row) => row.id),
+    )
+    .orderBy('sort_order')
+    .execute();
+
+  const byListing = new Map<string, ListingImageRow[]>();
+  for (const image of images) {
+    const bucket = byListing.get(image.listing_id) ?? [];
+    bucket.push(image);
+    byListing.set(image.listing_id, bucket);
+  }
+
+  return rows.map((row) => mapListing(row, byListing.get(row.id) ?? []));
+}
+
+/* ── the adapter ────────────────────────────────────────────────────────────────────────── */
 
 export function postgresRepository(): Repository {
+  const kysely = getDb();
+
   return {
     capabilities: { writes: true },
 
     listings: {
-      async list() {
-        return pending('Listing lookup');
+      async list(filter) {
+        return loadListings({
+          category: filter?.category,
+          featured: filter?.featured,
+          includeUnpublished: filter?.includeUnpublished,
+        });
       },
-      async bySlug() {
-        return pending('Listing lookup');
+      async bySlug(slug) {
+        // Admin edits a draft by slug, so unpublished has to be reachable here.
+        const found = await loadListings({ slug, includeUnpublished: true });
+        return found[0] ?? null;
       },
       async upsert() {
-        return pending('Saving a listing');
+        throw new UnsupportedOperation('Saving a listing');
       },
-      async remove() {
-        return pending('Deleting a listing');
+      async remove(slug) {
+        await kysely.deleteFrom('listings').where('slug', '=', slug).execute();
       },
     },
 
     agents: {
       async list() {
-        return pending('Team lookup');
+        const rows = await kysely.selectFrom('agents').selectAll().orderBy('sort_order').execute();
+        const registrations = await kysely
+          .selectFrom('agent_registrations')
+          .selectAll()
+          .orderBy('sort_order')
+          .execute();
+        return rows.map((row) =>
+          mapAgent(
+            row,
+            registrations.filter((reg) => reg.agent_id === row.id),
+          ),
+        );
       },
-      async byId() {
-        return pending('Team lookup');
+      async byId(id) {
+        const row = await kysely
+          .selectFrom('agents')
+          .selectAll()
+          .where('slug', '=', id)
+          .executeTakeFirst();
+        if (!row) return null;
+        const registrations = await kysely
+          .selectFrom('agent_registrations')
+          .selectAll()
+          .where('agent_id', '=', row.id)
+          .orderBy('sort_order')
+          .execute();
+        return mapAgent(row, registrations);
       },
       async upsert() {
-        return pending('Saving a team member');
+        throw new UnsupportedOperation('Saving a team member');
       },
-      async remove() {
-        return pending('Deleting a team member');
+      async remove(id) {
+        await kysely.deleteFrom('agents').where('slug', '=', id).execute();
       },
     },
 
     partners: {
       async groups() {
-        return pending('Partner lookup');
+        const groups = await kysely
+          .selectFrom('partner_groups')
+          .selectAll()
+          .orderBy('sort_order')
+          .execute();
+        const members = await kysely
+          .selectFrom('partners')
+          .selectAll()
+          .orderBy('sort_order')
+          .execute();
+        return groups.map((group) => ({
+          id: group.slug,
+          title: group.title,
+          description: group.description,
+          partners: members
+            .filter((partner) => partner.group_id === group.id)
+            .map((partner) => ({
+              name: partner.name,
+              ...(partner.short_name ? { shortName: partner.short_name } : {}),
+              ...(partner.logo_path ? { logo: partner.logo_path } : {}),
+            })),
+        }));
       },
     },
 
     testimonials: {
       async list() {
-        return pending('Testimonial lookup');
+        const rows = await kysely
+          .selectFrom('testimonials')
+          .selectAll()
+          .where('published', '=', true)
+          .orderBy('sort_order')
+          .execute();
+        return rows.map((row) => ({
+          quote: row.quote,
+          name: row.name,
+          organisation: row.organisation,
+          ...(row.role_title ? { role: row.role_title } : {}),
+        }));
       },
     },
 
     posts: {
-      async list() {
-        return pending('Blog lookup');
+      async list(options) {
+        let query = kysely
+          .selectFrom('blog_posts')
+          .leftJoin('agents', 'agents.id', 'blog_posts.author_id')
+          .selectAll('blog_posts')
+          .select('agents.slug as author_slug');
+        if (!options?.includeUnpublished) query = query.where('blog_posts.status', '=', 'published');
+        const rows = await query.orderBy('blog_posts.published_at', 'desc').execute();
+        return rows.map((row) => mapPost(row as BlogPostRow & { author_slug: string | null }));
       },
-      async bySlug() {
-        return pending('Blog lookup');
+      async bySlug(slug) {
+        const row = await kysely
+          .selectFrom('blog_posts')
+          .leftJoin('agents', 'agents.id', 'blog_posts.author_id')
+          .selectAll('blog_posts')
+          .select('agents.slug as author_slug')
+          .where('blog_posts.slug', '=', slug)
+          .executeTakeFirst();
+        return row ? mapPost(row as BlogPostRow & { author_slug: string | null }) : null;
       },
       async upsert() {
-        return pending('Saving a blog post');
+        throw new UnsupportedOperation('Saving a blog post');
       },
-      async remove() {
-        return pending('Deleting a blog post');
+      async remove(slug) {
+        await kysely.deleteFrom('blog_posts').where('slug', '=', slug).execute();
       },
     },
 
     inquiries: {
-      async create() {
-        return pending('Recording an enquiry');
+      async create(inquiry) {
+        await kysely
+          .insertInto('inquiries')
+          .values({
+            type: inquiry.type,
+            status: 'New',
+            name: inquiry.name,
+            phone: inquiry.phone ?? null,
+            email: inquiry.email ?? null,
+            message: inquiry.message,
+            listing_slug: inquiry.listingSlug ?? null,
+            valuation_asset: inquiry.valuationAsset ?? null,
+            valuation_purpose: inquiry.valuationPurpose ?? null,
+            source_path: inquiry.sourcePath ?? null,
+          } as never)
+          .execute();
       },
       async list() {
-        return pending('Enquiry lookup');
+        const rows = await kysely
+          .selectFrom('inquiries')
+          .selectAll()
+          .orderBy('created_at', 'desc')
+          .execute();
+        return rows.map((row) => ({
+          id: row.id,
+          type: row.type as Inquiry['type'],
+          status: row.status as Inquiry['status'],
+          name: row.name,
+          ...(row.phone ? { phone: row.phone } : {}),
+          ...(row.email ? { email: row.email } : {}),
+          message: row.message,
+          ...(row.listing_slug ? { listingSlug: row.listing_slug } : {}),
+          ...(row.valuation_asset ? { valuationAsset: row.valuation_asset } : {}),
+          ...(row.valuation_purpose ? { valuationPurpose: row.valuation_purpose } : {}),
+          ...(row.source_path ? { sourcePath: row.source_path } : {}),
+          createdAt: row.created_at.toISOString(),
+        }));
       },
-      async setStatus() {
-        return pending('Updating an enquiry');
+      async setStatus(id, status) {
+        await kysely
+          .updateTable('inquiries')
+          .set({ status } as never)
+          .where('id', '=', id)
+          .execute();
       },
     },
 
     settings: {
       async get() {
-        return pending('Settings lookup');
+        const row = await kysely.selectFrom('site_settings').selectAll().executeTakeFirst();
+        if (!row) throw new UnsupportedOperation('Settings lookup (no settings row; run the seed)');
+        const address = row.address as Record<string, string>;
+        return {
+          name: row.name,
+          shortName: row.short_name,
+          tagline: row.tagline,
+          description: row.description,
+          phone: { display: row.phone_display, href: row.phone_href },
+          email: row.email,
+          whatsapp: row.whatsapp,
+          address: {
+            building: address.building,
+            line1: address.line1,
+            street: address.street,
+            city: address.city,
+            country: address.country,
+          },
+          nairobiAddress: row.nairobi_address ?? '',
+          hours: row.hours as { days: string; time: string }[],
+          hoursConfirmed: row.hours_confirmed,
+          yearsInBusiness: row.years_in_business,
+          stats: row.stats as { value: string; unit: string; label: string }[],
+        };
       },
     },
   };
 }
+

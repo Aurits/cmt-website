@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:migrate": "node scripts/migrate.mjs",
+    "db:status": "node scripts/migrate.mjs --status",
+    "db:seed": "node scripts/seed.mjs"
   },
   "dependencies": {
     "kysely": "^0.29.6",
