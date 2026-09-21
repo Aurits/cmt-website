@@ -173,6 +173,38 @@ create table testimonials (
   sort_order   int not null default 0
 );
 
+-- ── the blog, which the site calls Insights ────────────────────────────
+-- Shaped by LAYOUT-SPECS A-07: the index is a ruled list of date, title and a
+-- one-line finding, each note carries a single pull figure, and the note page
+-- has a sticky rail of key figures beside it.
+create table insights (
+  id              uuid primary key default gen_random_uuid(),
+  slug            text not null unique,
+  title           text not null,
+  -- The one-line finding shown against the title in the index.
+  finding         text not null,
+  -- ~40 words, for the full-width "latest note" block at the top of the index.
+  excerpt         text not null,
+  body            text not null,               -- markdown
+  -- The number that gets quoted and screenshotted. This is the reason to publish.
+  pull_figure     text,                        -- '12.5%'
+  pull_caption    text,
+  -- The sticky rail: [{ label, value }]. A schedule, so jsonb rather than a table.
+  key_figures     jsonb not null default '[]',
+  author_id       uuid references agents on delete set null,
+  cover_path      text,                        -- storage path
+  meta_description text,
+  tags            text[] not null default '{}',
+  status          text not null default 'draft' check (status in
+                    ('published','draft','archived')),
+  published_at    timestamptz,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+
+create index insights_published_idx
+  on insights (published_at desc) where status = 'published';
+
 -- ── enquiries ──────────────────────────────────────────────────────────
 create table inquiries (
   id            uuid primary key default gen_random_uuid(),
@@ -202,12 +234,18 @@ create table site_settings (
   short_name        text not null,
   tagline           text not null,
   description       text not null,
+  url               text not null,             -- metadataBase, needed by OG images
   phone_display     text not null,
   phone_href        text not null,
   email             text not null,
   whatsapp          text,                      -- null until CMT supplies it
-  address           jsonb not null,
+  address           jsonb not null,            -- building, line1, street, city, country
+  address_lat       numeric(9,6) not null,     -- the contact and offices maps
+  address_lng       numeric(9,6) not null,
   nairobi_address   text,
+  cities            text[] not null default '{}',
+  regulator         text not null,
+  region_confirmed  boolean not null default false,
   hours             jsonb not null default '[]',
   hours_confirmed   boolean not null default false,
   years_in_business text not null,
@@ -271,6 +309,9 @@ create policy "public reads settings"     on site_settings  for select to anon u
 
 create policy "public reads published testimonials" on testimonials
   for select to anon using (published = true);
+
+create policy "public reads published insights" on insights
+  for select to anon using (status = 'published');
 ```
 
 `agent_registrations` is safe to read publicly because an unconfirmed registration stores no
@@ -313,6 +354,7 @@ Three public-read buckets, with paths keyed by uuid so a retitle never orphans a
 | `listings` | `listings/<listing_id>/<uuid>.webp` | read |
 | `team` | `agents/<agent_id>/<uuid>.webp` | read |
 | `partners` | `partners/<partner_id>/<uuid>.png` | read |
+| `insights` | `insights/<insight_id>/<uuid>.webp` | read |
 
 ```sql
 create policy "public may read listing images" on storage.objects
@@ -404,25 +446,82 @@ rather than discovered in production.
 
 ---
 
-## 6. Order of work
+## 6. Consistency audit
+
+Every column was checked back against the type it comes from, and every relation against the data
+that has to satisfy it. Four things did not line up.
+
+### Fixed above
+
+**`site_settings` was missing four fields the public site actually reads.** `AdminSiteSettings`
+models a subset of what `src/data/site.ts` exports, and the pages read the wider object. Had
+settings moved to the database as modelled, `site.address.coords`, `site.cities`, `site.regulator`
+and `site.regionConfirmed` would all have come back undefined, taking the contact map, the offices
+page wording, several leads and every "regulated by" line with them. Added, plus `url`, which
+`metadataBase` needs before Open Graph images can work.
+
+### Needs a change in the TypeScript, not the SQL
+
+**`Inquiry` does not capture what the valuation form collects.** `ValuationRequestForm` asks what
+is being valued and what the figure is for, which is the whole point of routing the matrix into
+it, and then the type has nowhere to put either. `inquiries` has `valuation_asset`,
+`valuation_purpose` and `source_path`; `src/lib/admin/types.ts` needs the same three fields or the
+data is dropped between the form and the table.
+
+### Handled at seed time
+
+**`Listing.agentId` holds an agent slug, not a uuid.** The values in `src/data/listings.ts` are
+`'kanshabe-lindah'` and `'waniala-andrew'`, which match `agents.id` in the current static data.
+The seed inserts agents first, keeps a slug to uuid map, and resolves `agent_id` through it.
+
+**Image paths change meaning.** `listing_images.path` will hold storage paths like
+`listings/<uuid>/<uuid>.webp`, but today's data holds public paths like
+`/images/listings/res-villa-pool.jpg`. Both are valid during the transition, so the helper that
+builds a URL treats a leading `/` as local and anything else as a bucket key. That lets the stock
+photography stay where it is while real photographs arrive through the CMS, rather than forcing a
+big-bang upload before launch.
+
+### Checked and correct
+
+- `Listing` to `listing_images`: one to many, ordered, cascading on delete so a removed property
+  takes its rows with it
+- `agents` to `agent_registrations`: one to many, cascading
+- `partner_groups` to `partners`: one to many, cascading, ordered within the group, which is what
+  `reorderPartner` needs
+- `insights.author_id` and `listings.agent_id`: both `on delete set null`, because losing a
+  colleague should not delete their work
+- `inquiries.listing_slug`: deliberately not a foreign key. An enquiry is a record of something
+  that happened and has to outlive the listing it came from
+- `site_settings`: single row, enforced by `check (id = 1)`
+
+---
+
+## 7. Order of work
 
 1. Project, buckets, signup disabled, keys into `.env.local` and the host
 2. Tables, in the order above (profiles, agents, listings, then the rest)
 3. RLS on every table, then the policies. **Verify with the anon key that `inquiries` cannot be
    read** before writing any application code
-4. Seed from `src/data/*.ts`, which becomes the seed script rather than being deleted
+4. Seed from `src/data/*.ts`, which becomes the seed script rather than being deleted. Agents
+   first, keeping a slug to uuid map so `listings.agent_id` resolves
 5. Rewrite the internals of `store.tsx`. No admin screen changes
 6. Middleware, then remove `auth.ts` and the bypass
 7. Public site reads, with revalidation on save
-8. Forms insert into `inquiries`
+8. Forms insert into `inquiries`, after `Inquiry` gains the three fields named in the audit
+9. The blog: admin screen, then the public `/insights` routes. Last, because the nav item stays
+   hidden until CMT has a first note to publish
 
 ---
 
-## 7. Still open
+## 8. Still open
 
-- **Insights and blog have no table here.** The admin has no screen for them either, and the nav
-  item is deliberately held back until a first note exists. If CMT wants it at launch, add
-  `insights` alongside `listings` with the same status field, and budget a day.
+- **The blog has a table but no admin screen.** `insights` is defined above; nothing in
+  `src/app/(admin)/` manages it yet. That is a list, a form and a store slice, so roughly a day,
+  and it is the one piece of new admin work the backend migration does not otherwise need.
+- **The nav item stays hidden until a first note exists**, which is unchanged. The table being
+  ready does not mean the section ships empty.
+- **No subscribers table.** LAYOUT-SPECS A-07 ends the index with "get the next note by email".
+  If that button is to work, it needs somewhere to write to and a consent record with it.
 - Offices remain in code. Move them if CMT starts opening or closing branches.
 - No audit trail. If CMT wants to know who changed a price, `updated_by uuid references profiles`
   on the content tables costs almost nothing now and is awkward to add later.
