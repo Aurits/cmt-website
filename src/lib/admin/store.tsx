@@ -30,10 +30,28 @@ function loadState(): AdminState {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return seedAdminState();
-    const parsed = JSON.parse(raw) as AdminState;
-    // Guard against a shape left over from an earlier version of the store.
+    const parsed = JSON.parse(raw) as Partial<AdminState>;
+    // Nothing recognisable: start over rather than limp along.
     if (!parsed.listings || !parsed.settings) return seedAdminState();
-    return parsed;
+
+    /*
+     * Merge over the seed rather than trusting the stored shape wholesale.
+     *
+     * A browser that saved before a collection was added to AdminState has no key for it, and
+     * returning that object as-is hands every screen an undefined array — which is exactly how
+     * `state.posts.filter` crashed the blog page for anyone who had used the CMS before the blog
+     * existed. Spreading over a fresh seed means a key added later arrives with its seed value
+     * instead of `undefined`, and the same is true of every collection added after this one.
+     *
+     * Settings merges a level deeper for the same reason: a new setting should read as its
+     * default, not as a missing property halfway down a page.
+     */
+    const seed = seedAdminState();
+    return {
+      ...seed,
+      ...parsed,
+      settings: { ...seed.settings, ...parsed.settings },
+    };
   } catch {
     return seedAdminState();
   }
