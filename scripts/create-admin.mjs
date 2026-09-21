@@ -3,11 +3,20 @@
  *
  *   node scripts/create-admin.mjs "you@cmtrealtors.com" "Full Name" [admin|editor]
  *
+ * It asks for the password rather than taking it as an argument, so it never reaches shell
+ * history or the process list. Press enter at the prompt to have one generated instead, in which
+ * case it is printed once and there is nothing to recover it from afterwards.
+ *
+ * ADMIN_PASSWORD in .env.local also works, for scripting. Note that on WSL an inline
+ * `ADMIN_PASSWORD=… node …` does NOT reach a Windows node.exe unless the name is in WSLENV: the
+ * variable vanishes and a password gets generated instead, which is a confusing way to be locked
+ * out. The prompt exists partly because of that.
+ *
  * There is no signup screen and there should not be one: accounts are created here, by someone
- * with database access. A password is generated rather than accepted on the command line, so it
- * never reaches shell history, and it is printed once.
+ * with database access.
  */
 import fs from 'node:fs';
+import readline from 'node:readline';
 import { randomBytes, scrypt as scryptCb } from 'node:crypto';
 import pg from 'pg';
 
@@ -55,7 +64,34 @@ const db = new pg.Client({
 });
 await db.connect();
 
-const password = generatePassword();
+/** Reads a line without echoing it, so a shoulder or a screen share sees nothing. */
+function askHidden(question) {
+  return new Promise((resolve) => {
+    if (!process.stdin.isTTY) return resolve('');
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout, terminal: true });
+    const output = rl.output;
+    let first = true;
+    output.write(question);
+    rl._writeToOutput = () => {
+      if (first) { first = false; }
+    };
+    rl.question('', (answer) => {
+      output.write('\n');
+      rl.close();
+      resolve(answer);
+    });
+  });
+}
+
+let chosen = process.env.ADMIN_PASSWORD?.trim() || '';
+if (!chosen) {
+  chosen = (await askHidden('  Password (enter to generate one): ')).trim();
+}
+if (chosen && chosen.length < 12) {
+  console.error('\n  That password is under 12 characters. Use a longer one.');
+  process.exit(1);
+}
+const password = chosen || generatePassword();
 const hash = await hashPassword(password);
 
 const { rows } = await db.query(
@@ -72,9 +108,24 @@ const user = rows[0];
 // Any existing session is dropped: changing a password should end the sessions it opened.
 const { rowCount } = await db.query('delete from sessions where user_id = $1', [user.id]);
 
+const rule = '─'.repeat(52);
 console.log(`\n${user.created ? 'created' : 'updated'}  ${user.email}  (${user.role})`);
 if (rowCount) console.log(`  ${rowCount} existing session(s) revoked`);
-console.log(`\n  password:  ${password}`);
-console.log('\n  Shown once. Store it in a password manager and change it after first sign-in.\n');
+
+if (chosen) {
+  console.log('\n  Password set to the one you supplied.\n');
+} else {
+  // Loud on purpose. The first version printed this as one quiet line among several and it was
+  // missed, which cost an afternoon of "why can I not log in" — the password was never the one
+  // being typed, because nobody chose it.
+  console.log(`\n${rule}`);
+  console.log('  A PASSWORD WAS GENERATED. It is shown only here.');
+  console.log(`${rule}`);
+  console.log(`\n      ${password}\n`);
+  console.log(`${rule}`);
+  console.log('  Copy it now. To choose your own instead, run this again and type one');
+  console.log('  at the prompt rather than pressing enter.');
+  console.log(`${rule}\n`);
+}
 
 await db.end();
