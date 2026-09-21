@@ -108,7 +108,7 @@ The admin dashboard now reads and writes Postgres, with no screen changing.
 **Wed 23 — images and auth.**
 Storage bucket wired into `ImageGalleryManager` through the S3 client, so the bucket vendor stays a
 config value. `remotePatterns` configured and verified against a real uploaded file. Our own auth
-replaces the `localStorage` gate, the bypass button goes, and the middleware gate lands with it.
+replaces the `localStorage` gate, the bypass button goes, and the proxy gate lands with it.
 See `PORTABILITY.md` section 3.
 
 **Thu 24 — the public site reads the database.**
@@ -138,7 +138,7 @@ restore, accounts confirmed in CMT's name.
 
 None of this is in the client workplan, and all of it has to be true before DNS moves.
 
-- [ ] **`/admin` is not reachable by the public.** Real auth, middleware on the route group, and
+- [ ] **`/admin` is not reachable by the public.** Real auth, proxy.ts on the route group, and
       `robots.txt` disallowing it. Thirteen admin routes are currently statically generated and
       crawlable, and the login accepts anything.
 - [ ] `robots.txt` and `sitemap.xml`, both generated from the route data

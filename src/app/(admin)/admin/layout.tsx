@@ -1,23 +1,16 @@
 import type { Metadata } from 'next';
-import { AdminAuthGate } from '@/components/admin/AdminAuthGate';
-import { AdminProvider } from '@/lib/admin/store';
 
 export const metadata: Metadata = {
   title: { default: 'CMT Realtors — Admin', template: '%s — CMT Admin' },
+  // Belt and braces with proxy.ts and robots.txt. A CMS has no business in a search index.
   robots: { index: false, follow: false },
 };
 
 /**
- * The CMS's own shell, isolated from the public site under the (site) route group — no
- * Header, Footer or StickyMobileCTA here. AdminProvider is mounted only inside this group,
- * so the public pages never pay for the CMS's localStorage read/write. AdminAuthGate decides
- * between the login screen and the sidebar shell — see its own comment for why that check is
- * a frontend-only stand-in rather than real authentication.
+ * Metadata only. The authentication gate lives one level down in (protected), so that
+ * /admin/login can sit under the same URL prefix without being behind the thing it exists to
+ * get you through.
  */
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <AdminProvider>
-      <AdminAuthGate>{children}</AdminAuthGate>
-    </AdminProvider>
-  );
+  return <>{children}</>;
 }

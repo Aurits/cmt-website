@@ -183,7 +183,33 @@ interface SiteSettingsRow {
   stats: unknown;
 }
 
+// Auth lives in the same database, so it shares one pool and one Kysely instance. The queries
+// themselves live in src/lib/auth, which is the only thing outside src/lib/data allowed to reach
+// for getDb(), because a user table is not content and does not belong behind the repository.
+interface UserRow {
+  id: string;
+  email: string;
+  full_name: string | null;
+  password_hash: string;
+  role: string;
+  activated_at: Date | null;
+  last_login_at: Date | null;
+  created_at: Date;
+}
+
+interface SessionRow {
+  id: string;
+  user_id: string;
+  token_hash: string;
+  expires_at: Date;
+  created_at: Date;
+  user_agent: string | null;
+  ip: string | null;
+}
+
 export interface Database {
+  users: UserRow;
+  sessions: SessionRow;
   site_settings: SiteSettingsRow;
   listings: ListingRow;
   listing_images: ListingImageRow;

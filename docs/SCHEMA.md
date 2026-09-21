@@ -396,7 +396,7 @@ image pipeline is the classic launch-morning discovery.
 > **Amended by `PORTABILITY.md`.** This section describes the Supabase Auth path. The project has
 > since chosen its own auth, in the repo, with users in our own Postgres, so that changing
 > database host does not touch authentication. The shape below still holds — profiles table,
-> roles, no public signup, a server-side gate in middleware — but `auth.users`, the trigger and
+> roles, no public signup, a server-side gate in proxy.ts — but `auth.users`, the trigger and
 > the Supabase keys are replaced by the arrangement in `PORTABILITY.md` section 3.
 
 
@@ -429,20 +429,27 @@ should not be one.
 |---|---|
 | `src/lib/admin/auth.ts` | The `localStorage` flag. Replaced by the Supabase session |
 | The bypass button on `/admin/login` | Honest while there was no server. Indefensible once there is |
-| `AdminAuthGate`'s client-only check | Becomes a session check, with the real gate in middleware |
+| `AdminAuthGate`'s client-only check | Becomes a session check, with the real gate in proxy.ts |
 
 ### The gate has to be server-side
 
-`AdminAuthGate` runs in the browser, which means the admin HTML is still sent before anything
-decides whether you should see it. Middleware refuses the request instead:
+`AdminAuthGate` ran in the browser, which meant the admin HTML was sent before anything decided
+whether you should see it. It is gone. Three locks replace it:
 
 ```ts
-// middleware.ts
+// src/proxy.ts  — Next 16 renamed `middleware` to `proxy`; the old name is deprecated.
 export const config = { matcher: ['/admin/:path*'] };
 ```
 
-Redirect to `/admin/login` when there is no session, and let `/admin/login` through. Combined with
-`robots.txt` disallowing `/admin`, that closes the hole flagged in `BUILD-PLAN.md`.
+**proxy** redirects when there is no session cookie, letting `/admin/login` through. It checks
+only for the cookie's presence and opens no connection, because the documentation is explicit
+that proxy may be deployed away from the application. **`(protected)/layout.tsx`** is the
+authoritative check, asking the database whether the session is real, unexpired and attached to
+an activated account. **`robots.ts`** disallows `/admin` so a crawler never asks in the first
+place.
+
+`(protected)` is a route group, so it changes no URL. Its only purpose is to put `/admin/login`
+outside the thing it exists to get you through.
 
 ### Keys
 
