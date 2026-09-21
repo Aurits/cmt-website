@@ -79,7 +79,12 @@ export function storage() {
     bucket: require_('S3_BUCKET', 'Uploads need a bucket name.'),
     accessKeyId: require_('S3_ACCESS_KEY_ID', 'Uploads need credentials.'),
     secretAccessKey: require_('S3_SECRET_ACCESS_KEY', 'Uploads need credentials.'),
-    publicUrl: require_('S3_PUBLIC_URL', 'Stored files need a public origin to be served from.'),
+    /*
+     * Optional. Left blank, src/lib/storage derives it from the endpoint, because Supabase's S3
+     * endpoint and its public object URL differ only by a subdomain and this is an easy field to
+     * skip. Set it explicitly the moment a CDN sits in front of the bucket.
+     */
+    publicUrlOptional: read('S3_PUBLIC_URL'),
   };
 }
 

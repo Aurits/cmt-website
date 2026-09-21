@@ -64,6 +64,8 @@ const RESET = process.argv.includes('--reset');
 async function main() {
   const db = await open();
   const count = {};
+  let keptImages = 0;
+  let keptLogos = 0;
 
   if (RESET) {
     // Order matters: children before parents. Enquiries are never in this list.
@@ -144,14 +146,30 @@ async function main() {
       ],
     );
 
-    await db.query('delete from listing_images where listing_id = $1', [rows[0].id]);
-    for (const [i, image] of listing.images.entries()) {
-      await db.query(
-        'insert into listing_images (listing_id, path, alt, sort_order) values ($1,$2,$3,$4)',
-        // A leading slash means a file already in public/. Anything else is a bucket key. Both
-        // are valid while real photography arrives one property at a time.
-        [rows[0].id, image.src, image.alt, i],
-      );
+    /*
+     * Images are only reseeded while they still point at public/.
+     *
+     * Once scripts/upload-images.mjs has moved them into the bucket the rows hold bucket keys,
+     * and blindly replacing them from src/data would quietly undo that upload and leave the site
+     * pointing at files it no longer serves. So: if any image for this listing is already a
+     * bucket key, leave the whole set alone.
+     */
+    const { rows: existing } = await db.query(
+      'select path from listing_images where listing_id = $1',
+      [rows[0].id],
+    );
+    const alreadyInBucket = existing.some((row) => !row.path.startsWith('/'));
+
+    if (!alreadyInBucket) {
+      await db.query('delete from listing_images where listing_id = $1', [rows[0].id]);
+      for (const [i, image] of listing.images.entries()) {
+        await db.query(
+          'insert into listing_images (listing_id, path, alt, sort_order) values ($1,$2,$3,$4)',
+          [rows[0].id, image.src, image.alt, i],
+        );
+      }
+    } else {
+      keptImages += listing.images.length;
     }
   }
   count.listings = listings.length;
@@ -169,13 +187,24 @@ async function main() {
        returning id`,
       [group.id, group.title, group.description, gi],
     );
+    // Read the existing logos before the wipe, so a bucket key survives the reinsert below.
+    const { rows: priorLogos } = await db.query(
+      'select name, logo_path from partners where group_id = $1',
+      [rows[0].id],
+    );
+    const priorByName = new Map(priorLogos.map((row) => [row.name, row.logo_path]));
     await db.query('delete from partners where group_id = $1', [rows[0].id]);
     for (const [pi, partner] of group.partners.entries()) {
+      // Same rule as images: never replace a bucket key with a public/ path.
+      const priorPath = priorByName.get(partner.name);
+      const keptLogo = priorPath && !priorPath.startsWith('/') ? priorPath : null;
+
       await db.query(
         `insert into partners (group_id, name, short_name, logo_path, verified, sort_order)
          values ($1,$2,$3,$4,true,$5)`,
-        [rows[0].id, partner.name, partner.shortName ?? null, partner.logo ?? null, pi],
+        [rows[0].id, partner.name, partner.shortName ?? null, keptLogo ?? partner.logo ?? null, pi],
       );
+      if (keptLogo) keptLogos += 1;
       partnerTotal += 1;
     }
   }
@@ -254,6 +283,11 @@ async function main() {
            (select count(*) from listing_images) images,
            (select count(*) from agent_registrations where confirmed = false and number is not null) leaked_numbers
   `);
+  if (keptImages || keptLogos) {
+    console.log(`\n  kept in the bucket: ${keptImages} images, ${keptLogos} logos ` +
+                '(not reset to public/ paths)');
+  }
+
   console.log('\nchecks');
   console.log(`  published listings   ${check[0].published_listings}`);
   console.log(`  listings with no agent ${check[0].orphan_listings}`);
