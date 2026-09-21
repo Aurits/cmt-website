@@ -6,9 +6,8 @@
 
 **Development Period: 17 – 30 September 2026**
 
-> Markdown conversion of `Website Development & Launch Workplan.pdf`, which sits beside this file
-> and remains the version issued to the client. If the two ever disagree, the PDF is the one that
-> was signed off.
+> Transcribed from the workplan issued to CMT on 17 September 2026. This file is now the record;
+> the original PDF is in the git history if the sent version is ever needed.
 
 ---
 
