@@ -3,20 +3,26 @@
  *
  *   node scripts/create-admin.mjs "you@cmtrealtors.com" "Full Name" [admin|editor]
  *
- * It asks for the password rather than taking it as an argument, so it never reaches shell
- * history or the process list. Press enter at the prompt to have one generated instead, in which
- * case it is printed once and there is nothing to recover it from afterwards.
+ * Three ways to set the password, in order of preference:
  *
- * ADMIN_PASSWORD in .env.local also works, for scripting. Note that on WSL an inline
- * `ADMIN_PASSWORD=… node …` does NOT reach a Windows node.exe unless the name is in WSLENV: the
- * variable vanishes and a password gets generated instead, which is a confusing way to be locked
- * out. The prompt exists partly because of that.
+ *   1. ADMIN_PASSWORD=… in .env.local        never touches shell history
+ *   2. a fourth argument                     convenient, but your shell remembers it
+ *   3. neither                               one is generated and printed once
+ *
+ * This script never waits for input. An earlier version prompted with the echo turned off, which
+ * is the nicer idea and the wrong one here: across WSL, npm run and a Windows node.exe,
+ * process.stdin.isTTY comes back true, false and undefined in different combinations, and where
+ * it is true the prompt sits there invisibly and looks like a hang. A tool run occasionally by
+ * one developer is not worth that.
+ *
+ * Note for WSL: an inline `ADMIN_PASSWORD=… node …` does NOT reach a Windows node.exe unless the
+ * name is in WSLENV. The variable vanishes silently and a password is generated instead. Put it
+ * in .env.local, or pass it as the fourth argument.
  *
  * There is no signup screen and there should not be one: accounts are created here, by someone
  * with database access.
  */
 import fs from 'node:fs';
-import readline from 'node:readline';
 import { randomBytes, scrypt as scryptCb } from 'node:crypto';
 import pg from 'pg';
 
@@ -50,7 +56,8 @@ function generatePassword() {
 
 const [email, name, role = 'admin'] = process.argv.slice(2);
 if (!email) {
-  console.error('usage: node scripts/create-admin.mjs "email" "Full Name" [admin|editor]');
+  console.error('usage: node scripts/create-admin.mjs "email" "Full Name" [admin|editor] [password]');
+  console.error('   or: ADMIN_PASSWORD in .env.local, which keeps it out of shell history');
   process.exit(1);
 }
 if (!['admin', 'editor'].includes(role)) {
@@ -64,31 +71,9 @@ const db = new pg.Client({
 });
 await db.connect();
 
-/** Reads a line without echoing it, so a shoulder or a screen share sees nothing. */
-function askHidden(question) {
-  return new Promise((resolve) => {
-    if (!process.stdin.isTTY) return resolve('');
-    const rl = readline.createInterface({ input: process.stdin, output: process.stdout, terminal: true });
-    const output = rl.output;
-    let first = true;
-    output.write(question);
-    rl._writeToOutput = () => {
-      if (first) { first = false; }
-    };
-    rl.question('', (answer) => {
-      output.write('\n');
-      rl.close();
-      resolve(answer);
-    });
-  });
-}
-
-let chosen = process.env.ADMIN_PASSWORD?.trim() || '';
-if (!chosen) {
-  chosen = (await askHidden('  Password (enter to generate one): ')).trim();
-}
+const chosen = (process.env.ADMIN_PASSWORD ?? process.argv[5] ?? '').trim();
 if (chosen && chosen.length < 12) {
-  console.error('\n  That password is under 12 characters. Use a longer one.');
+  console.error('  That password is under 12 characters. Use a longer one.');
   process.exit(1);
 }
 const password = chosen || generatePassword();
