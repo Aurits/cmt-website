@@ -125,6 +125,8 @@ Two documents drive the current direction, written after a review of CMT's own p
   `globals.css`.
 
 - **`docs/WORKPLAN.md`** — the Phase 1 delivery plan issued to CMT, 17 to 30 September.
+- **`docs/BUILD-PLAN.md`** — the internal version: the stack and storage decisions, the eight
+  remaining days, and the gate that has to be cleared before DNS moves.
 
 `docs/Plan.md` remains the client's original brief and is not edited — where the strategy supersedes it, the
 strategy says so and gives the reason.
