@@ -334,6 +334,11 @@ create policy "only staff may update enquiries" on inquiries
 > This is the most important policy in the project. Enquiries hold names, phone numbers and email
 > addresses. **`anon` gets `insert` and nothing else.** There is no public select policy on this
 > table, so there is no way to read it with the anon key, which is the key that ships to browsers.
+>
+> Under the portable architecture there is no browser-facing key at all, so the same protection is
+> carried by the repository: `inquiries.create()` is public, `inquiries.list()` sits behind
+> `requireStaff()`. The guarantee moves from the database to one reviewable directory. See
+> `PORTABILITY.md` section 4.
 
 **Staff write everything else.**
 
@@ -387,6 +392,13 @@ image pipeline is the classic launch-morning discovery.
 ---
 
 ## 5. Auth
+
+> **Amended by `PORTABILITY.md`.** This section describes the Supabase Auth path. The project has
+> since chosen its own auth, in the repo, with users in our own Postgres, so that changing
+> database host does not touch authentication. The shape below still holds — profiles table,
+> roles, no public signup, a server-side gate in middleware — but `auth.users`, the trigger and
+> the Supabase keys are replaced by the arrangement in `PORTABILITY.md` section 3.
+
 
 **Supabase Auth, email and password, and public signup switched off.** This is the first setting
 to change in the dashboard. Left on, anyone can create an account, and `is_staff()` returns true
@@ -447,6 +459,12 @@ rather than discovered in production.
 ---
 
 ## 6. How the app connects
+
+> **Amended by `PORTABILITY.md`.** The comparison below is still the right way to understand the
+> five options, and the warning about ORMs bypassing RLS is still true. The project's choice has
+> changed: it now reaches Postgres directly through Kysely and enforces access in the repository
+> layer instead, for the reasons in `PORTABILITY.md` sections 1 and 4.
+
 
 Supabase offers five connection options and they are not interchangeable. The choice decides
 whether the policies in section 3 are enforced or merely present.

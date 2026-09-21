@@ -106,8 +106,10 @@ Seed the database from `src/data/*.ts`. Replace the internals of `store.tsx` wit
 The admin dashboard now reads and writes Postgres, with no screen changing.
 
 **Wed 23 — images and auth.**
-Storage bucket wired into `ImageGalleryManager`. `remotePatterns` configured and verified against a
-real uploaded file. Supabase Auth replaces the `localStorage` gate, and the bypass button goes.
+Storage bucket wired into `ImageGalleryManager` through the S3 client, so the bucket vendor stays a
+config value. `remotePatterns` configured and verified against a real uploaded file. Our own auth
+replaces the `localStorage` gate, the bypass button goes, and the middleware gate lands with it.
+See `PORTABILITY.md` section 3.
 
 **Thu 24 — the public site reads the database.**
 Listings, property detail, agents, partners and testimonials switch from static imports to

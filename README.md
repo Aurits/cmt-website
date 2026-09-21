@@ -134,8 +134,10 @@ Two documents drive the current direction, written after a review of CMT's own p
 - **`docs/WORKPLAN.md`** — the Phase 1 delivery plan issued to CMT, 17 to 30 September.
 - **`docs/BUILD-PLAN.md`** — the internal version: the stack and storage decisions, the eight
   remaining days, and the gate that has to be cleared before DNS moves.
-- **`docs/SCHEMA.md`** — the Supabase design: tables derived from the existing types, the row
+- **`docs/SCHEMA.md`** — the database design: tables derived from the existing types, the row
   level security policies, storage buckets, and how admin login stops being a localStorage flag.
+- **`docs/PORTABILITY.md`** — how the backend stays swappable: what is actually locked in, the
+  repository seam, our own auth, and what that changes about row level security.
 
 `docs/Plan.md` remains the client's original brief and is not edited — where the strategy supersedes it, the
 strategy says so and gives the reason.
