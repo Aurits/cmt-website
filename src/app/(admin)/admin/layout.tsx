@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: { default: 'CMT Realtors — Admin', template: '%s — CMT Admin' },
+  title: { default: 'CMT Realtors, Admin', template: '%s, CMT Admin' },
   // Belt and braces with proxy.ts and robots.txt. A CMS has no business in a search index.
   robots: { index: false, follow: false },
 };

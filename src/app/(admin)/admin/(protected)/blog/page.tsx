@@ -19,7 +19,7 @@ const statusMeta: Record<PostStatus, { label: string; tone: PillTone }> = {
 /**
  * The blog.
  *
- * The columns are the index row from docs/LAYOUT-SPECS.md A-07 — date, title, finding, figure —
+ * The columns are the index row from docs/LAYOUT-SPECS.md A-07, date, title, finding, figure —
  * so what an editor sorts here is what a reader scans on the public page. The figure column
  * earns its place by being the thing most often missing: a post without one is just an opinion.
  */

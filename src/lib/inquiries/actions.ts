@@ -9,7 +9,7 @@ import type { InquiryType } from '@/lib/admin/types';
  *
  * Deliberately not in lib/admin/actions.ts, and deliberately without requireStaff: this is the one
  * write on the whole site that an anonymous visitor is allowed to make. Keeping it in its own file
- * means the rule over there — every function starts with requireStaff — stays absolute, with no
+ * means the rule over there, every function starts with requireStaff, stays absolute, with no
  * exception anyone has to remember.
  *
  * What it can do is exactly one thing: insert a row. It cannot read the table, update one, or

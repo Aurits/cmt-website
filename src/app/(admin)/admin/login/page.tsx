@@ -15,7 +15,7 @@ import { site } from '@/data/site';
  *
  * A server action rather than a fetch: the password never touches client state, the session
  * cookie is set httpOnly where script cannot read it, and the form still submits if the bundle
- * fails to load. Errors come back as a value rather than a thrown exception, deliberately — a
+ * fails to load. Errors come back as a value rather than a thrown exception, deliberately, a
  * failed sign-in is an ordinary outcome, not an exception.
  */
 export default function AdminLoginPage() {

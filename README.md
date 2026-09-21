@@ -1,7 +1,7 @@
 # CMT Realtors — website redesign (frontend prototype)
 
 Frontend-only prototype of the redesigned [cmtrealtors.com](https://cmtrealtors.com). Built
-against `docs/Plan.md`, the client brief in this repo. There is now a CMS at `/admin`, but it is
+against `docs/PLAN.md`, the client brief in this repo. There is now a CMS at `/admin`, but it is
 frontend only: it seeds from `src/data/*.ts` and saves to `localStorage`, so its edits never reach
 the public site. No database, no real authentication, and forms are still UI only. `docs/SCHEMA.md`
 is the design for the Supabase backend that replaces all three.
@@ -139,7 +139,7 @@ Two documents drive the current direction, written after a review of CMT's own p
 - **`docs/PORTABILITY.md`** — how the backend stays swappable: what is actually locked in, the
   repository seam, our own auth, and what that changes about row level security.
 
-`docs/Plan.md` remains the client's original brief and is not edited — where the strategy supersedes it, the
+`docs/PLAN.md` remains the client's original brief and is not edited — where the strategy supersedes it, the
 strategy says so and gives the reason.
 
 ## Replacing placeholder content

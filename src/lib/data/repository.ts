@@ -24,7 +24,7 @@ import type {
  * small enough to review in an afternoon. See docs/PORTABILITY.md section 4.
  *
  * Reads are what the public site needs. Writes are what the CMS needs. They sit on one interface
- * because they hit one store, but an adapter is free to reject writes — the static adapter does
+ * because they hit one store, but an adapter is free to reject writes, the static adapter does
  * exactly that.
  */
 

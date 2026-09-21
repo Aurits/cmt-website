@@ -15,7 +15,7 @@ export interface DataTableColumn<T> {
 }
 
 /**
- * The one data table the CMS uses everywhere. Square (rounded-brand), ruled rows — the same
+ * The one data table the CMS uses everywhere. Square (rounded-brand), ruled rows, the same
  * "schedule" logic as the rest of the site, scaled up to a grid. Sorting is optional per
  * column and entirely client-side, which is the right cost for a prototype with at most a
  * few dozen rows.

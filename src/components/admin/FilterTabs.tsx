@@ -6,7 +6,7 @@ export interface FilterTab {
   count?: number;
 }
 
-/** Underline tabs for filtering a table — controls, so rounded-control on the active pill. */
+/** Underline tabs for filtering a table, controls, so rounded-control on the active pill. */
 export function FilterTabs({
   tabs,
   value,

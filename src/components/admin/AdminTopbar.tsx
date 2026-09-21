@@ -23,7 +23,7 @@ function titleFor(pathname: string): string {
   return titles.find((t) => t.match(pathname))?.label ?? 'Admin';
 }
 
-/** Identifies who is editing — this is a single-admin prototype, not an auth system. */
+/** Identifies who is editing. This is a single-admin prototype, not an auth system. */
 export function AdminTopbar({ onMenu, adminEmail }: { onMenu: () => void; adminEmail: string }) {
   const pathname = usePathname();
   const initials = (adminEmail.slice(0, 2) || 'AD').toUpperCase();

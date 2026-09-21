@@ -58,7 +58,7 @@ export const site = {
 } as const;
 
 /**
- * Six items, identity first, which is the ceiling docs/Plan.md sets.
+ * Six items, identity first, which is the ceiling docs/PLAN.md sets.
  *
  * Home earns its slot on a site people arrive at sideways: most visitors land on a valuation
  * page from a search or a bank's referral rather than on the homepage, and the logo alone is a

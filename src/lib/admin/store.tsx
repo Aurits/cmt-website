@@ -23,7 +23,7 @@ import type {
  * through a server action that writes Postgres and revalidates whatever public page it touched.
  *
  * The context keeps the same shape it always had, so no screen changed: the methods still look
- * synchronous and still return void. What happens underneath is optimistic — local state updates
+ * synchronous and still return void. What happens underneath is optimistic, local state updates
  * at once so the interface does not stall on a round trip, the action runs, and a failure puts
  * the previous state back and reports why rather than leaving the screen showing an edit that
  * was never saved.
@@ -100,7 +100,7 @@ export function AdminProvider({
    * Apply a change locally, then persist it.
    *
    * The optimistic update is what keeps the CMS feeling like a tool rather than a form: the row
-   * moves the moment you click. The snapshot is what makes that honest — if the write fails, the
+   * moves the moment you click. The snapshot is what makes that honest, if the write fails, the
    * screen goes back to what the database actually holds instead of showing an edit that only
    * ever existed in this tab.
    *

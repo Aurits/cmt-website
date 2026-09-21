@@ -30,7 +30,7 @@ const items = [
 
 /**
  * The CMS masthead-equivalent: same brand green as the public Header, so the admin still
- * reads as CMT's own tool, but its own layout — a fixed rail rather than a sticky bar,
+ * reads as CMT's own tool, but its own layout, a fixed rail rather than a sticky bar,
  * because an admin spends the session here rather than passing through.
  */
 export function AdminSidebar({

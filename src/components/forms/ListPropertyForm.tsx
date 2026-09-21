@@ -11,7 +11,7 @@ import { cities } from '@/data/listings';
 import { site } from '@/data/site';
 
 /**
- * Owners putting a property on the market. Five fields and nothing about valuation purpose — an
+ * Owners putting a property on the market. Five fields and nothing about valuation purpose, an
  * owner is answering a different question from a bank, and one shared form with a subject
  * dropdown made both of them wade through the other's.
  */

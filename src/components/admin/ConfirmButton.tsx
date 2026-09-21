@@ -5,7 +5,7 @@ import { TrashIcon } from '@/components/admin/icons';
 import { cx } from '@/lib/cx';
 
 /**
- * A two-tap delete, in place rather than in a native confirm() dialog — a browser-chrome
+ * A two-tap delete, in place rather than in a native confirm() dialog, a browser-chrome
  * modal is exactly the "borrowed control" look the brief's design tokens are written to
  * avoid. First tap arms it and swaps the label for three seconds; a second tap within that
  * window commits, otherwise it quietly disarms.

@@ -34,7 +34,7 @@ export interface Storage {
 }
 
 /** True when a path points at a file in public/ rather than at the bucket. */
-export function isLocalPath(path: string): boolean {
+function isLocalPath(path: string): boolean {
   return path.startsWith('/');
 }
 
@@ -45,7 +45,7 @@ export function isLocalPath(path: string): boolean {
  * public object URL differ only by a subdomain and it is an easy thing to leave blank. Set it
  * explicitly once a CDN is in front.
  */
-export function publicBase(): string {
+function publicBase(): string {
   const env = storageEnv();
   if (env.publicUrlOptional) return env.publicUrlOptional.replace(/\/$/, '');
   const ref = new URL(env.endpoint).hostname.split('.')[0];
@@ -133,16 +133,3 @@ export function getStorage(): Storage {
   return hasStorage() ? s3Storage : localStorage;
 }
 
-/** Where a file belongs, so the convention lives in one place rather than at each call site. */
-export const keys = {
-  listingImage: (listingId: string, filename: string) => `listings/${listingId}/${filename}`,
-  partnerLogo: (partnerId: string, filename: string) => `partners/${partnerId}/${filename}`,
-  agentPhoto: (agentId: string, filename: string) => `agents/${agentId}/${filename}`,
-  postCover: (postId: string, filename: string) => `blog/${postId}/${filename}`,
-  /**
-   * Stock photography that shipped with the prototype. Shared between listings rather than owned
-   * by one, which is why it is not under listings/<id>/: these are illustrative, the property
-   * pages say so, and real photographs replace them one property at a time.
-   */
-  seedListingImage: (filename: string) => `seed/listings/${filename}`,
-};

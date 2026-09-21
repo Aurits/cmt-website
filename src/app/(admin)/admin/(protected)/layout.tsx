@@ -14,7 +14,7 @@ import { requireStaff } from '@/lib/auth';
  * This is the authoritative check. proxy.ts already turned away anyone with no session cookie,
  * but a cookie is a claim: this is where the database says whether the session exists, has not
  * expired, and belongs to an activated account. It runs on the server, so admin HTML is never
- * sent to someone who should not have it — which the client-side gate this replaces could not
+ * sent to someone who should not have it, which the client-side gate this replaces could not
  * promise, because by the time it ran the page had already been delivered.
  */
 export default async function ProtectedAdminLayout({

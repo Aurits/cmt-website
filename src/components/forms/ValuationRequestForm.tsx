@@ -13,13 +13,13 @@ import type { ValuationAssetSlug, ValuationPurposeSlug } from '@/lib/types';
 /**
  * The form the whole site funnels into.
  *
- * Six fields, and two of them are the axes of the matrix on /valuations — so a visitor who
+ * Six fields, and two of them are the axes of the matrix on /valuations, so a visitor who
  * arrived by picking a cell finds both already answered rather than being asked to explain
  * themselves again. That was the leak in the first cut of this navigation: every route said
  * "request a valuation" and then landed on a generic enquiry box with a subject dropdown.
  *
  * `asset` and `purpose` arrive from the URL (the matrix, a purpose page, the hero counter). They
- * are still editable — a pre-filled field the visitor cannot correct is worse than an empty one.
+ * are still editable, a pre-filled field the visitor cannot correct is worse than an empty one.
  *
  * This form sends for real now. It reaches the enquiries table, appears in the CMS inbox, and the
  * confirmation below says what happens next rather than the old honest apology about the site

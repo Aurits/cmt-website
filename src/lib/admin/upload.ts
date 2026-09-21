@@ -64,7 +64,7 @@ export async function uploadImage(formData: FormData): Promise<UploadResult> {
     return {
       error: `That file is ${(file.size / 1024 / 1024).toFixed(1)}MB. The limit is ${
         MAX_BYTES / 1024 / 1024
-      }MB — resize it and try again.`,
+      }MB, resize it and try again.`,
     };
   }
   if (!['listings', 'agents', 'partners', 'blog'].includes(folder)) {

@@ -20,7 +20,7 @@ export default function AdminPartnersPage() {
       <p className="text-body text-muted">
         {state.partners.length} logos across {partnerGroups.length} groups. Order here is the order they
         appear on the client conveyor. Upload a logo file directly, or point the path field at a file
-        already in <span className="tnum">public/brand/partners/</span> — an uploaded file previews for
+        already in <span className="tnum">public/brand/partners/</span>, an uploaded file previews for
         this browser tab only, since there is no image storage backend yet.
       </p>
 

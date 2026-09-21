@@ -12,11 +12,11 @@ import { site } from '@/data/site';
  * The general door. Three fields.
  *
  * This used to be the site's only form, with a subject dropdown that asked the visitor to file
- * themselves before the page had helped them — and then asked everyone the union of every
+ * themselves before the page had helped them, and then asked everyone the union of every
  * intent's questions. Valuation requests and listing enquiries now have their own routes and
  * their own fields, which leaves this one free to be as short as a question deserves.
  *
- * UI only this phase — the submitted state says so rather than showing a confirmation that would
+ * UI only this phase, the submitted state says so rather than showing a confirmation that would
  * be a lie.
  */
 export function ContactForm() {

@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { SESSION_COOKIE } from '@/lib/auth/cookie';
 
 /**
  * The admin is not public.
@@ -12,18 +13,16 @@ import { NextResponse, type NextRequest } from 'next/server';
  * admin layout, which calls requireStaff(). A cookie here is a claim, not proof.
  *
  * What this does buy is worth having on its own. Thirteen admin routes stop being served to
- * anyone who types the URL, including crawlers, before any React renders — so the CMS never
+ * anyone who types the URL, including crawlers, before any React renders, so the CMS never
  * appears in a search index and an unauthenticated request never costs a database round trip.
  */
-const COOKIE = 'cmt_session';
-
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
   // The login page has to stay reachable, or there is no way back in.
   if (pathname === '/admin/login') return NextResponse.next();
 
-  if (!request.cookies.get(COOKIE)?.value) {
+  if (!request.cookies.get(SESSION_COOKIE)?.value) {
     const url = request.nextUrl.clone();
     url.pathname = '/admin/login';
     // Remember where they were going, so signing in does not dump them on the dashboard.

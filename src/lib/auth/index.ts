@@ -17,8 +17,3 @@ export async function requireStaff(): Promise<SessionUser> {
   if (!user) redirect('/admin/login');
   return user;
 }
-
-/** For places that want to vary rather than refuse, like showing a name in the topbar. */
-export async function currentUser(): Promise<SessionUser | null> {
-  return getSessionUser();
-}

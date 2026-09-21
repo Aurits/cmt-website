@@ -158,13 +158,13 @@ function SettingsForm({
             <div key={index} className="grid gap-3 sm:grid-cols-2">
               <TextField
                 id={`hours-days-${index}`}
-                label={`Row ${index + 1} — days`}
+                label={`Row ${index + 1}, days`}
                 value={row.days}
                 onChange={(e) => setHour(index, { days: e.target.value })}
               />
               <TextField
                 id={`hours-time-${index}`}
-                label={`Row ${index + 1} — time`}
+                label={`Row ${index + 1}, time`}
                 value={row.time}
                 onChange={(e) => setHour(index, { time: e.target.value })}
               />

@@ -1,5 +1,5 @@
 import { agents, agentById } from '@/data/agents';
-import { posts, postBySlug, sortedPosts } from '@/data/blog';
+import { postBySlug, sortedPosts } from '@/data/blog';
 import { listings, listingBySlug, listingsByCategory } from '@/data/listings';
 import { partnerGroups } from '@/data/partners';
 import { site } from '@/data/site';
@@ -172,5 +172,3 @@ function asAdminPost(post: ReturnType<typeof sortedPosts>[number]): AdminBlogPos
   return { ...post, status: 'published', updatedAt: '' };
 }
 
-/** Exported so the seed script and the Postgres adapter can share one source of truth. */
-export const staticContent = { agents, listings, partnerGroups, testimonials, posts };

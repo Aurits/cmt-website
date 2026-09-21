@@ -2,12 +2,13 @@ import 'server-only';
 import { createHash, randomBytes } from 'node:crypto';
 import { cookies } from 'next/headers';
 import { getDb } from '@/lib/data/adapters/postgres';
+import { SESSION_COOKIE } from '@/lib/auth/cookie';
 
 /**
  * Sessions, stored rather than self-describing.
  *
  * A signed JWT would save a query and cost the ability to revoke. With a row per session,
- * signing someone out actually signs them out, and so does removing a colleague — which for a
+ * signing someone out actually signs them out, and so does removing a colleague, which for a
  * tool that edits a client's live website is worth one indexed lookup per request.
  *
  * The cookie carries a random token; the database stores only its SHA-256. A leak of the
@@ -15,7 +16,6 @@ import { getDb } from '@/lib/data/adapters/postgres';
  * password KDF on purpose: the token is 32 random bytes, so there is no dictionary to attack and
  * nothing for a slow hash to defend against.
  */
-const COOKIE = 'cmt_session';
 const LIFETIME_DAYS = 7;
 /** Re-issued once a session is more than a day old, so an active editor is not logged out mid-week. */
 const REFRESH_AFTER_DAYS = 1;
@@ -48,7 +48,7 @@ export async function createSession(
     .execute();
 
   const jar = await cookies();
-  jar.set(COOKIE, token, {
+  jar.set(SESSION_COOKIE, token, {
     httpOnly: true,
     // Lax rather than Strict: Strict would drop the cookie when an editor follows a link to the
     // CMS from an email, which reads as a random logout rather than as a security feature.
@@ -65,7 +65,7 @@ export async function createSession(
  */
 export async function getSessionUser(): Promise<SessionUser | null> {
   const jar = await cookies();
-  const token = jar.get(COOKIE)?.value;
+  const token = jar.get(SESSION_COOKIE)?.value;
   if (!token) return null;
 
   const row = await getDb()
@@ -114,16 +114,9 @@ export async function getSessionUser(): Promise<SessionUser | null> {
 
 export async function destroySession(): Promise<void> {
   const jar = await cookies();
-  const token = jar.get(COOKIE)?.value;
+  const token = jar.get(SESSION_COOKIE)?.value;
   if (token) {
     await getDb().deleteFrom('sessions').where('token_hash', '=', hashToken(token)).execute();
   }
-  jar.delete(COOKIE);
+  jar.delete(SESSION_COOKIE);
 }
-
-/** Every session for one person, for "sign out everywhere" and for removing a colleague. */
-export async function destroyAllSessions(userId: string): Promise<void> {
-  await getDb().deleteFrom('sessions').where('user_id', '=', userId).execute();
-}
-
-export const SESSION_COOKIE = COOKIE;

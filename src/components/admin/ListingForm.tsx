@@ -285,7 +285,7 @@ export function ListingForm({ initial, isNew }: { initial: AdminListing; isNew: 
         </div>
       </FormSection>
 
-      <FormSection title="Photographs" lead="Drag to reorder — the first image is the cover.">
+      <FormSection title="Photographs" lead="Drag to reorder, the first image is the cover.">
         <ImageGalleryManager images={draft.images} onChange={(images) => set('images', images)} />
       </FormSection>
 
