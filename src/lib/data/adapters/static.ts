@@ -4,6 +4,7 @@ import { listings, listingBySlug, listingsByCategory } from '@/data/listings';
 import { partnerGroups } from '@/data/partners';
 import { site } from '@/data/site';
 import { testimonials } from '@/data/testimonials';
+import type { AdminBlogPost, AdminListing } from '@/lib/admin/types';
 import type { Repository } from '@/lib/data/repository';
 import { UnsupportedOperation } from '@/lib/data/repository';
 
@@ -26,10 +27,11 @@ export const staticRepository: Repository = {
     async list(filter) {
       let result = filter?.category ? listingsByCategory(filter.category) : listings;
       if (filter?.featured) result = result.filter((listing) => listing.featured);
-      return result;
+      return result.map(asAdminListing);
     },
     async bySlug(slug) {
-      return listingBySlug[slug] ?? null;
+      const found = listingBySlug[slug];
+      return found ? asAdminListing(found) : null;
     },
     async upsert() {
       throw new UnsupportedOperation('Saving a listing');
@@ -58,20 +60,52 @@ export const staticRepository: Repository = {
     async groups() {
       return partnerGroups;
     },
+    async listForAdmin() {
+      return partnerGroups.flatMap((group) =>
+        group.partners.map((partner, index) => ({
+          id: `${group.id}-${index}`,
+          groupId: group.id,
+          name: partner.name,
+          ...(partner.shortName ? { shortName: partner.shortName } : {}),
+          ...(partner.logo ? { logo: partner.logo } : {}),
+          order: index,
+          verified: true,
+        })),
+      );
+    },
+    async upsert() {
+      throw new UnsupportedOperation('Saving a partner');
+    },
+    async remove() {
+      throw new UnsupportedOperation('Deleting a partner');
+    },
   },
 
   testimonials: {
     async list() {
       return testimonials;
     },
+    async listForAdmin() {
+      return testimonials.map((testimonial, index) => ({
+        ...testimonial,
+        id: `testimonial-${index}`,
+      }));
+    },
+    async upsert() {
+      throw new UnsupportedOperation('Saving a testimonial');
+    },
+    async remove() {
+      throw new UnsupportedOperation('Deleting a testimonial');
+    },
   },
 
   posts: {
     async list() {
-      return sortedPosts();
+      return sortedPosts().map(asAdminPost);
     },
     async bySlug(slug) {
-      return postBySlug[slug] ?? null;
+      const found = postBySlug[slug];
+      return found ? asAdminPost(found) : null;
     },
     async upsert() {
       throw new UnsupportedOperation('Saving a blog post');
@@ -119,8 +153,24 @@ export const staticRepository: Repository = {
         stats: [],
       };
     },
+    async update() {
+      throw new UnsupportedOperation('Saving settings');
+    },
   },
 };
+
+/*
+ * The static content has no editorial state, because a file in src/data is by definition what the
+ * site is publishing. Both helpers say so explicitly rather than leaving the field undefined and
+ * making every caller guess.
+ */
+function asAdminListing(listing: (typeof listings)[number]): AdminListing {
+  return { ...listing, status: 'published', updatedAt: '' };
+}
+
+function asAdminPost(post: ReturnType<typeof sortedPosts>[number]): AdminBlogPost {
+  return { ...post, status: 'published', updatedAt: '' };
+}
 
 /** Exported so the seed script and the Postgres adapter can share one source of truth. */
 export const staticContent = { agents, listings, partnerGroups, testimonials, posts };

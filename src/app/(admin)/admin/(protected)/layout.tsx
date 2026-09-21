@@ -1,5 +1,6 @@
 import { AdminShell } from '@/components/admin/AdminShell';
 import { AdminProvider } from '@/lib/admin/store';
+import { loadAdminState } from '@/lib/admin/actions';
 import { requireStaff } from '@/lib/auth';
 
 /**
@@ -23,8 +24,18 @@ export default async function ProtectedAdminLayout({
 }) {
   const user = await requireStaff();
 
+  /*
+   * One read on the server, handed to the provider as a prop.
+   *
+   * The CMS used to seed itself from localStorage in an effect, which meant a frame where it
+   * knew nothing and a `ready` flag for every screen to check. Loading it here means the first
+   * render already has the data, and it comes from the database rather than from whatever this
+   * browser happened to save last time.
+   */
+  const initialState = await loadAdminState();
+
   return (
-    <AdminProvider>
+    <AdminProvider initialState={initialState}>
       <AdminShell adminEmail={user.email}>{children}</AdminShell>
     </AdminProvider>
   );

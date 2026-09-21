@@ -1,12 +1,13 @@
+import type { Agent, CategorySlug, PartnerGroup, Testimonial } from '@/lib/types';
 import type {
-  Agent,
-  BlogPost,
-  CategorySlug,
-  Listing,
-  PartnerGroup,
-  Testimonial,
-} from '@/lib/types';
-import type { AdminSiteSettings, Inquiry, InquiryStatus } from '@/lib/admin/types';
+  AdminBlogPost,
+  AdminListing,
+  AdminPartner,
+  AdminSiteSettings,
+  AdminTestimonial,
+  Inquiry,
+  InquiryStatus,
+} from '@/lib/admin/types';
 
 /**
  * The only way anything reaches stored content.
@@ -38,10 +39,18 @@ export interface Repository {
   /** What this adapter can actually do, so callers and the admin can say so honestly. */
   readonly capabilities: { readonly writes: boolean };
 
+  /*
+   * Reads return the ADMIN shape, which is a superset of the public one.
+   *
+   * AdminListing is `Listing` plus status and updatedAt, so a page that wants a Listing can use
+   * an AdminListing unchanged and simply not look at the extra two fields. One method then
+   * serves both the public site and the CMS, instead of two that have to be kept in step and
+   * will eventually disagree about something.
+   */
   listings: {
-    list(filter?: ListingFilter): Promise<Listing[]>;
-    bySlug(slug: string): Promise<Listing | null>;
-    upsert(listing: Listing): Promise<void>;
+    list(filter?: ListingFilter): Promise<AdminListing[]>;
+    bySlug(slug: string): Promise<AdminListing | null>;
+    upsert(listing: AdminListing): Promise<void>;
     remove(slug: string): Promise<void>;
   };
 
@@ -54,16 +63,23 @@ export interface Repository {
 
   partners: {
     groups(): Promise<PartnerGroup[]>;
+    /** Flat, with ids and ordering, which is what the CMS screen edits. */
+    listForAdmin(): Promise<AdminPartner[]>;
+    upsert(partner: AdminPartner): Promise<void>;
+    remove(id: string): Promise<void>;
   };
 
   testimonials: {
     list(): Promise<Testimonial[]>;
+    listForAdmin(): Promise<AdminTestimonial[]>;
+    upsert(testimonial: AdminTestimonial): Promise<void>;
+    remove(id: string): Promise<void>;
   };
 
   posts: {
-    list(options?: { includeUnpublished?: boolean }): Promise<BlogPost[]>;
-    bySlug(slug: string): Promise<BlogPost | null>;
-    upsert(post: BlogPost): Promise<void>;
+    list(options?: { includeUnpublished?: boolean }): Promise<AdminBlogPost[]>;
+    bySlug(slug: string): Promise<AdminBlogPost | null>;
+    upsert(post: AdminBlogPost): Promise<void>;
     remove(slug: string): Promise<void>;
   };
 
@@ -77,6 +93,7 @@ export interface Repository {
 
   settings: {
     get(): Promise<AdminSiteSettings>;
+    update(settings: AdminSiteSettings): Promise<void>;
   };
 }
 

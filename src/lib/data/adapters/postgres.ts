@@ -2,8 +2,13 @@ import 'server-only';
 import { Kysely, PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
 import { databaseUrl } from '@/lib/env';
-import type { Agent, BlogPost, Listing } from '@/lib/types';
-import type { Inquiry } from '@/lib/admin/types';
+import type { Agent, Listing } from '@/lib/types';
+import type {
+  AdminBlogPost,
+  AdminListing,
+  AdminSiteSettings,
+  Inquiry,
+} from '@/lib/admin/types';
 import type { Repository } from '@/lib/data/repository';
 import { UnsupportedOperation } from '@/lib/data/repository';
 
@@ -236,11 +241,20 @@ export function getDb(): Kysely<Database> {
   return db;
 }
 
+/*
+ * A draft created in the browser carries an id like "testimonial-lq3k4j" because the client has
+ * no way to mint a uuid the database will accept. Comparing that to a uuid column does not
+ * return false, it raises "invalid input syntax for type uuid" and fails the save. So anything
+ * that is not a uuid is treated as new, which is exactly what it is.
+ */
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const isUuid = (value: string) => UUID.test(value);
+
 /* ── row to domain ──────────────────────────────────────────────────────────────────────── */
 
 type ListingWithAgent = ListingRow & { agent_slug: string | null };
 
-function mapListing(row: ListingWithAgent, images: ListingImageRow[]): Listing {
+function mapListing(row: ListingWithAgent, images: ListingImageRow[]): AdminListing {
   return {
     slug: row.slug,
     reference: row.reference,
@@ -264,6 +278,8 @@ function mapListing(row: ListingWithAgent, images: ListingImageRow[]): Listing {
     agentId: row.agent_slug ?? '',
     featured: row.featured,
     ...(row.valued_on ? { valuedOn: row.valued_on } : {}),
+    status: row.status as AdminListing['status'],
+    updatedAt: row.updated_at.toISOString(),
   };
 }
 
@@ -292,7 +308,7 @@ function mapAgent(row: AgentRow, registrations: AgentRegistrationRow[]): Agent {
   };
 }
 
-function mapPost(row: BlogPostRow & { author_slug: string | null }): BlogPost {
+function mapPost(row: BlogPostRow & { author_slug: string | null }): AdminBlogPost {
   return {
     slug: row.slug,
     title: row.title,
@@ -306,6 +322,8 @@ function mapPost(row: BlogPostRow & { author_slug: string | null }): BlogPost {
     ...(row.cover_path ? { coverImage: row.cover_path } : {}),
     tags: row.tags,
     publishedAt: (row.published_at ?? new Date()).toISOString().slice(0, 10),
+    status: row.status as AdminBlogPost['status'],
+    updatedAt: new Date().toISOString(),
   };
 }
 
@@ -314,7 +332,7 @@ async function loadListings(options: {
   category?: string;
   featured?: boolean;
   includeUnpublished?: boolean;
-}): Promise<Listing[]> {
+}): Promise<AdminListing[]> {
   const kysely = getDb();
 
   let query = kysely
@@ -379,8 +397,72 @@ export function postgresRepository(): Repository {
         const found = await loadListings({ slug, includeUnpublished: true });
         return found[0] ?? null;
       },
-      async upsert() {
-        throw new UnsupportedOperation('Saving a listing');
+      /*
+       * One transaction, because a listing and its images are one thing to an editor. Without it
+       * a failure halfway leaves a property with the wrong photographs, which is worse than a
+       * failure that changes nothing.
+       */
+      async upsert(listing) {
+        await kysely.transaction().execute(async (tx) => {
+          const agent = listing.agentId
+            ? await tx
+                .selectFrom('agents')
+                .select('id')
+                .where('slug', '=', listing.agentId)
+                .executeTakeFirst()
+            : undefined;
+
+          const values = {
+            slug: listing.slug,
+            reference: listing.reference,
+            title: listing.title,
+            category: listing.category,
+            listing_type: listing.listingType,
+            price: String(listing.price),
+            rent_period: listing.rentPeriod ?? null,
+            city: listing.city,
+            area: listing.area,
+            lat: String(listing.coords[0]),
+            lng: String(listing.coords[1]),
+            beds: listing.beds ?? null,
+            baths: listing.baths ?? null,
+            size: listing.size,
+            size_label: listing.sizeLabel,
+            tenure: listing.tenure,
+            summary: listing.summary,
+            description: listing.description,
+            features: listing.features,
+            agent_id: agent?.id ?? null,
+            featured: listing.featured ?? false,
+            valued_on: listing.valuedOn ?? null,
+            status: listing.status,
+            updated_at: new Date(),
+          };
+
+          const saved = await tx
+            .insertInto('listings')
+            .values(values as never)
+            .onConflict((conflict) => conflict.column('slug').doUpdateSet(values as never))
+            .returning('id')
+            .executeTakeFirstOrThrow();
+
+          // Replaced wholesale rather than diffed: the editor reorders and removes in the
+          // gallery, and matching that by hand is more code and more ways to be wrong.
+          await tx.deleteFrom('listing_images').where('listing_id', '=', saved.id).execute();
+          if (listing.images.length) {
+            await tx
+              .insertInto('listing_images')
+              .values(
+                listing.images.map((image, index) => ({
+                  listing_id: saved.id,
+                  path: image.src,
+                  alt: image.alt,
+                  sort_order: index,
+                })) as never,
+              )
+              .execute();
+          }
+        });
       },
       async remove(slug) {
         await kysely.deleteFrom('listings').where('slug', '=', slug).execute();
@@ -417,8 +499,53 @@ export function postgresRepository(): Repository {
           .execute();
         return mapAgent(row, registrations);
       },
-      async upsert() {
-        throw new UnsupportedOperation('Saving a team member');
+      async upsert(agent) {
+        await kysely.transaction().execute(async (tx) => {
+          const values = {
+            slug: agent.id,
+            name: agent.name,
+            role_title: agent.role,
+            rank: agent.rank,
+            based: agent.based ?? null,
+            bio: agent.bio ?? null,
+            photo_path: agent.photo ?? null,
+            phone: agent.phone ?? null,
+            email: agent.email ?? null,
+            qualifications: agent.qualifications ?? [],
+            credentials_confirmed: agent.credentialsConfirmed,
+            sourced_from: agent.sourcedFrom,
+            updated_at: new Date(),
+          };
+
+          const saved = await tx
+            .insertInto('agents')
+            .values(values as never)
+            .onConflict((conflict) => conflict.column('slug').doUpdateSet(values as never))
+            .returning('id')
+            .executeTakeFirstOrThrow();
+
+          await tx.deleteFrom('agent_registrations').where('agent_id', '=', saved.id).execute();
+          const registrations = agent.registrations ?? [];
+          if (registrations.length) {
+            await tx
+              .insertInto('agent_registrations')
+              .values(
+                registrations.map((reg, index) => ({
+                  agent_id: saved.id,
+                  authority: reg.authority,
+                  authority_full: reg.authorityFull,
+                  jurisdiction: reg.jurisdiction,
+                  post_nominals: reg.postNominals ?? null,
+                  // The gate that runs everywhere else runs here too: an unconfirmed
+                  // registration stores no number, so there is nothing to leak later.
+                  number: reg.confirmed ? (reg.number ?? null) : null,
+                  confirmed: reg.confirmed,
+                  sort_order: index,
+                })) as never,
+              )
+              .execute();
+          }
+        });
       },
       async remove(id) {
         await kysely.deleteFrom('agents').where('slug', '=', id).execute();
@@ -426,6 +553,63 @@ export function postgresRepository(): Repository {
     },
 
     partners: {
+      async listForAdmin() {
+        const groups = await kysely.selectFrom('partner_groups').selectAll().execute();
+        const slugOf = new Map(groups.map((group) => [group.id, group.slug]));
+        const rows = await kysely
+          .selectFrom('partners')
+          .selectAll()
+          .orderBy('sort_order')
+          .execute();
+        return rows.map((row) => ({
+          id: row.id,
+          groupId: slugOf.get(row.group_id) ?? '',
+          name: row.name,
+          ...(row.short_name ? { shortName: row.short_name } : {}),
+          ...(row.logo_path ? { logo: row.logo_path } : {}),
+          order: row.sort_order,
+          verified: row.verified,
+        }));
+      },
+      async upsert(partner) {
+        const group = await kysely
+          .selectFrom('partner_groups')
+          .select('id')
+          .where('slug', '=', partner.groupId)
+          .executeTakeFirst();
+        if (!group) throw new UnsupportedOperation(`Unknown partner group "${partner.groupId}"`);
+
+        const values = {
+          group_id: group.id,
+          name: partner.name,
+          short_name: partner.shortName ?? null,
+          logo_path: partner.logo ?? null,
+          verified: partner.verified,
+          sort_order: partner.order,
+        };
+
+        const existing = isUuid(partner.id)
+          ? await kysely
+              .selectFrom('partners')
+              .select('id')
+              .where('id', '=', partner.id)
+              .executeTakeFirst()
+          : undefined;
+
+        if (existing) {
+          await kysely
+            .updateTable('partners')
+            .set(values as never)
+            .where('id', '=', partner.id)
+            .execute();
+        } else {
+          await kysely.insertInto('partners').values(values as never).execute();
+        }
+      },
+      async remove(id) {
+        if (!isUuid(id)) return; // a draft that was never saved
+        await kysely.deleteFrom('partners').where('id', '=', id).execute();
+      },
       async groups() {
         const groups = await kysely
           .selectFrom('partner_groups')
@@ -453,6 +637,49 @@ export function postgresRepository(): Repository {
     },
 
     testimonials: {
+      async listForAdmin() {
+        const rows = await kysely
+          .selectFrom('testimonials')
+          .selectAll()
+          .orderBy('sort_order')
+          .execute();
+        return rows.map((row) => ({
+          id: row.id,
+          quote: row.quote,
+          name: row.name,
+          organisation: row.organisation,
+          ...(row.role_title ? { role: row.role_title } : {}),
+        }));
+      },
+      async upsert(testimonial) {
+        const values = {
+          quote: testimonial.quote,
+          name: testimonial.name,
+          organisation: testimonial.organisation,
+          role_title: testimonial.role ?? null,
+          published: true,
+        };
+        const existing = isUuid(testimonial.id)
+          ? await kysely
+              .selectFrom('testimonials')
+              .select('id')
+              .where('id', '=', testimonial.id)
+              .executeTakeFirst()
+          : undefined;
+        if (existing) {
+          await kysely
+            .updateTable('testimonials')
+            .set(values as never)
+            .where('id', '=', testimonial.id)
+            .execute();
+        } else {
+          await kysely.insertInto('testimonials').values(values as never).execute();
+        }
+      },
+      async remove(id) {
+        if (!isUuid(id)) return; // a draft that was never saved
+        await kysely.deleteFrom('testimonials').where('id', '=', id).execute();
+      },
       async list() {
         const rows = await kysely
           .selectFrom('testimonials')
@@ -490,8 +717,37 @@ export function postgresRepository(): Repository {
           .executeTakeFirst();
         return row ? mapPost(row as BlogPostRow & { author_slug: string | null }) : null;
       },
-      async upsert() {
-        throw new UnsupportedOperation('Saving a blog post');
+      async upsert(post) {
+        const author = post.authorId
+          ? await kysely
+              .selectFrom('agents')
+              .select('id')
+              .where('slug', '=', post.authorId)
+              .executeTakeFirst()
+          : undefined;
+
+        const values = {
+          slug: post.slug,
+          title: post.title,
+          finding: post.finding,
+          excerpt: post.excerpt,
+          body: post.body,
+          pull_figure: post.pullFigure ?? null,
+          pull_caption: post.pullCaption ?? null,
+          key_figures: JSON.stringify(post.keyFigures ?? []),
+          author_id: author?.id ?? null,
+          cover_path: post.coverImage ?? null,
+          tags: post.tags ?? [],
+          status: post.status,
+          published_at: post.publishedAt ? new Date(post.publishedAt) : null,
+          updated_at: new Date(),
+        };
+
+        await kysely
+          .insertInto('blog_posts')
+          .values(values as never)
+          .onConflict((conflict) => conflict.column('slug').doUpdateSet(values as never))
+          .execute();
       },
       async remove(slug) {
         await kysely.deleteFrom('blog_posts').where('slug', '=', slug).execute();
@@ -538,6 +794,7 @@ export function postgresRepository(): Repository {
         }));
       },
       async setStatus(id, status) {
+        if (!isUuid(id)) return;
         await kysely
           .updateTable('inquiries')
           .set({ status } as never)
@@ -572,6 +829,29 @@ export function postgresRepository(): Repository {
           yearsInBusiness: row.years_in_business,
           stats: row.stats as { value: string; unit: string; label: string }[],
         };
+      },
+      async update(settings: AdminSiteSettings) {
+        await kysely
+          .updateTable('site_settings')
+          .set({
+            name: settings.name,
+            short_name: settings.shortName,
+            tagline: settings.tagline,
+            description: settings.description,
+            phone_display: settings.phone.display,
+            phone_href: settings.phone.href,
+            email: settings.email,
+            whatsapp: settings.whatsapp,
+            address: JSON.stringify(settings.address),
+            nairobi_address: settings.nairobiAddress || null,
+            hours: JSON.stringify(settings.hours),
+            hours_confirmed: settings.hoursConfirmed,
+            years_in_business: settings.yearsInBusiness,
+            stats: JSON.stringify(settings.stats),
+            updated_at: new Date(),
+          } as never)
+          .where('id', '=', 1)
+          .execute();
       },
     },
   };
