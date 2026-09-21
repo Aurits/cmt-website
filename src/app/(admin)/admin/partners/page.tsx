@@ -162,7 +162,7 @@ function PartnerRow({
           type="button"
           onClick={onDelete}
           aria-label="Remove partner"
-          className="flex h-8 w-8 items-center justify-center rounded-control border border-rule-strong text-muted transition-colors hover:border-red-700/50 hover:text-red-800"
+          className="flex h-8 w-8 items-center justify-center rounded-control border border-rule-strong text-muted transition-colors hover:border-flag hover:text-flag"
         >
           <TrashIcon width={14} height={14} />
         </button>

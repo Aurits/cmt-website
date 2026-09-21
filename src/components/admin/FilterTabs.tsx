@@ -38,7 +38,7 @@ export function FilterTabs({
             {tab.count !== undefined && (
               <span
                 className={cx(
-                  'tnum rounded-control px-1.5 text-[11px]',
+                  'tnum rounded-control px-1.5 text-label',
                   active ? 'bg-cream/20 text-cream' : 'bg-cream-deep text-muted',
                 )}
               >

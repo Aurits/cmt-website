@@ -72,7 +72,7 @@ export const site = {
  * /properties/[slug] already serves property detail and a second dynamic segment at that level
  * would collide.
  *
- * Insights is deliberately absent until the first market note exists. An empty Insights section
+ * Blog is deliberately absent until the first post exists. An empty blog
  * advertises that the firm started something and stopped.
  *
  * `match` lists any additional path prefixes that should light this item up — property detail

@@ -87,7 +87,7 @@ export function ImageGalleryManager({
               <div className="relative aspect-[4/3] overflow-hidden rounded-brand border border-rule bg-cream-deep">
                 <Image src={image.src} alt={image.alt || 'Listing photograph'} fill unoptimized className="object-cover" />
                 {index === 0 && (
-                  <span className="absolute left-2 top-2 rounded-control bg-green px-2 py-0.5 text-[11px] font-medium text-cream">
+                  <span className="absolute left-2 top-2 rounded-control bg-green px-2 py-0.5 text-label font-medium text-cream">
                     Cover
                   </span>
                 )}
@@ -131,7 +131,7 @@ export function ImageGalleryManager({
                 <button
                   type="button"
                   onClick={() => removeAt(index)}
-                  className="flex h-8 w-8 items-center justify-center rounded-control border border-rule-strong text-muted transition-colors hover:border-red-700/50 hover:text-red-800"
+                  className="flex h-8 w-8 items-center justify-center rounded-control border border-rule-strong text-muted transition-colors hover:border-flag hover:text-flag"
                   aria-label="Remove image"
                 >
                   <TrashIcon width={14} height={14} />

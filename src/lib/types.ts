@@ -195,6 +195,38 @@ export interface ValuationPurpose {
   deliverables: string[];
 }
 
+/**
+ * A blog post.
+ *
+ * Shaped by what the Blog pages actually render (docs/LAYOUT-SPECS.md A-07) rather than by
+ * what a generic blog post looks like. The index is a ruled list of date, title and a one-line
+ * finding; each note carries a single pull figure, which is the number that gets quoted and is
+ * most of the reason to publish at all; the note page runs a schedule of key figures down a
+ * sticky rail beside the body.
+ */
+export interface BlogPost {
+  slug: string;
+  title: string;
+  /** The single line shown against the title in the index. Says what was found. */
+  finding: string;
+  /** Roughly forty words, for the full-width latest-note block. */
+  excerpt: string;
+  /** Markdown. Paragraphs split on a blank line. */
+  body: string;
+  /** The number that gets quoted and screenshotted. */
+  pullFigure?: string;
+  pullCaption?: string;
+  /** The sticky rail, set as a schedule. */
+  keyFigures: { label: string; value: string }[];
+  /** Agent id of whoever wrote it. */
+  authorId?: string;
+  coverImage?: string;
+  coverAlt?: string;
+  tags: string[];
+  /** ISO date. */
+  publishedAt: string;
+}
+
 export interface AdvisoryService {
   slug: string;
   name: string;

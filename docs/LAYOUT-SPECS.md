@@ -80,10 +80,10 @@ it costs 40px of vertical space.
 
 ### Cut from this page
 
-**Testimonials and the market-insights band.** Eleven sections is two too many, and both currently end
+**Testimonials and the market-blog posts band.** Eleven sections is two too many, and both currently end
 the page on a promise rather than a proof — an empty testimonial state and a "coming soon" note are the
 last two things a visitor reads before the footer. Move testimonials to `/about/clients` where the logo
-wall carries them, and let the Insights nav item do the work the teaser band was doing. **Home drops from
+wall carries them, and let the Blog nav item do the work the teaser band was doing. **Home drops from
 11 sections to 9** and ends on the CTA.
 
 ---
@@ -300,7 +300,7 @@ valuation credibility that sells it.
 
 ---
 
-## A-07 · Insights — `/insights`
+## A-07 · Blog — `/blog`
 
 **A research library, not a blog.** Cards with featured images and read-times signal content marketing. A
 ruled index with dates, figures and a named author signals research. CMT is competing with Knight Frank's
@@ -322,8 +322,8 @@ market review here, and the format has to carry the same seriousness before a wo
 - **Note page** — single column, `66ch`, with a sticky right rail at lg carrying **key figures** as a
   schedule and the author. Charts, when they come, take the gold/green palette with hairline gridlines —
   never a default library theme.
-- **Launch condition** — **do not ship the nav item until one note exists.** An empty Insights section is
-  worse than no Insights section: it advertises that the firm started something and stopped.
+- **Launch condition** — **do not ship the nav item until the first post exists.** An empty blog is
+  worse than no blog at all: it advertises that the firm started something and stopped.
 
 ---
 

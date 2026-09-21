@@ -167,4 +167,4 @@ None of this is in the client workplan, and all of it has to be true before DNS 
 1. Supabase, or R2 plus Neon? Decide Monday, not Wednesday.
 2. Where hosting lands, and whether the account is CMT's from day one or transferred later.
 3. Who receives enquiry emails, and does the same address work the lead queue in the CMS?
-4. Does CMT want the Insights section live at launch, which needs a first note written?
+4. Does CMT want the blog live at launch, which needs a first post written?

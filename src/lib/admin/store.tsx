@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { seedAdminState } from '@/lib/admin/seed';
 import type {
   AdminAgent,
+  AdminBlogPost,
   AdminListing,
   AdminPartner,
   AdminSiteSettings,
@@ -66,6 +67,10 @@ interface AdminContextValue {
   deletePartner: (id: string) => void;
   reorderPartner: (id: string, direction: 'up' | 'down') => void;
   createPartnerDraft: (groupId: string) => AdminPartner;
+
+  upsertPost: (post: AdminBlogPost) => void;
+  deletePost: (slug: string) => void;
+  createPostDraft: () => AdminBlogPost;
 
   upsertTestimonial: (testimonial: AdminTestimonial) => void;
   deleteTestimonial: (id: string) => void;
@@ -217,6 +222,47 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     [state.partners],
   );
 
+  /*
+   * Keyed by slug, like listings, because /admin/blog/[id] resolves by slug and a post's
+   * slug is the public URL it will live at. A blank slug is derived from the title on save, so
+   * an editor never has to think about it.
+   */
+  const upsertPost = useCallback((post: AdminBlogPost) => {
+    const withSlug: AdminBlogPost = {
+      ...post,
+      slug: post.slug || slugify(post.title) || nextId('note'),
+      updatedAt: new Date().toISOString(),
+    };
+    setState((prev) => {
+      const exists = prev.posts.some((i) => i.slug === withSlug.slug);
+      return {
+        ...prev,
+        posts: exists
+          ? prev.posts.map((i) => (i.slug === withSlug.slug ? withSlug : i))
+          : [withSlug, ...prev.posts],
+      };
+    });
+  }, []);
+
+  const deletePost = useCallback((slug: string) => {
+    setState((prev) => ({ ...prev, posts: prev.posts.filter((i) => i.slug !== slug) }));
+  }, []);
+
+  const createPostDraft = useCallback((): AdminBlogPost => {
+    return {
+      slug: '',
+      title: '',
+      finding: '',
+      excerpt: '',
+      body: '',
+      keyFigures: [],
+      tags: [],
+      publishedAt: new Date().toISOString().slice(0, 10),
+      status: 'draft',
+      updatedAt: new Date().toISOString(),
+    };
+  }, []);
+
   const upsertTestimonial = useCallback((testimonial: AdminTestimonial) => {
     setState((prev) => {
       const exists = prev.testimonials.some((t) => t.id === testimonial.id);
@@ -266,6 +312,9 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       deletePartner,
       reorderPartner,
       createPartnerDraft,
+      upsertPost,
+      deletePost,
+      createPostDraft,
       upsertTestimonial,
       deleteTestimonial,
       createTestimonialDraft,
@@ -286,6 +335,9 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       deletePartner,
       reorderPartner,
       createPartnerDraft,
+      upsertPost,
+      deletePost,
+      createPostDraft,
       upsertTestimonial,
       deleteTestimonial,
       createTestimonialDraft,

@@ -184,5 +184,4 @@ The one figure still genuinely missing is the **Uganda founding year**. We would
   what was wanted, so the homepage carries a single combined belt and links through.
 - **Map pins are neighbourhood-level** on listings, captioned as such. It is what a real agent publishes
   before a viewing is booked, and it avoids implying a surveyed position.
-- **Insights ships when there is something to put in it**, not before. The nav item is held back until the
-  first market note exists.
+- **The blog ships when there is something to put in it**, not before. The nav item is held back until the first post exists.

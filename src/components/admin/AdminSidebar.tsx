@@ -10,6 +10,7 @@ import {
   HandshakeIcon,
   InboxIcon,
   LogoutIcon,
+  NotesIcon,
   QuoteIcon,
   UsersIcon,
 } from '@/components/admin/icons';
@@ -21,6 +22,7 @@ const items = [
   { label: 'Listings', href: '/admin/listings', icon: BuildingIcon },
   { label: 'Agents & team', href: '/admin/agents', icon: UsersIcon },
   { label: 'Partners & clients', href: '/admin/partners', icon: HandshakeIcon },
+  { label: 'Blog', href: '/admin/blog', icon: NotesIcon },
   { label: 'Testimonials', href: '/admin/testimonials', icon: QuoteIcon },
   { label: 'Inquiries', href: '/admin/inquiries', icon: InboxIcon },
   { label: 'Site settings', href: '/admin/settings', icon: GearIcon },

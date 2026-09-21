@@ -1,4 +1,4 @@
-import type { Agent, Listing, Partner, Testimonial } from '@/lib/types';
+import type { Agent, BlogPost, Listing, Partner, Testimonial } from '@/lib/types';
 
 /**
  * CMS-only extensions to the public data shapes.
@@ -41,6 +41,18 @@ export interface Inquiry {
   message: string;
   /** Listing slug, where the enquiry came from a property page. */
   listingSlug?: string;
+  /*
+   * What the valuation request actually asked.
+   *
+   * ValuationRequestForm puts two questions to the visitor — what is being valued, and what the
+   * figure is for — and the matrix on /valuations exists to answer both before they arrive. The
+   * type had nowhere to put either, so the answers were collected and then dropped between the
+   * form and the record. See the consistency audit in docs/SCHEMA.md.
+   */
+  valuationAsset?: string;
+  valuationPurpose?: string;
+  /** Which page it was sent from, so a lead can be traced back to what prompted it. */
+  sourcePath?: string;
   createdAt: string;
 }
 
@@ -70,11 +82,20 @@ export interface AdminTestimonial extends Testimonial {
   id: string;
 }
 
+export type PostStatus = 'published' | 'draft' | 'archived';
+
+/** Same additive pattern as AdminListing: a public BlogPost plus the editorial state. */
+export interface AdminBlogPost extends BlogPost {
+  status: PostStatus;
+  updatedAt: string;
+}
+
 export interface AdminState {
   listings: AdminListing[];
   agents: AdminAgent[];
   partners: AdminPartner[];
   testimonials: AdminTestimonial[];
+  posts: AdminBlogPost[];
   inquiries: Inquiry[];
   settings: AdminSiteSettings;
 }

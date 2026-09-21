@@ -173,11 +173,11 @@ create table testimonials (
   sort_order   int not null default 0
 );
 
--- ── the blog, which the site calls Insights ────────────────────────────
+-- ── the blog ─────────────────────────────────────────────────────────
 -- Shaped by LAYOUT-SPECS A-07: the index is a ruled list of date, title and a
--- one-line finding, each note carries a single pull figure, and the note page
+-- one-line finding, each post carries a single pull figure, and the post page
 -- has a sticky rail of key figures beside it.
-create table insights (
+create table blog_posts (
   id              uuid primary key default gen_random_uuid(),
   slug            text not null unique,
   title           text not null,
@@ -202,8 +202,8 @@ create table insights (
   updated_at      timestamptz not null default now()
 );
 
-create index insights_published_idx
-  on insights (published_at desc) where status = 'published';
+create index blog_posts_published_idx
+  on blog_posts (published_at desc) where status = 'published';
 
 -- ── enquiries ──────────────────────────────────────────────────────────
 create table inquiries (
@@ -310,7 +310,7 @@ create policy "public reads settings"     on site_settings  for select to anon u
 create policy "public reads published testimonials" on testimonials
   for select to anon using (published = true);
 
-create policy "public reads published insights" on insights
+create policy "public reads published blog posts" on blog_posts
   for select to anon using (status = 'published');
 ```
 
@@ -354,7 +354,7 @@ Three public-read buckets, with paths keyed by uuid so a retitle never orphans a
 | `listings` | `listings/<listing_id>/<uuid>.webp` | read |
 | `team` | `agents/<agent_id>/<uuid>.webp` | read |
 | `partners` | `partners/<partner_id>/<uuid>.png` | read |
-| `insights` | `insights/<insight_id>/<uuid>.webp` | read |
+| `blog_posts` | `blog posts/<blog post_id>/<uuid>.webp` | read |
 
 ```sql
 create policy "public may read listing images" on storage.objects
@@ -488,7 +488,7 @@ big-bang upload before launch.
 - `agents` to `agent_registrations`: one to many, cascading
 - `partner_groups` to `partners`: one to many, cascading, ordered within the group, which is what
   `reorderPartner` needs
-- `insights.author_id` and `listings.agent_id`: both `on delete set null`, because losing a
+- `blog posts.author_id` and `listings.agent_id`: both `on delete set null`, because losing a
   colleague should not delete their work
 - `inquiries.listing_slug`: deliberately not a foreign key. An enquiry is a record of something
   that happened and has to outlive the listing it came from
@@ -508,19 +508,19 @@ big-bang upload before launch.
 6. Middleware, then remove `auth.ts` and the bypass
 7. Public site reads, with revalidation on save
 8. Forms insert into `inquiries`, after `Inquiry` gains the three fields named in the audit
-9. The blog: admin screen, then the public `/insights` routes. Last, because the nav item stays
+9. The blog: admin screen, then the public `/blog` routes. Last, because the nav item stays
    hidden until CMT has a first note to publish
 
 ---
 
 ## 8. Still open
 
-- **The blog has a table but no admin screen.** `insights` is defined above; nothing in
+- **The blog has a table but no admin screen.** `blog_posts` is defined above; nothing in
   `src/app/(admin)/` manages it yet. That is a list, a form and a store slice, so roughly a day,
   and it is the one piece of new admin work the backend migration does not otherwise need.
 - **The nav item stays hidden until a first note exists**, which is unchanged. The table being
   ready does not mean the section ships empty.
-- **No subscribers table.** LAYOUT-SPECS A-07 ends the index with "get the next note by email".
+- **No subscribers table.** LAYOUT-SPECS A-07 ends the index with "get the next post by email".
   If that button is to work, it needs somewhere to write to and a consent record with it.
 - Offices remain in code. Move them if CMT starts opening or closing branches.
 - No audit trail. If CMT wants to know who changed a price, `updated_by uuid references profiles`

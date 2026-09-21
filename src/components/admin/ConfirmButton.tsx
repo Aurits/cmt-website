@@ -40,7 +40,7 @@ export function ConfirmButton({
       className={cx(
         'inline-flex items-center gap-1.5 rounded-control border px-3 py-2 text-micro font-medium transition-colors',
         armed
-          ? 'border-red-700/40 bg-red-700/10 text-red-800'
+          ? 'border-flag bg-flag/10 text-flag'
           : 'border-rule-strong text-muted hover:border-green/50 hover:text-green',
         className,
       )}

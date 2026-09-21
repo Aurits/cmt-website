@@ -1,8 +1,10 @@
 # CMT Realtors — website redesign (frontend prototype)
 
 Frontend-only prototype of the redesigned [cmtrealtors.com](https://cmtrealtors.com). Built
-against `docs/Plan.md`, the client brief in this repo. No database, no authentication and no CMS
-this phase: listings, partners, agents and services are static data, and forms are UI only.
+against `docs/Plan.md`, the client brief in this repo. There is now a CMS at `/admin`, but it is
+frontend only: it seeds from `src/data/*.ts` and saves to `localStorage`, so its edits never reach
+the public site. No database, no real authentication, and forms are still UI only. `docs/SCHEMA.md`
+is the design for the Supabase backend that replaces all three.
 
 ## Running it
 
@@ -29,7 +31,12 @@ src/app/                     routes
   listings/                  all listings, with filter, sort and pagination
   listings/[category]/       the five category landing pages
   properties/[slug]/         property detail
+src/app/(site)/              the public site, with the Header/Footer layout
+src/app/(admin)/admin/       the CMS: listings, blog, agents, partners, testimonials,
+                             enquiries, settings
 src/components/              reusable components (see below)
+src/components/admin/        the CMS's own component set
+src/lib/admin/               CMS state, seed and the placeholder auth
 src/data/                    all content: site, categories, listings, agents,
                              partners, services, testimonials
 src/lib/                     types, currency formatting, class helper
@@ -164,5 +171,5 @@ between server and browser.
 
 ## Out of scope this phase
 
-Database, backend API, authentication, staff CMS, real property data, working form
+Database, backend API, real authentication, real property data, working form
 submission, and SEO migration from the WordPress site.

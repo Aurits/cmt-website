@@ -1,5 +1,6 @@
 import { agents } from '@/data/agents';
 import { listings } from '@/data/listings';
+import { posts } from '@/data/blog';
 import { partnerGroups } from '@/data/partners';
 import { site, stats } from '@/data/site';
 import { testimonials } from '@/data/testimonials';
@@ -136,6 +137,11 @@ export function seedAdminState(): AdminState {
     agents: seedAgents(),
     partners: seedPartners(),
     testimonials: seedTestimonials(),
+    posts: posts.map((post) => ({
+      ...post,
+      status: 'published' as const,
+      updatedAt: new Date().toISOString(),
+    })),
     inquiries: seedInquiries(),
     settings: seedSettings(),
   };
