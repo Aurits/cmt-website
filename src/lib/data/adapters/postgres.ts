@@ -2,6 +2,7 @@ import 'server-only';
 import { Kysely, PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
 import { databaseUrl } from '@/lib/env';
+import { publicUrl, toStoredPath } from '@/lib/storage';
 import type { Agent, Listing } from '@/lib/types';
 import type {
   AdminBlogPost,
@@ -271,7 +272,7 @@ function mapListing(row: ListingWithAgent, images: ListingImageRow[]): AdminList
     size: row.size,
     sizeLabel: row.size_label as Listing['sizeLabel'],
     tenure: row.tenure as Listing['tenure'],
-    images: images.map((image) => ({ src: image.path, alt: image.alt })),
+    images: images.map((image) => ({ src: publicUrl(image.path), alt: image.alt })),
     summary: row.summary,
     description: row.description,
     features: row.features,
@@ -291,7 +292,7 @@ function mapAgent(row: AgentRow, registrations: AgentRegistrationRow[]): Agent {
     rank: row.rank as Agent['rank'],
     ...(row.based ? { based: row.based } : {}),
     ...(row.bio ? { bio: row.bio } : {}),
-    ...(row.photo_path ? { photo: row.photo_path } : {}),
+    ...(row.photo_path ? { photo: publicUrl(row.photo_path) } : {}),
     ...(row.phone ? { phone: row.phone } : {}),
     ...(row.email ? { email: row.email } : {}),
     qualifications: row.qualifications,
@@ -319,7 +320,7 @@ function mapPost(row: BlogPostRow & { author_slug: string | null }): AdminBlogPo
     ...(row.pull_caption ? { pullCaption: row.pull_caption } : {}),
     keyFigures: row.key_figures ?? [],
     ...(row.author_slug ? { authorId: row.author_slug } : {}),
-    ...(row.cover_path ? { coverImage: row.cover_path } : {}),
+    ...(row.cover_path ? { coverImage: publicUrl(row.cover_path) } : {}),
     tags: row.tags,
     publishedAt: (row.published_at ?? new Date()).toISOString().slice(0, 10),
     status: row.status as AdminBlogPost['status'],
@@ -455,7 +456,7 @@ export function postgresRepository(): Repository {
               .values(
                 listing.images.map((image, index) => ({
                   listing_id: saved.id,
-                  path: image.src,
+                  path: toStoredPath(image.src),
                   alt: image.alt,
                   sort_order: index,
                 })) as never,
@@ -508,7 +509,7 @@ export function postgresRepository(): Repository {
             rank: agent.rank,
             based: agent.based ?? null,
             bio: agent.bio ?? null,
-            photo_path: agent.photo ?? null,
+            photo_path: agent.photo ? toStoredPath(agent.photo) : null,
             phone: agent.phone ?? null,
             email: agent.email ?? null,
             qualifications: agent.qualifications ?? [],
@@ -566,7 +567,7 @@ export function postgresRepository(): Repository {
           groupId: slugOf.get(row.group_id) ?? '',
           name: row.name,
           ...(row.short_name ? { shortName: row.short_name } : {}),
-          ...(row.logo_path ? { logo: row.logo_path } : {}),
+          ...(row.logo_path ? { logo: publicUrl(row.logo_path) } : {}),
           order: row.sort_order,
           verified: row.verified,
         }));
@@ -583,7 +584,7 @@ export function postgresRepository(): Repository {
           group_id: group.id,
           name: partner.name,
           short_name: partner.shortName ?? null,
-          logo_path: partner.logo ?? null,
+          logo_path: partner.logo ? toStoredPath(partner.logo) : null,
           verified: partner.verified,
           sort_order: partner.order,
         };
@@ -630,7 +631,7 @@ export function postgresRepository(): Repository {
             .map((partner) => ({
               name: partner.name,
               ...(partner.short_name ? { shortName: partner.short_name } : {}),
-              ...(partner.logo_path ? { logo: partner.logo_path } : {}),
+              ...(partner.logo_path ? { logo: publicUrl(partner.logo_path) } : {}),
             })),
         }));
       },
@@ -736,7 +737,7 @@ export function postgresRepository(): Repository {
           pull_caption: post.pullCaption ?? null,
           key_figures: JSON.stringify(post.keyFigures ?? []),
           author_id: author?.id ?? null,
-          cover_path: post.coverImage ?? null,
+          cover_path: post.coverImage ? toStoredPath(post.coverImage) : null,
           tags: post.tags ?? [],
           status: post.status,
           published_at: post.publishedAt ? new Date(post.publishedAt) : null,

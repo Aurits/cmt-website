@@ -59,6 +59,22 @@ export function publicUrl(path: string): string {
   return `${publicBase()}/${path.replace(/^\/+/, '')}`;
 }
 
+/**
+ * The inverse of publicUrl: a full URL back to the key the database should hold.
+ *
+ * Forms round-trip whatever they were given, so without this a saved listing would store
+ * "https://…/storage/v1/object/public/cmt/seed/listings/x.jpg" instead of "seed/listings/x.jpg",
+ * and the day a CDN goes in front every row would be wrong. Resolve on the way out, strip on the
+ * way in, and the column keeps meaning one thing.
+ */
+export function toStoredPath(value: string): string {
+  if (!value) return value;
+  if (isLocalPath(value)) return value;
+  if (!hasStorage()) return value;
+  const base = publicBase();
+  return value.startsWith(base) ? value.slice(base.length + 1) : value;
+}
+
 let client: S3Client | null = null;
 
 function getClient(): S3Client {

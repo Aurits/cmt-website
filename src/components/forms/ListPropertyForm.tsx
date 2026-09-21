@@ -1,7 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useActionState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
+import { Honeypot } from '@/components/forms/Honeypot';
+import { submitInquiry, type InquiryState } from '@/lib/inquiries/actions';
 import { SelectField, TextArea, TextField } from '@/components/forms/fields';
 import { categories } from '@/data/categories';
 import { cities } from '@/data/listings';
@@ -13,15 +16,15 @@ import { site } from '@/data/site';
  * dropdown made both of them wade through the other's.
  */
 export function ListPropertyForm({ defaultCategory }: { defaultCategory?: string }) {
-  const [submitted, setSubmitted] = useState(false);
+  const pathname = usePathname();
+  const [state, action, pending] = useActionState<InquiryState, FormData>(submitInquiry, {});
 
-  if (submitted) {
+  if (state.ok) {
     return (
       <div className="border border-green/25 bg-green/8 p-6">
-        <h3 className="text-h4 text-green">Not sent: the site is still in build</h3>
+        <h3 className="text-h4 text-green">Thank you, that has reached us</h3>
         <p className="mt-3 max-w-[54ch] text-body leading-relaxed text-muted">
-          Nothing has reached CMT. Call the office and ask for the agency desk. They will arrange
-          the inspection that sets the asking price.
+          Someone from the agency desk will call to arrange the inspection that sets the asking price.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <Button href={site.phone.href} variant="primary" size="md">
@@ -31,13 +34,6 @@ export function ListPropertyForm({ defaultCategory }: { defaultCategory?: string
             Email the office
           </Button>
         </div>
-        <button
-          type="button"
-          onClick={() => setSubmitted(false)}
-          className="mt-5 text-body text-green underline decoration-gold decoration-2 underline-offset-4"
-        >
-          Back to the form
-        </button>
       </div>
     );
   }
@@ -45,15 +41,15 @@ export function ListPropertyForm({ defaultCategory }: { defaultCategory?: string
   return (
     <form
       className="grid gap-5"
-      onSubmit={(event) => {
-        event.preventDefault();
-        setSubmitted(true);
-      }}
+      action={action}
     >
+      <Honeypot />
+      <input type="hidden" name="type" value="list-a-property" />
+      <input type="hidden" name="sourcePath" value={pathname} />
       <div className="grid gap-5 sm:grid-cols-2">
-        <TextField id="l-name" label="Your name" autoComplete="name" placeholder="Full name" />
+        <TextField id="name" label="Your name" autoComplete="name" placeholder="Full name" />
         <TextField
-          id="l-phone"
+          id="phone"
           label="Phone number"
           type="tel"
           autoComplete="tel"
@@ -64,7 +60,7 @@ export function ListPropertyForm({ defaultCategory }: { defaultCategory?: string
 
       <div className="grid gap-5 sm:grid-cols-2">
         <SelectField
-          id="l-category"
+          id="category"
           label="What kind of property"
           defaultValue={defaultCategory ?? categories[0].slug}
           options={categories.map((category) => ({
@@ -73,14 +69,14 @@ export function ListPropertyForm({ defaultCategory }: { defaultCategory?: string
           }))}
         />
         <SelectField
-          id="l-city"
+          id="city"
           label="Where it is"
           options={cities.map((city) => ({ value: city, label: city }))}
         />
       </div>
 
       <TextField
-        id="l-expectation"
+        id="expectation"
         label="What you hope it is worth"
         optional
         inputMode="numeric"
@@ -88,7 +84,7 @@ export function ListPropertyForm({ defaultCategory }: { defaultCategory?: string
       />
 
       <TextArea
-        id="l-message"
+        id="message"
         label="Tell us about the property"
         optional
         rows={4}
@@ -96,11 +92,17 @@ export function ListPropertyForm({ defaultCategory }: { defaultCategory?: string
       />
 
       <div className="flex flex-col gap-4 border-t border-rule pt-5 sm:flex-row sm:items-center sm:justify-between">
-        <p className="max-w-[38ch] text-micro leading-relaxed text-muted">
-          Form not connected yet. This page is a prototype.
+        {state.error ? (
+          <p role="alert" className="max-w-[38ch] text-micro leading-relaxed text-flag">
+            {state.error}
+          </p>
+        ) : (
+          <p className="max-w-[38ch] text-micro leading-relaxed text-muted">
+          We reply the same working day.
         </p>
-        <Button type="submit" variant="primary" size="lg">
-          Send the details
+        )}
+        <Button type="submit" variant="primary" size="lg" disabled={pending}>
+          {pending ? 'Sending…' : 'Send the details'}
         </Button>
       </div>
     </form>
