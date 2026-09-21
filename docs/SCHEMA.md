@@ -446,7 +446,53 @@ rather than discovered in production.
 
 ---
 
-## 6. Consistency audit
+## 6. How the app connects
+
+Supabase offers five connection options and they are not interchangeable. The choice decides
+whether the policies in section 3 are enforced or merely present.
+
+| Option | What it actually is | RLS |
+|---|---|---|
+| **Framework** | `@supabase/supabase-js` over HTTPS to the auto-generated REST API, with the project URL and a key | **Enforced** |
+| **Server** | The same client used from server components, route handlers and server actions | Enforced, or bypassed with the service role key |
+| **Direct** | A raw Postgres connection string, used by psql and the CLI | **Bypassed** |
+| **ORM** | Prisma, Drizzle or Kysely, which also use the connection string | **Bypassed** |
+| **MCP** | A server that lets an AI agent query and migrate the database | Development only |
+
+### What this project uses
+
+**`@supabase/ssr`, the Next.js flavour of the client library, for everything the app does.** It is
+the only option that carries the visitor's session in cookies, which is what makes `auth.uid()`
+resolve inside a policy. Without it, `is_staff()` has nothing to check and every policy in section
+3 evaluates against an anonymous caller.
+
+It is also the only path to Auth and to Storage, both of which this design depends on.
+
+**The connection string, for migrations only.** Running the SQL in this document, through the
+dashboard editor or the Supabase CLI. Nothing in the running application uses it.
+
+> **Why not an ORM.** Prisma and Drizzle connect as the `postgres` role, which is a superuser and
+> bypasses row level security entirely. Every policy here would still exist and none would run.
+> The protection on `inquiries` in particular would stop being a database guarantee and become a
+> promise that no future query forgets a `where` clause. For a table holding names, phone numbers
+> and email addresses on a site where the key ships to browsers, that is the wrong trade.
+>
+> RLS can be made to work under an ORM by connecting as a restricted role and setting the JWT
+> claims on every transaction. It is real, it is fiddly, and it is not a thing to take on in the
+> eight days that are left.
+
+**One trap if the connection string is ever used from the app.** Serverless functions open a
+connection per invocation and will exhaust the direct limit quickly, so that path needs Supabase's
+pooled connection string rather than the direct one. The client library sidesteps this entirely by
+being HTTP, with no pool to manage.
+
+**MCP** is worth turning on for development. It lets an agent read the schema and run migrations
+against the project directly, which shortens the loop in section 7. It is not part of the
+deployed application and should not be pointed at production.
+
+---
+
+## 7. Consistency audit
 
 Every column was checked back against the type it comes from, and every relation against the data
 that has to satisfy it. Four things did not line up.
@@ -496,7 +542,7 @@ big-bang upload before launch.
 
 ---
 
-## 7. Order of work
+## 8. Order of work
 
 1. Project, buckets, signup disabled, keys into `.env.local` and the host
 2. Tables, in the order above (profiles, agents, listings, then the rest)
@@ -513,7 +559,7 @@ big-bang upload before launch.
 
 ---
 
-## 8. Still open
+## 9. Still open
 
 - **The blog has a table but no admin screen.** `blog_posts` is defined above; nothing in
   `src/app/(admin)/` manages it yet. That is a list, a form and a store slice, so roughly a day,
