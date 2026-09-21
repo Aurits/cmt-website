@@ -65,11 +65,6 @@ export default function AdminLoginPage() {
             {pending ? 'Checking…' : 'Sign in'}
           </Button>
         </form>
-
-        <p className="mt-6 border-t border-rule pt-5 text-micro leading-relaxed text-muted">
-          Accounts are created by whoever administers the site. There is no sign-up, and there
-          should not be one: everyone with a login here can change what the public site says.
-        </p>
       </div>
     </div>
   );
