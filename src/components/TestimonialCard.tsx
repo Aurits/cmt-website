@@ -1,23 +1,125 @@
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
+import { allPartners } from '@/data/partners';
 import type { Testimonial } from '@/lib/types';
+import { cx } from '@/lib/cx';
 
-export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
+/** The client's own mark, when the organisation is one we already hold a logo for. */
+function partnerLogo(organisation: string) {
+  const name = organisation.trim().toLowerCase();
+  return allPartners.find(
+    (partner) =>
+      partner.name.toLowerCase() === name || partner.shortName?.toLowerCase() === name,
+  )?.logo;
+}
+
+/**
+ * A client reference, set the way a reference sits on file rather than as a floating
+ * compliment: the quote, then who said it and for which organisation, then, when we know it,
+ * the instruction it vouches for. A quote that names the job is worth more than one that
+ * does not, so `instruction` is shown as a schedule row, the same device the rest of the site
+ * uses for anything that can be checked.
+ *
+ * `featured` is the lead reference on green; the rest sit on paper beside it.
+ */
+export function TestimonialCard({
+  testimonial,
+  featured = false,
+}: {
+  testimonial: Testimonial;
+  featured?: boolean;
+}) {
+  const logo = partnerLogo(testimonial.organisation);
+
   return (
-    <figure className="flex h-full flex-col justify-between rounded-brand border border-rule bg-paper p-6">
-      <blockquote className="font-display text-h4 leading-snug text-green">
-        <span aria-hidden="true" className="mr-1 text-gold-deep">
-          &ldquo;
-        </span>
+    <figure
+      className={cx(
+        'flex h-full flex-col rounded-brand border p-6 sm:p-8',
+        featured ? 'border-green bg-green text-cream' : 'border-rule bg-paper',
+      )}
+    >
+      <span
+        aria-hidden="true"
+        className={cx(
+          'font-display text-[3.5rem] leading-[0.6]',
+          featured ? 'text-gold' : 'text-gold-deep',
+        )}
+      >
+        &ldquo;
+      </span>
+      <blockquote
+        className={cx(
+          'mt-4 font-display leading-snug',
+          featured ? 'text-h3 text-cream' : 'text-h4 text-green',
+        )}
+      >
         {testimonial.quote}
       </blockquote>
-      <figcaption className="mt-6 border-t border-rule pt-4 text-sm">
-        <span className="block font-medium text-ink">{testimonial.name}</span>
-        <span className="block text-muted">
-          {testimonial.role ? `${testimonial.role}, ` : ''}
-          {testimonial.organisation}
-        </span>
+
+      <figcaption className="mt-auto pt-8">
+        <div
+          className={cx(
+            'flex items-center gap-4 border-t pt-5',
+            featured ? 'border-cream/20' : 'border-rule',
+          )}
+        >
+          {logo && (
+            // White plate: these are other organisations' marks, drawn for a white ground.
+            // Same reasoning as the client conveyor.
+            <span className="flex h-12 w-20 shrink-0 items-center justify-center rounded-brand border border-rule bg-white px-2">
+              <Image src={logo} alt="" width={120} height={48} className="max-h-8 w-auto object-contain" />
+            </span>
+          )}
+          <span className="text-sm">
+            <span className={cx('block font-medium', featured ? 'text-cream' : 'text-ink')}>
+              {testimonial.name}
+            </span>
+            <span className={cx('block', featured ? 'text-cream/70' : 'text-muted')}>
+              {testimonial.role ? `${testimonial.role}, ` : ''}
+              {testimonial.organisation}
+            </span>
+          </span>
+        </div>
+        {testimonial.instruction && (
+          <p
+            className={cx(
+              'schedule-row mt-5 text-sm',
+              featured ? 'border-cream/20' : 'border-rule',
+            )}
+          >
+            <span className={featured ? 'text-cream/60' : 'text-muted'}>Instruction</span>
+            <span className={cx('tnum text-right', featured ? 'text-cream' : 'text-ink')}>
+              {testimonial.instruction}
+              {testimonial.year ? ` · ${testimonial.year}` : ''}
+            </span>
+          </p>
+        )}
       </figcaption>
     </figure>
+  );
+}
+
+/**
+ * The references, lead first. One reads full width; with more, the lead takes the wider
+ * column and the rest stack beside it, so the section is never a row of equal boxes.
+ */
+export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) {
+  const [lead, ...rest] = testimonials;
+  if (!lead) return null;
+
+  return (
+    <div className={cx('grid gap-6', rest.length > 0 && 'lg:grid-cols-12')}>
+      <div className={cx(rest.length > 0 && 'lg:col-span-7')}>
+        <TestimonialCard testimonial={lead} featured />
+      </div>
+      {rest.length > 0 && (
+        <div className="grid gap-6 lg:col-span-5">
+          {rest.map((testimonial) => (
+            <TestimonialCard key={`${testimonial.name}-${testimonial.organisation}`} testimonial={testimonial} />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 

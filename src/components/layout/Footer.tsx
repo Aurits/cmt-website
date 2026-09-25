@@ -1,9 +1,43 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Container } from '@/components/ui/Container';
-import { MailIcon, PhoneIcon, PinIcon } from '@/components/ui/icons';
+import {
+  FacebookIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  MailIcon,
+  PhoneIcon,
+  PinIcon,
+  TikTokIcon,
+  WhatsAppIcon,
+  XIcon,
+  YouTubeIcon,
+} from '@/components/ui/icons';
 import { categories } from '@/data/categories';
-import { aboutPages, nav, site } from '@/data/site';
+import { aboutPages, nav, site, whatsappHref } from '@/data/site';
+
+/**
+ * WhatsApp always links: without a number it routes to /contact#whatsapp, like every other
+ * WhatsApp CTA. The rest link only once site.social holds a real profile URL.
+ */
+const socialLinks = [
+  { label: 'Facebook', href: site.social.facebook, Icon: FacebookIcon },
+  { label: 'X', href: site.social.x, Icon: XIcon },
+  { label: 'Instagram', href: site.social.instagram, Icon: InstagramIcon },
+  { label: 'LinkedIn', href: site.social.linkedin, Icon: LinkedInIcon },
+  { label: 'YouTube', href: site.social.youtube, Icon: YouTubeIcon },
+  { label: 'TikTok', href: site.social.tiktok, Icon: TikTokIcon },
+  {
+    label: 'WhatsApp',
+    href: whatsappHref('Hello CMT Realtors, I have a property enquiry.'),
+    Icon: WhatsAppIcon,
+  },
+];
+
+// 44px on touch screens, the minimum comfortable tap target; 36px from sm up, where a pointer
+// does the aiming and the row should not shout.
+const socialClass =
+  'flex h-11 w-11 items-center justify-center rounded-control border border-cream/25 text-cream/85 sm:h-9 sm:w-9';
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -25,6 +59,31 @@ export function Footer() {
             <p className="mt-5 max-w-[34ch] text-sm leading-relaxed text-cream/75">
               Valuation and property consultancy in Uganda, regulated by the {site.regulator}.
             </p>
+            <ul aria-label="Follow CMT Realtors" className="mt-6 flex flex-wrap gap-2">
+              {socialLinks.map(({ label, href, Icon }) => (
+                <li key={label}>
+                  {href ? (
+                    <a
+                      href={href}
+                      aria-label={label}
+                      title={label}
+                      {...(href.startsWith('http') && { target: '_blank', rel: 'noopener noreferrer' })}
+                      className={`${socialClass} transition-colors hover:border-gold hover:text-gold`}
+                    >
+                      <Icon width={16} height={16} />
+                    </a>
+                  ) : (
+                    <span
+                      title={`${label} (link coming soon)`}
+                      className={`${socialClass} cursor-default opacity-40`}
+                    >
+                      <Icon width={16} height={16} />
+                      <span className="sr-only">{label}, link coming soon</span>
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
           </div>
 
           <nav aria-label="Footer">

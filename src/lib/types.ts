@@ -140,6 +140,10 @@ export interface Testimonial {
   name: string;
   organisation: string;
   role?: string;
+  /** What CMT did for them, e.g. "Mortgage valuation". Names the job the quote vouches for. */
+  instruction?: string;
+  /** Year of the instruction, shown beside it. */
+  year?: string;
 }
 
 export interface Service {

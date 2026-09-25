@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import { CTABanner } from '@/components/CTABanner';
 import { PartnerConveyorGroups } from '@/components/PartnerConveyor';
+import { Testimonials } from '@/components/TestimonialCard';
 import { Container } from '@/components/ui/Container';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Reveal } from '@/components/ui/Reveal';
 import { partnerCount, partnerGroups } from '@/data/partners';
 import { site } from '@/data/site';
+import { testimonials } from '@/data/testimonials';
 
 export const metadata: Metadata = {
   title: 'Our Clients',
@@ -34,6 +36,24 @@ export default function ClientsPage() {
           </Reveal>
         </Container>
       </section>
+
+      {/* docs/LAYOUT-SPECS.md A-07: the references sit with the logos they come from. Renders nothing
+          until a real, named one exists (docs/OPEN-ITEMS.md #6). */}
+      {testimonials.length > 0 && (
+        <section className="pb-14 lg:pb-20">
+          <Container>
+            <Reveal>
+              <SectionHeading
+                title="What our clients say"
+                lead="In their own words, published with their permission."
+              />
+            </Reveal>
+            <Reveal className="mt-8">
+              <Testimonials testimonials={testimonials} />
+            </Reveal>
+          </Container>
+        </section>
+      )}
 
       <section className="bg-cream-deep/45 py-14 lg:py-20">
         <Container className="grid gap-12 lg:grid-cols-2 lg:gap-16">

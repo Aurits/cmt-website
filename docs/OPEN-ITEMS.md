@@ -76,6 +76,10 @@ have been supplied, so the section carries an honest empty state rather than inv
 banks. Add entries to `src/data/testimonials.ts` and the section switches to real cards.
 
 Each one needs: the quote, the person's name, their organisation, and their permission to publish.
+Worth asking for too: which instruction the quote is about and the year (e.g. "Mortgage valuation, 2025").
+A reference that names the job is worth more than one that does not, and the card shows it when supplied.
+Until the first one arrives, the homepage shows four plain statements about CMT in that slot instead, and
+`/about/clients` shows nothing.
 
 ## 7. The full client list, with permission to name them
 
@@ -136,6 +140,13 @@ the brief's `#143d1e` — or use the gold wordmark on cream, where the green til
 all.
 
 ---
+
+## 13. Social profile URLs
+
+The footer carries Facebook, X, Instagram, LinkedIn, YouTube, TikTok and WhatsApp icons. The icons on
+cmtrealtors.com link to `#`, so we have no profile URLs we can publish. Paste each URL into `site.social`
+in `src/data/site.ts` and that icon becomes a live link. Unlinked icons show dimmed until then. Say which
+platforms CMT has no presence on and we will drop those icons.
 
 ## Closed by the 15 September review
 
