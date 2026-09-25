@@ -26,6 +26,20 @@ export const site = {
    */
   whatsapp: null as string | null,
 
+  /**
+   * OPEN ITEM: cmtrealtors.com shows Facebook, X and LinkedIn icons but links each to '#',
+   * so we have no profile URLs to publish. Paste the full URL of each profile here and its
+   * footer icon becomes a live link. Until then the icon shows, dimmed, as not yet linked.
+   */
+  social: {
+    facebook: null as string | null,
+    x: null as string | null,
+    instagram: null as string | null,
+    linkedin: null as string | null,
+    youtube: null as string | null,
+    tiktok: null as string | null,
+  },
+
   address: {
     building: 'Ambassador House',
     line1: 'Plot 56/60, Suite B, 1st Floor',
@@ -72,19 +86,29 @@ export const site = {
  * /properties/[slug] already serves property detail and a second dynamic segment at that level
  * would collide.
  *
+ * About, Valuations, Advisory and Properties open a menu rather than going straight to their
+ * page (see NavMenus): each previews its section and lets a visitor go straight to the part they
+ * came for. Properties' menu is also where "List with us" lives without costing a seventh slot.
+ * Home and Contact are single destinations and stay plain links.
+ *
  * Insights is deliberately absent until the first market note exists. An empty Insights section
  * advertises that the firm started something and stopped.
  *
  * `match` lists any additional path prefixes that should light this item up — property detail
- * lives under /properties while the nav points at /listings, and both are the same destination
- * as far as a visitor is concerned.
+ * lives under /properties, and List with us under /contact. Where two items both match, the
+ * header lights the more specific one, so the list-a-property page marks Properties, not Contact.
  */
 export const nav = [
   { label: 'Home', href: '/' },
-  { label: 'About', href: '/about' },
-  { label: 'Valuations', href: '/valuations' },
-  { label: 'Advisory', href: '/advisory' },
-  { label: 'Properties', href: '/listings', match: ['/properties'] },
+  { label: 'About', href: '/about', menu: 'about' },
+  { label: 'Valuations', href: '/valuations', menu: 'valuations' },
+  { label: 'Advisory', href: '/advisory', menu: 'advisory' },
+  {
+    label: 'Properties',
+    href: '/listings',
+    match: ['/properties', '/contact/list-a-property'],
+    menu: 'properties',
+  },
   { label: 'Contact', href: '/contact' },
 ] as const;
 

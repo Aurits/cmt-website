@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import {
+  ChevronIcon,
   CloseIcon,
   MailIcon,
   MenuIcon,
@@ -15,6 +16,7 @@ import {
   WhatsAppIcon,
 } from '@/components/ui/icons';
 import { PillNav } from '@/components/layout/PillNav';
+import { navMenus } from '@/components/layout/NavMenus';
 import { nav, site, whatsappHref } from '@/data/site';
 import { cx } from '@/lib/cx';
 
@@ -32,6 +34,9 @@ import { cx } from '@/lib/cx';
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  // Which drawer section is expanded. A choice only holds on the page it was made on; otherwise
+  // the section containing the current page is the one open, so the drawer starts short.
+  const [expanded, setExpanded] = useState<{ path: string; href: string | null } | null>(null);
 
   // Escape closes the drawer, and the page behind it does not scroll while it is open.
   useEffect(() => {
@@ -48,13 +53,25 @@ export function Header() {
   }, [open]);
 
   // A nav item lights up for its own href and for any extra prefixes it claims (see `nav` in
-  // data/site.ts — "Properties" points at /listings but owns /properties/[slug] too).
-  const isActive = (href: string) => {
-    if (href === '/') return pathname === '/';
-    const item = nav.find((entry) => entry.href === href);
-    const extra = (item as { match?: readonly string[] } | undefined)?.match ?? [];
-    return pathname.startsWith(href) || extra.some((prefix) => pathname.startsWith(prefix));
+  // data/site.ts). Only the most specific match lights up, so /contact/list-a-property marks
+  // Properties and not Contact as well.
+  const matchLength = (item: (typeof nav)[number]) => {
+    if (item.href === '/') return pathname === '/' ? 1 : 0;
+    const extra = (item as { match?: readonly string[] }).match ?? [];
+    return Math.max(
+      0,
+      ...[item.href, ...extra].filter((prefix) => pathname.startsWith(prefix)).map((p) => p.length),
+    );
   };
+  const activeHref = nav.reduce<{ href: string | null; length: number }>(
+    (best, item) => {
+      const length = matchLength(item);
+      return length > best.length ? { href: item.href, length } : best;
+    },
+    { href: null, length: 0 },
+  ).href;
+  const isActive = (href: string) => href === activeHref;
+  const expandedHref = expanded?.path === pathname ? expanded.href : activeHref;
 
   return (
     <>
@@ -167,17 +184,72 @@ export function Header() {
           <ul>
             {nav.map((item) => (
               <li key={item.href} className="border-b border-cream/12">
-                <Link
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  aria-current={isActive(item.href) ? 'page' : undefined}
-                  className={cx(
-                    'block py-4 font-display text-2xl',
-                    isActive(item.href) ? 'text-gold' : 'text-cream',
+                <div className="flex items-center justify-between gap-4">
+                  <Link
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    aria-current={isActive(item.href) ? 'page' : undefined}
+                    className={cx(
+                      'block flex-1 py-4 font-display text-2xl',
+                      isActive(item.href) ? 'text-gold' : 'text-cream',
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                  {'menu' in item && (
+                    <button
+                      type="button"
+                      aria-expanded={expandedHref === item.href}
+                      aria-controls={`drawer-${item.menu}`}
+                      onClick={() =>
+                        setExpanded({
+                          path: pathname,
+                          href: expandedHref === item.href ? null : item.href,
+                        })
+                      }
+                      className="flex h-11 w-11 items-center justify-center rounded-control border border-cream/20 text-cream"
+                    >
+                      <ChevronIcon
+                        width={18}
+                        height={18}
+                        className={cx(
+                          'transition-transform duration-200',
+                          expandedHref === item.href ? '-rotate-90' : 'rotate-90',
+                        )}
+                      />
+                      <span className="sr-only">{item.label} sections</span>
+                    </button>
                   )}
-                >
-                  {item.label}
-                </Link>
+                </div>
+                {/* The drawer carries the same menus as the desktop panels, minus the intro:
+                    the item itself already links to the section's landing page. */}
+                {'menu' in item && expandedHref === item.href && (
+                  <ul
+                    id={`drawer-${item.menu}`}
+                    className="-mt-1 mb-4 space-y-1 border-l border-cream/15 pl-4"
+                  >
+                    {navMenus[item.menu].schedule.rows.map((row) => (
+                      <li key={row.href}>
+                        <Link
+                          href={row.href}
+                          onClick={() => setOpen(false)}
+                          className="block py-1.5 text-base text-cream/75 hover:text-gold"
+                        >
+                          {row.label}
+                        </Link>
+                      </li>
+                    ))}
+                    <li>
+                      <Link
+                        href={navMenus[item.menu].feature.cta.href}
+                        onClick={() => setOpen(false)}
+                        className="block py-1.5 text-base font-medium text-gold"
+                      >
+                        {navMenus[item.menu].feature.cta.label}
+                      </Link>
+                    </li>
+                  </ul>
+                )}
               </li>
             ))}
           </ul>

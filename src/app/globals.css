@@ -124,11 +124,19 @@
    * the page that says "this is different" — and it reads as far more of an exception
    * against 0 and 4px than it ever did against a uniform 10px.
    *
+   * --radius-overlay (12px) is a layer that a control OPENS — the nav menus (NavMenus.tsx).
+   * They are not page content but part of the pill nav that spawned them, so they take a
+   * softened corner from it rather than the document edge. Only the corners that float get
+   * it: a menu's top edge hangs flush from the masthead hairline and stays square. Anything
+   * nested inside one steps down a size (radius minus 4px) so the curves stay concentric
+   * instead of the inner one looking pinched.
+   *
    * The radius the client asked to modernise is still tunable from one place: raise
    * --radius-brand and every surface follows, exactly as before.
    */
   --radius-brand: 0;
   --radius-control: 0.25rem;
+  --radius-overlay: 0.75rem;
 }
 
 @layer base {

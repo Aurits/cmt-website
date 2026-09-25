@@ -3,8 +3,10 @@ import Link from 'next/link';
 import { CTABanner } from '@/components/CTABanner';
 import { CategoryCard } from '@/components/CategoryCard';
 import { HeroSearchTabs } from '@/components/HeroSearchTabs';
+import { InBrief } from '@/components/InBrief';
 import { PartnerConveyor } from '@/components/PartnerConveyor';
 import { StatsStrip } from '@/components/StatsStrip';
+import { Testimonials } from '@/components/TestimonialCard';
 import { FeaturedCarousel } from '@/components/property/FeaturedCarousel';
 import { CredentialLine } from '@/components/about/StandingSchedule';
 import { AnimatedHeadline } from '@/components/ui/AnimatedHeadline';
@@ -18,6 +20,7 @@ import { allPartners, partnerCount } from '@/data/partners';
 import { advisoryServices } from '@/data/advisory';
 import { featuredPurposes, purposeBySlug } from '@/data/valuations';
 import { site } from '@/data/site';
+import { testimonials } from '@/data/testimonials';
 
 /**
  * Homepage.
@@ -324,6 +327,26 @@ export default function HomePage() {
         <Reveal className="mt-9">
           <PartnerConveyor partners={allPartners} label="CMT Realtors clients" />
         </Reveal>
+        {/*
+          What the belt's clients say, once they have said it on the record. Until then the
+          slot carries four plain statements about the firm instead: CMT speaking for itself,
+          under its own heading, never set as a quote. Part of this section rather than a new
+          one, so the page gains a row, not a section.
+        */}
+        <Container className="mt-12">
+          <Reveal>
+            <h3 className="font-display text-h3 text-green">
+              {testimonials.length > 0 ? 'In their words' : `${site.shortName} in brief`}
+            </h3>
+          </Reveal>
+          <Reveal className="mt-6">
+            {testimonials.length > 0 ? (
+              <Testimonials testimonials={testimonials.slice(0, 3)} />
+            ) : (
+              <InBrief />
+            )}
+          </Reveal>
+        </Container>
       </section>
 
       <CTABanner
