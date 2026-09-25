@@ -23,7 +23,7 @@ export function AdminSelectField({
   onChange: (value: string) => void;
   options: SelectOption[];
   optional?: boolean;
-  /** Keeps the label for screen readers but drops its visual space — for in-table selects. */
+  /** Keeps the label for screen readers but drops its visual space, for in-table selects. */
   hideLabel?: boolean;
 }) {
   return (

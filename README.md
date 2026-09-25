@@ -1,8 +1,10 @@
 # CMT Realtors — website redesign (frontend prototype)
 
 Frontend-only prototype of the redesigned [cmtrealtors.com](https://cmtrealtors.com). Built
-against `Plan.md`, the client brief in this repo. No database, no authentication and no CMS
-this phase: listings, partners, agents and services are static data, and forms are UI only.
+against `docs/PLAN.md`, the client brief in this repo. There is now a CMS at `/admin`, but it is
+frontend only: it seeds from `src/data/*.ts` and saves to `localStorage`, so its edits never reach
+the public site. No database, no real authentication, and forms are still UI only. `docs/SCHEMA.md`
+is the design for the Supabase backend that replaces all three.
 
 ## Running it
 
@@ -29,7 +31,12 @@ src/app/                     routes
   listings/                  all listings, with filter, sort and pagination
   listings/[category]/       the five category landing pages
   properties/[slug]/         property detail
+src/app/(site)/              the public site, with the Header/Footer layout
+src/app/(admin)/admin/       the CMS: listings, blog, agents, partners, testimonials,
+                             enquiries, settings
 src/components/              reusable components (see below)
+src/components/admin/        the CMS's own component set
+src/lib/admin/               CMS state, seed and the placeholder auth
 src/data/                    all content: site, categories, listings, agents,
                              partners, services, testimonials
 src/lib/                     types, currency formatting, class helper
@@ -41,6 +48,8 @@ scripts/prepare-icons.mjs    builds favicon.ico, icon.png, apple-icon.png and th
 public/images/CREDITS.md     licence and source of every photograph
 public/brand/cmt-logo.png    the client-supplied mark, optimised
 public/brand/partners/       client logos + CREDITS.md
+docs/                        the written record: brief, strategy, layout specs,
+                             open items and the client workplan
 ```
 
 ### Reusable components
@@ -67,7 +76,7 @@ pagination), `PropertyGallery`, `PropertyMap`, `HeroSearchTabs`, `Reveal`, `Cont
   pins all use it, so the logo merges into any surface and the site reads as one material.
   Depth comes from alpha of that same green (`green/8`, `green/85`) and from gold hairlines,
   never from a second hue. This supersedes the brief's `#143d1e` at the client's direction —
-  see `OPEN-ITEMS.md`.
+  see `docs/OPEN-ITEMS.md`.
 - **Type**: Inter for UI and body, Fraunces for headlines, picking up the tall serif of the
   CMT wordmark.
 - **Sharp surfaces, softened controls**: two radii, and the split carries meaning. Anything
@@ -109,23 +118,28 @@ pagination), `PropertyGallery`, `PropertyMap`, `HeroSearchTabs`, `Reveal`, `Cont
 
 The brief forbids invented testimonials, and the same principle is applied throughout:
 where CMT has not supplied something, the UI says so instead of filling the gap with a
-plausible fiction. See `OPEN-ITEMS.md` for the full list and where each one is wired.
+plausible fiction. See `docs/OPEN-ITEMS.md` for the full list and where each one is wired.
 
 ## Strategy and layout
 
 Two documents drive the current direction, written after a review of CMT's own published material
 (Uganda and Kenya) and the competitive field:
 
-- **`SITE-STRATEGY.md`** — what the research found, the positioning, the navigation naming and the
+- **`docs/SITE-STRATEGY.md`** — what the research found, the positioning, the navigation naming and the
   sitemap. Read this first; it explains *why* the pages are what they are.
-- **`LAYOUT-SPECS.md`** — nine sheets specifying how each page in that sitemap is built: structural
+- **`docs/LAYOUT-SPECS.md`** — nine sheets specifying how each page in that sitemap is built: structural
   concept, visitor flow, section order and exact dimensions, all resolving against the tokens in
   `globals.css`.
 
-- **`WORKPLAN.md`** — the 17 to 30 September delivery plan, written to be read by the client:
-  the ten days one at a time, what we need from CMT and by when, and what "finished" means.
+- **`docs/WORKPLAN.md`** — the Phase 1 delivery plan issued to CMT, 17 to 30 September.
+- **`docs/BUILD-PLAN.md`** — the internal version: the stack and storage decisions, the eight
+  remaining days, and the gate that has to be cleared before DNS moves.
+- **`docs/SCHEMA.md`** — the database design: tables derived from the existing types, the row
+  level security policies, storage buckets, and how admin login stops being a localStorage flag.
+- **`docs/PORTABILITY.md`** — how the backend stays swappable: what is actually locked in, the
+  repository seam, our own auth, and what that changes about row level security.
 
-`Plan.md` remains the client's original brief and is not edited — where the strategy supersedes it, the
+`docs/PLAN.md` remains the client's original brief and is not edited — where the strategy supersedes it, the
 strategy says so and gives the reason.
 
 ## Replacing placeholder content
@@ -159,5 +173,5 @@ between server and browser.
 
 ## Out of scope this phase
 
-Database, backend API, authentication, staff CMS, real property data, working form
+Database, backend API, real authentication, real property data, working form
 submission, and SEO migration from the WordPress site.

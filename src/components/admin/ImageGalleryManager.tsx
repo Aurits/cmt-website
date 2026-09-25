@@ -1,11 +1,12 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useTransition } from 'react';
 import Image from 'next/image';
 import { ArrowDownIcon, ArrowUpIcon, DragHandleIcon, PlusIcon, TrashIcon } from '@/components/admin/icons';
 import { AdminSelectField } from '@/components/admin/AdminSelectField';
 import { inputClass } from '@/components/forms/fields';
 import { stockListingImages } from '@/lib/admin/stockImages';
+import { uploadImage, type UploadFolder } from '@/lib/admin/upload';
 import { cx } from '@/lib/cx';
 
 export interface GalleryImage {
@@ -14,21 +15,30 @@ export interface GalleryImage {
 }
 
 /**
- * Drag-and-drop gallery reordering, with two ways to add a photo: pick from the licensed
- * stock already in public/images/listings (the only real files the prototype has), or
- * upload from device for an in-session preview. There is no upload backend this phase — an
- * uploaded file becomes an object URL that lives only for the browser tab, which the label
- * says plainly rather than implying it is saved anywhere.
+ * Drag-and-drop gallery reordering, with two ways to add a photo: pick from the licensed stock
+ * that shipped with the site, or upload one.
+ *
+ * Uploads are real now. They used to become an object URL that lasted until the tab closed,
+ * which looked exactly like saving and was not; the file now goes to the bucket through a server
+ * action and what comes back is a URL that survives a reload and works for everyone.
+ *
+ * The button stays disabled while a file is in flight and failures are shown rather than
+ * swallowed, because the one thing worse than a slow upload is a silent one.
  */
 export function ImageGalleryManager({
   images,
   onChange,
+  folder = 'listings',
 }: {
   images: GalleryImage[];
   onChange: (images: GalleryImage[]) => void;
+  /** Which prefix in the bucket these belong under. */
+  folder?: UploadFolder;
 }) {
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [stockChoice, setStockChoice] = useState(stockListingImages[0].file);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploading, startUpload] = useTransition();
   const fileInput = useRef<HTMLInputElement>(null);
 
   const move = (from: number, to: number) => {
@@ -55,10 +65,23 @@ export function ImageGalleryManager({
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    onChange([...images, { src: url, alt: file.name.replace(/\.[^.]+$/, '') }]);
     event.target.value = '';
+    if (!file) return;
+
+    setUploadError(null);
+    const alt = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ');
+
+    startUpload(async () => {
+      const body = new FormData();
+      body.set('file', file);
+      body.set('folder', folder);
+      const result = await uploadImage(body);
+      if (result.error || !result.url) {
+        setUploadError(result.error ?? 'The upload failed.');
+        return;
+      }
+      onChange([...images, { src: result.url, alt }]);
+    });
   };
 
   return (
@@ -87,7 +110,7 @@ export function ImageGalleryManager({
               <div className="relative aspect-[4/3] overflow-hidden rounded-brand border border-rule bg-cream-deep">
                 <Image src={image.src} alt={image.alt || 'Listing photograph'} fill unoptimized className="object-cover" />
                 {index === 0 && (
-                  <span className="absolute left-2 top-2 rounded-control bg-green px-2 py-0.5 text-[11px] font-medium text-cream">
+                  <span className="absolute left-2 top-2 rounded-control bg-green px-2 py-0.5 text-label font-medium text-cream">
                     Cover
                   </span>
                 )}
@@ -131,7 +154,7 @@ export function ImageGalleryManager({
                 <button
                   type="button"
                   onClick={() => removeAt(index)}
-                  className="flex h-8 w-8 items-center justify-center rounded-control border border-rule-strong text-muted transition-colors hover:border-red-700/50 hover:text-red-800"
+                  className="flex h-8 w-8 items-center justify-center rounded-control border border-rule-strong text-muted transition-colors hover:border-flag hover:text-flag"
                   aria-label="Remove image"
                 >
                   <TrashIcon width={14} height={14} />
@@ -163,16 +186,31 @@ export function ImageGalleryManager({
           <button
             type="button"
             onClick={() => fileInput.current?.click()}
-            className="flex h-[46px] items-center gap-1.5 rounded-control border border-rule-strong px-4 text-body text-muted transition-colors hover:border-green/50 hover:text-green"
+            disabled={uploading}
+            className="flex h-[46px] items-center gap-1.5 rounded-control border border-rule-strong px-4 text-body text-muted transition-colors hover:border-green/50 hover:text-green disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Upload from device
+            {uploading ? 'Uploading…' : 'Upload from device'}
           </button>
-          <input ref={fileInput} type="file" accept="image/*" onChange={onFileChange} className="hidden" />
+          <input
+            ref={fileInput}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={onFileChange}
+            className="hidden"
+          />
         </div>
       </div>
+
+      {uploadError && (
+        <p role="alert" className="border-l-[3px] border-flag bg-flag/10 px-3 py-2 text-micro text-flag">
+          {uploadError}
+        </p>
+      )}
+
       <p className="text-micro text-muted">
-        Uploaded files preview for this browser tab only — this prototype has no image storage
-        backend. Use the licensed stock picker for anything that needs to persist across a reload.
+        JPEG, PNG or WebP, up to 8MB. Uploads go straight to the site&rsquo;s image storage and are
+        live as soon as the listing is saved. Photographs are served resized, so there is no need
+        to shrink them first.
       </p>
     </div>
   );

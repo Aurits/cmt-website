@@ -9,7 +9,7 @@ import type { Agent } from '@/lib/types';
  * homepage hero, the cards on /about/people. Names and roles render regardless, because who
  * directs a company is a matter of public record; a professional qualification is a claim about a
  * person's standing and belongs to them to confirm. Flip the flag per person and everything
- * switches on at once. See OPEN-ITEMS.md #1.
+ * switches on at once. See docs/OPEN-ITEMS.md #1.
  *
  * `sourcedFrom` records how we know. 'cmt' means the firm publishes it on cmtrealtors.com or
  * cmtrealtors.co.ke. 'directory' means a third-party business directory — good enough to know who

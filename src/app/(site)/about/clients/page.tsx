@@ -37,8 +37,8 @@ export default function ClientsPage() {
         </Container>
       </section>
 
-      {/* LAYOUT-SPECS A-07: the references sit with the logos they come from. Renders nothing
-          until a real, named one exists (OPEN-ITEMS.md #6). */}
+      {/* docs/LAYOUT-SPECS.md A-07: the references sit with the logos they come from. Renders nothing
+          until a real, named one exists (docs/OPEN-ITEMS.md #6). */}
       {testimonials.length > 0 && (
         <section className="pb-14 lg:pb-20">
           <Container>

@@ -11,7 +11,7 @@
 
   This supersedes the brief's #143d1e, at the client's direction: the mark cannot be
   recoloured, so matching the site to the mark was the only way to get a continuous
-  masthead. Recorded in OPEN-ITEMS.md. Re-measured from cmt-logo-gold.png when that export
+  masthead. Recorded in docs/OPEN-ITEMS.md. Re-measured from cmt-logo-gold.png when that export
   replaced the original white-on-tile mark — see scripts/prepare-images.mjs — since the two
   exports' tiles turned out to be a few RGB steps apart; this is the second value, not the
   first.
@@ -56,6 +56,19 @@
    * paper, 3.32 on cream) and is used only on things you can type into or open.
    */
   --color-rule-strong: #918455;
+  /*
+   * Destructive, and the only colour on the site outside the brand.
+   *
+   * Deleting something is the one action the palette genuinely cannot express: green, gold and
+   * cream are all affirmative, and a "delete" button in brand green reads as approval. This is
+   * the admin's alone; nothing on the public site uses it.
+   *
+   * #991b1b measures 8.17:1 as text on paper and 7.40:1 on cream, so it clears AA as a word, and
+   * it clears the 3:1 boundary rule as a 1px border at full strength. The version it replaces was
+   * a Tailwind red at 50% opacity, which came out at 2.53:1 and failed the same border test the
+   * inputs failed. Tint it for a fill, never for a border.
+   */
+  --color-flag: #991b1b;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-fraunces), ui-serif, Georgia, serif;

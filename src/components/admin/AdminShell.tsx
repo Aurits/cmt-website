@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { AdminTopbar } from '@/components/admin/AdminTopbar';
+import { SaveStatus } from '@/components/admin/SaveStatus';
 
 /** Sidebar + top bar shell, isolated from the public Header/Footer. See (admin)/admin/layout.tsx. */
 export function AdminShell({
@@ -33,6 +34,9 @@ export function AdminShell({
           {children}
         </main>
       </div>
+
+      {/* One place for "saving" and for "that did not save", wherever the change came from. */}
+      <SaveStatus />
     </div>
   );
 }

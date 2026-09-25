@@ -1,7 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useActionState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
+import { Honeypot } from '@/components/forms/Honeypot';
+import { submitInquiry, type InquiryState } from '@/lib/inquiries/actions';
 import { SelectField, TextArea, TextField } from '@/components/forms/fields';
 import { site, whatsappHref } from '@/data/site';
 
@@ -16,16 +19,15 @@ export function InquiryForm({
   reference: string;
   title: string;
 }) {
-  const [submitted, setSubmitted] = useState(false);
+  const pathname = usePathname();
+  const [state, action, pending] = useActionState<InquiryState, FormData>(submitInquiry, {});
 
-  if (submitted) {
+  if (state.ok) {
     return (
       <div className="rounded-brand border border-green/25 bg-green/8 p-6">
-        <h3 className="text-h4 text-green">Not sent: the site is still in build</h3>
+        <h3 className="text-h4 text-green">Thank you, that has reached us</h3>
         <p className="mt-3 text-body leading-relaxed text-muted">
-          Nothing has reached CMT. Quote reference{' '}
-          <span className="tnum font-medium text-ink">{reference}</span> when you call or
-          message, and the agent will have the file open.
+          The agent handling this property will come back to you the same working day.
         </p>
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <Button href={site.phone.href} variant="primary" size="md">
@@ -39,13 +41,6 @@ export function InquiryForm({
             WhatsApp the agent
           </Button>
         </div>
-        <button
-          type="button"
-          onClick={() => setSubmitted(false)}
-          className="mt-5 text-body text-green underline decoration-gold decoration-2 underline-offset-4"
-        >
-          Back to the form
-        </button>
       </div>
     );
   }
@@ -53,14 +48,14 @@ export function InquiryForm({
   return (
     <form
       className="grid gap-4"
-      onSubmit={(event) => {
-        event.preventDefault();
-        setSubmitted(true);
-      }}
+      action={action}
     >
-      <TextField id="enquiry-name" label="Your name" autoComplete="name" placeholder="Full name" />
+      <Honeypot />
+      <input type="hidden" name="type" value="agent-contact" />
+      <input type="hidden" name="sourcePath" value={pathname} />
+      <TextField id="name" label="Your name" autoComplete="name" placeholder="Full name" />
       <TextField
-        id="enquiry-phone"
+        id="phone"
         label="Phone number"
         type="tel"
         autoComplete="tel"
@@ -68,7 +63,7 @@ export function InquiryForm({
         placeholder="+256"
       />
       <TextField
-        id="enquiry-email"
+        id="email"
         label="Email address"
         type="email"
         autoComplete="email"
@@ -76,7 +71,7 @@ export function InquiryForm({
         placeholder="you@example.com"
       />
       <SelectField
-        id="enquiry-preference"
+        id="preference"
         label="Best way to reach you"
         options={[
           { value: 'call', label: 'Phone call' },
@@ -85,18 +80,24 @@ export function InquiryForm({
         ]}
       />
       <TextArea
-        id="enquiry-message"
+        id="message"
         label="Your message"
         rows={4}
         defaultValue={`I would like to arrange a viewing of ${reference} (${title}).`}
       />
 
-      <Button type="submit" variant="primary" size="lg" fullWidth>
-        Send enquiry
-      </Button>
-      <p className="text-micro leading-relaxed text-muted">
-        Form not connected yet. This page is a prototype.
+      <Button type="submit" variant="primary" size="lg" fullWidth disabled={pending}>
+          {pending ? 'Sending…' : 'Send enquiry'}
+        </Button>
+      {state.error ? (
+          <p role="alert" className="max-w-[38ch] text-micro leading-relaxed text-flag">
+            {state.error}
+          </p>
+        ) : (
+          <p className="text-micro leading-relaxed text-muted">
+        We reply the same working day.
       </p>
+        )}
     </form>
   );
 }

@@ -24,7 +24,7 @@ function initials(name: string) {
  *
  * Qualifications render only once `credentialsConfirmed` is true. Name and role are public record;
  * a professional qualification is a claim about a person's standing and is theirs to confirm.
- * See OPEN-ITEMS.md #1.
+ * See docs/OPEN-ITEMS.md #1.
  */
 export function AgentCard({
   agent,

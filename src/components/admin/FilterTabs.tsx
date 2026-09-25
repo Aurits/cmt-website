@@ -6,7 +6,7 @@ export interface FilterTab {
   count?: number;
 }
 
-/** Underline tabs for filtering a table — controls, so rounded-control on the active pill. */
+/** Underline tabs for filtering a table, controls, so rounded-control on the active pill. */
 export function FilterTabs({
   tabs,
   value,
@@ -38,7 +38,7 @@ export function FilterTabs({
             {tab.count !== undefined && (
               <span
                 className={cx(
-                  'tnum rounded-control px-1.5 text-[11px]',
+                  'tnum rounded-control px-1.5 text-label',
                   active ? 'bg-cream/20 text-cream' : 'bg-cream-deep text-muted',
                 )}
               >

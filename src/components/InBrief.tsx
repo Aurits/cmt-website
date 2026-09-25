@@ -23,7 +23,7 @@ const kenyaHead = kenyaOffices.find((office) => office.role === 'Head office')?.
  * advisory services), so the summary cannot drift from the pages it summarises.
  *
  * Kenya is described as a linked practice, not as part of one regional firm, until
- * `site.regionConfirmed` says otherwise (OPEN-ITEMS.md #2).
+ * `site.regionConfirmed` says otherwise (docs/OPEN-ITEMS.md #2).
  */
 const statements = [
   {

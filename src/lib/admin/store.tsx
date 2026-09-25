@@ -1,9 +1,11 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { seedAdminState } from '@/lib/admin/seed';
+import { createContext, useCallback, useContext, useMemo, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import * as server from '@/lib/admin/actions';
 import type {
   AdminAgent,
+  AdminBlogPost,
   AdminListing,
   AdminPartner,
   AdminSiteSettings,
@@ -12,31 +14,25 @@ import type {
   InquiryStatus,
 } from '@/lib/admin/types';
 
-const STORAGE_KEY = 'cmt-admin-state-v1';
-
 /**
- * Frontend-only persistence for the CMS prototype.
+ * CMS state, backed by the database.
  *
- * There is no backend this phase — see AGENTS.md / README.md — so "saving" means writing to
- * localStorage. State is seeded once from src/data/*.ts (the real static content the public
- * site renders) and every edit made in the admin session is written back here, so a reload
- * of any /admin page keeps what you changed. It never touches the public site's own render,
- * which still reads straight from src/data — this is a management surface over a copy, not a
- * live database.
+ * It used to be localStorage seeded from src/data: edits survived a reload in one browser and
+ * reached nothing else, which was an honest prototype and is no longer what this is. The state
+ * now arrives from the server, already loaded by (protected)/layout.tsx, and every change goes
+ * through a server action that writes Postgres and revalidates whatever public page it touched.
+ *
+ * The context keeps the same shape it always had, so no screen changed: the methods still look
+ * synchronous and still return void. What happens underneath is optimistic, local state updates
+ * at once so the interface does not stall on a round trip, the action runs, and a failure puts
+ * the previous state back and reports why rather than leaving the screen showing an edit that
+ * was never saved.
+ *
+ * `ready` is now always true. It existed because localStorage could not be read during server
+ * rendering, and there was a frame where the CMS knew nothing. There is no such frame any more,
+ * but the screens all check it, and a flag that is always true costs nothing next to touching
+ * thirteen files to remove it.
  */
-function loadState(): AdminState {
-  if (typeof window === 'undefined') return seedAdminState();
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return seedAdminState();
-    const parsed = JSON.parse(raw) as AdminState;
-    // Guard against a shape left over from an earlier version of the store.
-    if (!parsed.listings || !parsed.settings) return seedAdminState();
-    return parsed;
-  } catch {
-    return seedAdminState();
-  }
-}
 
 function nextId(prefix: string): string {
   return `${prefix}-${Date.now().toString(36)}${Math.floor(Math.random() * 1000)}`;
@@ -67,6 +63,10 @@ interface AdminContextValue {
   reorderPartner: (id: string, direction: 'up' | 'down') => void;
   createPartnerDraft: (groupId: string) => AdminPartner;
 
+  upsertPost: (post: AdminBlogPost) => void;
+  deletePost: (slug: string) => void;
+  createPostDraft: () => AdminBlogPost;
+
   upsertTestimonial: (testimonial: AdminTestimonial) => void;
   deleteTestimonial: (id: string) => void;
   createTestimonialDraft: () => AdminTestimonial;
@@ -75,58 +75,283 @@ interface AdminContextValue {
 
   updateSettings: (settings: AdminSiteSettings) => void;
 
-  resetToSeed: () => void;
+  /** True while a save is in flight, for anything that wants to say so. */
+  saving: boolean;
+  /** Set when a save failed and the local state was rolled back. */
+  error: string | null;
+  dismissError: () => void;
 }
 
 const AdminContext = createContext<AdminContextValue | null>(null);
 
-export function AdminProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<AdminState>(() => seedAdminState());
-  const [ready, setReady] = useState(false);
+export function AdminProvider({
+  initialState,
+  children,
+}: {
+  initialState: AdminState;
+  children: React.ReactNode;
+}) {
+  const router = useRouter();
+  const [state, setState] = useState<AdminState>(initialState);
+  const [error, setError] = useState<string | null>(null);
+  const [saving, startTransition] = useTransition();
 
-  // Hydrate from localStorage on mount only — seeding server-side would risk a hydration
-  // mismatch, since localStorage does not exist there. This is a deliberate one-time read
-  // from an external store on mount, which is the case the lint rule's own guidance carves
-  // out ("subscribe for updates from some external system"); there is no reactive
-  // alternative for a value that only exists in the browser.
-  useEffect(() => {
-    // One-time read of an external store (localStorage) that cannot exist during SSR.
-    setState(loadState()); // eslint-disable-line react-hooks/set-state-in-effect
-    setReady(true);
-  }, []);
+  /**
+   * Apply a change locally, then persist it.
+   *
+   * The optimistic update is what keeps the CMS feeling like a tool rather than a form: the row
+   * moves the moment you click. The snapshot is what makes that honest, if the write fails, the
+   * screen goes back to what the database actually holds instead of showing an edit that only
+   * ever existed in this tab.
+   *
+   * router.refresh() on success pulls the authoritative state back down, which is how a
+   * server-generated id (a uuid for a brand new testimonial) replaces the placeholder the browser
+   * invented.
+   */
+  const mutate = useCallback(
+    (apply: (previous: AdminState) => AdminState, persist: () => Promise<void>) => {
+      let snapshot: AdminState | null = null;
+      setState((previous) => {
+        snapshot = previous;
+        return apply(previous);
+      });
+      startTransition(async () => {
+        try {
+          await persist();
+          router.refresh();
+        } catch (cause) {
+          if (snapshot) setState(snapshot);
+          setError(cause instanceof Error ? cause.message : 'That change could not be saved.');
+        }
+      });
+    },
+    [router],
+  );
 
-  useEffect(() => {
-    if (!ready) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [state, ready]);
+  /* ── listings ────────────────────────────────────────────────────────────────────────── */
 
-  const upsertListing = useCallback((listing: AdminListing) => {
-    setState((prev) => {
-      const exists = prev.listings.some((l) => l.slug === listing.slug);
-      return {
-        ...prev,
-        listings: exists
-          ? prev.listings.map((l) => (l.slug === listing.slug ? listing : l))
-          : [listing, ...prev.listings],
+  const upsertListing = useCallback(
+    (listing: AdminListing) => {
+      mutate(
+        (previous) => ({
+          ...previous,
+          listings: previous.listings.some((item) => item.slug === listing.slug)
+            ? previous.listings.map((item) => (item.slug === listing.slug ? listing : item))
+            : [listing, ...previous.listings],
+        }),
+        () => server.saveListing(listing),
+      );
+    },
+    [mutate],
+  );
+
+  const deleteListing = useCallback(
+    (slug: string) => {
+      const category = state.listings.find((item) => item.slug === slug)?.category ?? '';
+      mutate(
+        (previous) => ({
+          ...previous,
+          listings: previous.listings.filter((item) => item.slug !== slug),
+        }),
+        () => server.removeListing(slug, category),
+      );
+    },
+    [mutate, state.listings],
+  );
+
+  /* ── team ────────────────────────────────────────────────────────────────────────────── */
+
+  const upsertAgent = useCallback(
+    (agent: AdminAgent) => {
+      mutate(
+        (previous) => ({
+          ...previous,
+          agents: previous.agents.some((item) => item.id === agent.id)
+            ? previous.agents.map((item) => (item.id === agent.id ? agent : item))
+            : [...previous.agents, agent],
+        }),
+        () => server.saveAgent(agent),
+      );
+    },
+    [mutate],
+  );
+
+  const deleteAgent = useCallback(
+    (id: string) => {
+      mutate(
+        (previous) => ({ ...previous, agents: previous.agents.filter((item) => item.id !== id) }),
+        () => server.removeAgent(id),
+      );
+    },
+    [mutate],
+  );
+
+  /* ── clients ─────────────────────────────────────────────────────────────────────────── */
+
+  const upsertPartner = useCallback(
+    (partner: AdminPartner) => {
+      mutate(
+        (previous) => ({
+          ...previous,
+          partners: previous.partners.some((item) => item.id === partner.id)
+            ? previous.partners.map((item) => (item.id === partner.id ? partner : item))
+            : [...previous.partners, partner],
+        }),
+        () => server.savePartner(partner),
+      );
+    },
+    [mutate],
+  );
+
+  const deletePartner = useCallback(
+    (id: string) => {
+      mutate(
+        (previous) => ({
+          ...previous,
+          partners: previous.partners.filter((item) => item.id !== id),
+        }),
+        () => server.removePartner(id),
+      );
+    },
+    [mutate],
+  );
+
+  const reorderPartner = useCallback(
+    (id: string, direction: 'up' | 'down') => {
+      const subject = state.partners.find((item) => item.id === id);
+      if (!subject) return;
+      const siblings = state.partners
+        .filter((item) => item.groupId === subject.groupId)
+        .sort((a, b) => a.order - b.order);
+      const index = siblings.findIndex((item) => item.id === id);
+      const target = index + (direction === 'up' ? -1 : 1);
+      if (target < 0 || target >= siblings.length) return;
+
+      // Swap the order values, then persist both rows. Two writes, because order lives on the
+      // row and a swap is by definition two rows changing.
+      const a = { ...siblings[index], order: siblings[target].order };
+      const b = { ...siblings[target], order: siblings[index].order };
+
+      mutate(
+        (previous) => ({
+          ...previous,
+          partners: previous.partners.map((item) =>
+            item.id === a.id ? a : item.id === b.id ? b : item,
+          ),
+        }),
+        async () => {
+          await server.savePartner(a);
+          await server.savePartner(b);
+        },
+      );
+    },
+    [mutate, state.partners],
+  );
+
+  /* ── blog ────────────────────────────────────────────────────────────────────────────── */
+
+  const upsertPost = useCallback(
+    (post: AdminBlogPost) => {
+      const withSlug: AdminBlogPost = {
+        ...post,
+        slug: post.slug || slugify(post.title) || nextId('post'),
+        updatedAt: new Date().toISOString(),
       };
-    });
-  }, []);
+      mutate(
+        (previous) => ({
+          ...previous,
+          posts: previous.posts.some((item) => item.slug === withSlug.slug)
+            ? previous.posts.map((item) => (item.slug === withSlug.slug ? withSlug : item))
+            : [withSlug, ...previous.posts],
+        }),
+        () => server.savePost(withSlug),
+      );
+    },
+    [mutate],
+  );
 
-  const deleteListing = useCallback((slug: string) => {
-    setState((prev) => ({ ...prev, listings: prev.listings.filter((l) => l.slug !== slug) }));
-  }, []);
+  const deletePost = useCallback(
+    (slug: string) => {
+      mutate(
+        (previous) => ({ ...previous, posts: previous.posts.filter((item) => item.slug !== slug) }),
+        () => server.removePost(slug),
+      );
+    },
+    [mutate],
+  );
 
-  const createListingDraft = useCallback((): AdminListing => {
-    return {
+  /* ── testimonials ────────────────────────────────────────────────────────────────────── */
+
+  const upsertTestimonial = useCallback(
+    (testimonial: AdminTestimonial) => {
+      mutate(
+        (previous) => ({
+          ...previous,
+          testimonials: previous.testimonials.some((item) => item.id === testimonial.id)
+            ? previous.testimonials.map((item) =>
+                item.id === testimonial.id ? testimonial : item,
+              )
+            : [...previous.testimonials, testimonial],
+        }),
+        () => server.saveTestimonial(testimonial),
+      );
+    },
+    [mutate],
+  );
+
+  const deleteTestimonial = useCallback(
+    (id: string) => {
+      mutate(
+        (previous) => ({
+          ...previous,
+          testimonials: previous.testimonials.filter((item) => item.id !== id),
+        }),
+        () => server.removeTestimonial(id),
+      );
+    },
+    [mutate],
+  );
+
+  /* ── enquiries and settings ──────────────────────────────────────────────────────────── */
+
+  const setInquiryStatus = useCallback(
+    (id: string, status: InquiryStatus) => {
+      mutate(
+        (previous) => ({
+          ...previous,
+          inquiries: previous.inquiries.map((item) =>
+            item.id === id ? { ...item, status } : item,
+          ),
+        }),
+        () => server.setInquiryStatus(id, status),
+      );
+    },
+    [mutate],
+  );
+
+  const updateSettings = useCallback(
+    (settings: AdminSiteSettings) => {
+      mutate(
+        (previous) => ({ ...previous, settings }),
+        () => server.saveSettings(settings),
+      );
+    },
+    [mutate],
+  );
+
+  /* ── drafts, which are local until saved ─────────────────────────────────────────────── */
+
+  const createListingDraft = useCallback(
+    (): AdminListing => ({
       slug: '',
-      reference: `CMT-NEW-${Math.floor(1000 + Math.random() * 9000)}`,
+      reference: '',
       title: '',
       category: 'residential',
       listingType: 'sale',
       price: 0,
-      city: '',
+      city: 'Kampala',
       area: '',
-      coords: [0.3476, 32.5825],
+      coords: [0.3146, 32.5806],
       size: '',
       sizeLabel: 'Built area',
       tenure: 'Leasehold',
@@ -136,126 +361,67 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       features: [],
       agentId: '',
       status: 'draft',
-      updatedAt: new Date().toISOString().slice(0, 10),
-    };
-  }, []);
+      updatedAt: new Date().toISOString(),
+    }),
+    [],
+  );
 
-  const upsertAgent = useCallback((agent: AdminAgent) => {
-    setState((prev) => {
-      const exists = prev.agents.some((a) => a.id === agent.id);
-      return {
-        ...prev,
-        agents: exists
-          ? prev.agents.map((a) => (a.id === agent.id ? agent : a))
-          : [...prev.agents, agent],
-      };
-    });
-  }, []);
-
-  const deleteAgent = useCallback((id: string) => {
-    setState((prev) => ({ ...prev, agents: prev.agents.filter((a) => a.id !== id) }));
-  }, []);
-
-  const createAgentDraft = useCallback((): AdminAgent => {
-    return {
+  const createAgentDraft = useCallback(
+    (): AdminAgent => ({
       id: '',
       name: '',
-      role: 'Property Agent',
+      role: '',
       rank: 'agent',
       credentialsConfirmed: false,
       sourcedFrom: 'cmt',
       assignedListings: [],
-    };
-  }, []);
-
-  const upsertPartner = useCallback((partner: AdminPartner) => {
-    setState((prev) => {
-      const exists = prev.partners.some((p) => p.id === partner.id);
-      return {
-        ...prev,
-        partners: exists
-          ? prev.partners.map((p) => (p.id === partner.id ? partner : p))
-          : [...prev.partners, partner],
-      };
-    });
-  }, []);
-
-  const deletePartner = useCallback((id: string) => {
-    setState((prev) => ({ ...prev, partners: prev.partners.filter((p) => p.id !== id) }));
-  }, []);
-
-  const reorderPartner = useCallback((id: string, direction: 'up' | 'down') => {
-    setState((prev) => {
-      const group = prev.partners.filter((p) => p.groupId === prev.partners.find((x) => x.id === id)?.groupId);
-      const sorted = [...group].sort((a, b) => a.order - b.order);
-      const index = sorted.findIndex((p) => p.id === id);
-      const swapWith = direction === 'up' ? index - 1 : index + 1;
-      if (swapWith < 0 || swapWith >= sorted.length) return prev;
-      const a = sorted[index];
-      const b = sorted[swapWith];
-      const newOrders = new Map([[a.id, b.order], [b.id, a.order]]);
-      return {
-        ...prev,
-        partners: prev.partners.map((p) => (newOrders.has(p.id) ? { ...p, order: newOrders.get(p.id)! } : p)),
-      };
-    });
-  }, []);
+    }),
+    [],
+  );
 
   const createPartnerDraft = useCallback(
-    (groupId: string): AdminPartner => {
-      const maxOrder = state.partners
-        .filter((p) => p.groupId === groupId)
-        .reduce((max, p) => Math.max(max, p.order), -1);
-      return {
-        id: nextId('partner'),
-        groupId,
-        name: '',
-        order: maxOrder + 1,
-        verified: false,
-      };
-    },
+    (groupId: string): AdminPartner => ({
+      id: nextId('partner'),
+      groupId,
+      name: '',
+      order:
+        Math.max(
+          0,
+          ...state.partners.filter((item) => item.groupId === groupId).map((item) => item.order),
+        ) + 1,
+      verified: false,
+    }),
     [state.partners],
   );
 
-  const upsertTestimonial = useCallback((testimonial: AdminTestimonial) => {
-    setState((prev) => {
-      const exists = prev.testimonials.some((t) => t.id === testimonial.id);
-      return {
-        ...prev,
-        testimonials: exists
-          ? prev.testimonials.map((t) => (t.id === testimonial.id ? testimonial : t))
-          : [...prev.testimonials, testimonial],
-      };
-    });
-  }, []);
+  const createTestimonialDraft = useCallback(
+    (): AdminTestimonial => ({ id: nextId('testimonial'), quote: '', name: '', organisation: '' }),
+    [],
+  );
 
-  const deleteTestimonial = useCallback((id: string) => {
-    setState((prev) => ({ ...prev, testimonials: prev.testimonials.filter((t) => t.id !== id) }));
-  }, []);
-
-  const createTestimonialDraft = useCallback((): AdminTestimonial => {
-    return { id: nextId('testimonial'), quote: '', name: '', organisation: '' };
-  }, []);
-
-  const setInquiryStatus = useCallback((id: string, status: InquiryStatus) => {
-    setState((prev) => ({
-      ...prev,
-      inquiries: prev.inquiries.map((inquiry) => (inquiry.id === id ? { ...inquiry, status } : inquiry)),
-    }));
-  }, []);
-
-  const updateSettings = useCallback((settings: AdminSiteSettings) => {
-    setState((prev) => ({ ...prev, settings }));
-  }, []);
-
-  const resetToSeed = useCallback(() => {
-    setState(seedAdminState());
-  }, []);
+  const createPostDraft = useCallback(
+    (): AdminBlogPost => ({
+      slug: '',
+      title: '',
+      finding: '',
+      excerpt: '',
+      body: '',
+      keyFigures: [],
+      tags: [],
+      publishedAt: new Date().toISOString().slice(0, 10),
+      status: 'draft',
+      updatedAt: new Date().toISOString(),
+    }),
+    [],
+  );
 
   const value = useMemo<AdminContextValue>(
     () => ({
       state,
-      ready,
+      ready: true,
+      saving,
+      error,
+      dismissError: () => setError(null),
       upsertListing,
       deleteListing,
       createListingDraft,
@@ -266,32 +432,23 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       deletePartner,
       reorderPartner,
       createPartnerDraft,
+      upsertPost,
+      deletePost,
+      createPostDraft,
       upsertTestimonial,
       deleteTestimonial,
       createTestimonialDraft,
       setInquiryStatus,
       updateSettings,
-      resetToSeed,
     }),
     [
-      state,
-      ready,
-      upsertListing,
-      deleteListing,
-      createListingDraft,
-      upsertAgent,
-      deleteAgent,
-      createAgentDraft,
-      upsertPartner,
-      deletePartner,
-      reorderPartner,
-      createPartnerDraft,
-      upsertTestimonial,
-      deleteTestimonial,
-      createTestimonialDraft,
-      setInquiryStatus,
-      updateSettings,
-      resetToSeed,
+      state, saving, error,
+      upsertListing, deleteListing, createListingDraft,
+      upsertAgent, deleteAgent, createAgentDraft,
+      upsertPartner, deletePartner, reorderPartner, createPartnerDraft,
+      upsertPost, deletePost, createPostDraft,
+      upsertTestimonial, deleteTestimonial, createTestimonialDraft,
+      setInquiryStatus, updateSettings,
     ],
   );
 

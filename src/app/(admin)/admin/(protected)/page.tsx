@@ -36,7 +36,7 @@ export default function AdminOverviewPage() {
       text: (
         <>
           <span className="font-medium text-ink">{listing.title || 'Untitled listing'}</span>{' '}
-          updated — {formatPrice(listing.price)}
+          updated, {formatPrice(listing.price)}
         </>
       ),
       when: listing.updatedAt,

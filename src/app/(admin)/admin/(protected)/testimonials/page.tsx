@@ -8,7 +8,7 @@ import type { AdminTestimonial } from '@/lib/admin/types';
 import { cx } from '@/lib/cx';
 
 /**
- * The brief forbids invented testimonials — see data/testimonials.ts and OPEN-ITEMS.md #6.
+ * The brief forbids invented testimonials. See data/testimonials.ts and docs/OPEN-ITEMS.md #6.
  * This module exists so a real, named quote can be added the moment CMT supplies one; it
  * does not pre-fill anything.
  */
@@ -22,7 +22,7 @@ export default function AdminTestimonialsPage() {
       <div className="flex items-center justify-between">
         <p className="text-body text-muted">
           {state.testimonials.length} real, named testimonial{state.testimonials.length === 1 ? '' : 's'}.
-          Never invent a quote — an honest empty state beats a fabricated one.
+          Never invent a quote, an honest empty state beats a fabricated one.
         </p>
         <button
           type="button"

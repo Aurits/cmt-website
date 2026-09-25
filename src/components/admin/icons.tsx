@@ -146,3 +146,14 @@ export const LogoutIcon = (props: IconProps) => (
     <path d="M9 12h11m0 0-3-3m3 3-3 3" />
   </Icon>
 );
+
+/** Blog: a ruled page with a figure pulled out of it. */
+export function NotesIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M5 3h10l4 4v14H5z" />
+      <path d="M15 3v4h4" />
+      <path d="M8 12h5M8 16h3" />
+    </Icon>
+  );
+}

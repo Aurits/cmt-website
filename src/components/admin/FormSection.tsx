@@ -1,6 +1,6 @@
 import { cx } from '@/lib/cx';
 
-/** A bordered, square panel grouping related fields — the CMS's equivalent of a report section. */
+/** A bordered, square panel grouping related fields, the CMS's equivalent of a report section. */
 export function FormSection({
   title,
   lead,

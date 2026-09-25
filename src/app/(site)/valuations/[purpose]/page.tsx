@@ -34,7 +34,7 @@ export async function generateMetadata({
  *
  * Someone lands here from a search like "valuation for a bank loan" — mid-problem, often under
  * time pressure. So the page opens by stating their situation back to them, and the rail carries
- * the enquiry from the first pixel. See LAYOUT-SPECS.md A-04.
+ * the enquiry from the first pixel. See docs/LAYOUT-SPECS.md A-04.
  */
 export default async function ValuationPurposePage({
   params,

@@ -1,9 +1,9 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { MenuIcon } from '@/components/ui/icons';
 import { LogoutIcon } from '@/components/admin/icons';
-import { signOut } from '@/lib/admin/auth';
+import { signOut } from '@/lib/auth/actions';
 
 const titles: { match: (path: string) => boolean; label: string }[] = [
   { match: (p) => p === '/admin', label: 'Overview' },
@@ -23,10 +23,9 @@ function titleFor(pathname: string): string {
   return titles.find((t) => t.match(pathname))?.label ?? 'Admin';
 }
 
-/** Identifies who is editing — this is a single-admin prototype, not an auth system. */
+/** Identifies who is editing. This is a single-admin prototype, not an auth system. */
 export function AdminTopbar({ onMenu, adminEmail }: { onMenu: () => void; adminEmail: string }) {
   const pathname = usePathname();
-  const router = useRouter();
   const initials = (adminEmail.slice(0, 2) || 'AD').toUpperCase();
 
   return (
@@ -48,18 +47,21 @@ export function AdminTopbar({ onMenu, adminEmail }: { onMenu: () => void; adminE
         <span className="flex h-9 w-9 items-center justify-center rounded-control bg-green text-micro font-medium text-gold">
           {initials}
         </span>
+        {/*
+          A form rather than an onClick, because signing out now destroys a session row and
+          clears an httpOnly cookie, and neither is something the browser can do on its own.
+          It also means sign-out survives a failed bundle, which a click handler does not.
+        */}
+        <form action={signOut}>
         <button
-          type="button"
-          onClick={() => {
-            signOut();
-            router.replace('/admin/login');
-          }}
+          type="submit"
           className="flex h-9 w-9 items-center justify-center rounded-control border border-rule-strong text-muted transition-colors hover:border-green/50 hover:text-green"
           aria-label="Sign out"
           title="Sign out"
         >
           <LogoutIcon width={16} height={16} />
         </button>
+        </form>
       </div>
     </header>
   );

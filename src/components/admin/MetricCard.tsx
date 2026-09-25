@@ -3,7 +3,7 @@ import { cx } from '@/lib/cx';
 /**
  * A dashboard metric, set as a valuation-style schedule rather than a generic stat card: a
  * gold top rule, a label, then the figure in tabular Fraunces. Square (rounded-brand) like
- * every other data panel — this presents a fact, so it does not get the softened radius.
+ * every other data panel. This presents a fact, so it does not get the softened radius.
  */
 export function MetricCard({
   label,

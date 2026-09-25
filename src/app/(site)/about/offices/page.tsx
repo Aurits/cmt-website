@@ -19,7 +19,7 @@ export const metadata: Metadata = {
  * Offices.
  *
  * Uganda expanded, Kenya as a linked practice. Deliberately not "nine offices, one firm": until
- * CMT confirms how the Uganda and Kenya entities relate (OPEN-ITEMS.md #2) we describe what we can
+ * CMT confirms how the Uganda and Kenya entities relate (docs/OPEN-ITEMS.md #2) we describe what we can
  * see — two practices, a shared director, the same standard of report — rather than claiming a
  * single regional entity we have not verified. `site.regionConfirmed` flips the wording.
  */

@@ -16,7 +16,7 @@ import { cx } from '@/lib/cx';
  * The two halves distribute independently — `justify-between` inside each country rather than
  * across all nine — so the border stays at the centre and the split is the thing you see first.
  * Below md the whole object rotates: the rule runs down the left and stations become rows, which
- * is the same drawing turned ninety degrees rather than a wrapped mess. See LAYOUT-SPECS.md A-02.
+ * is the same drawing turned ninety degrees rather than a wrapped mess. See docs/LAYOUT-SPECS.md A-02.
  */
 function Station({ office, vertical }: { office: Office; vertical?: boolean }) {
   const isHead = office.role === 'Head office';

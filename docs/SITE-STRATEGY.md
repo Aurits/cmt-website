@@ -59,13 +59,13 @@ Five firms competing for the same instructions.
 | Firm | Top-level navigation | What it tells you |
 |---|---|---|
 | **CMT (today)** | Home · *Property Listings* · Services · Our Clients · About Us · Contact | Leads with the smallest, least defensible part of the business. Reads as an estate agency |
-| **Knight Frank Uganda** | Find a Property · Services · People & Offices · *Insights* | Four items. People at top level. Insights is the moat — they publish the Kampala market review everyone else quotes |
+| **Knight Frank Uganda** | Find a Property · Services · People & Offices · *Blog* | Four items. People at top level. Blog is the moat — they publish the Kampala market review everyone else quotes |
 | **Allied Property Surveyors** | About Us · *Services & Sectors* · Public Sector · Our Clients · Our Team | Sectors, not products. Breaks out Compulsory Purchase & Compensation and public sector — the Ugandan money lines |
 | **Grok Appraisal** | Our Services · About Us · Our Team · Properties · *Compliance* · Resources · Contact | Services first, listings fourth. A whole nav item for Compliance — they understand who is buying |
 | **Knight Frank global** | Valuation & Advisory → *Discover · Advise · Validate* | Organised by client type and decision, not department. "Trusted valuation intelligence for global portfolios" |
 
 **The opening.** Every serious firm leads with the professional work and puts proof — people, sectors,
-compliance, research — at top level. Only Knight Frank publishes insights. In a market where one foreign
+compliance, research — at top level. Only Knight Frank publishes blog posts. In a market where one foreign
 firm owns the market-commentary ground and everyone else competes on adjectives, a quarterly note from a
 chartered, dual-licensed local practice is the cheapest credibility CMT can buy.
 
@@ -99,9 +99,9 @@ the site should be arranged to answer one question: *will this number hold?*
 
 ## 4. The navigation
 
-**About · Valuations · Advisory · Properties · Insights · Contact**
+**About · Valuations · Advisory · Properties · Blog · Contact**
 
-Six items, as the brief allows. Identity leads — as `Plan.md` requires — then the professional work,
+Six items, as the brief allows. Identity leads — as `PLAN.md` requires — then the professional work,
 with the agency arm demoted from first to third. A persistent **Request a valuation** button sits in the
 masthead.
 
@@ -141,10 +141,10 @@ restructuring: `/properties/[slug]` already serves property detail, and a second
 (`/properties/[category]`) at the same level is a Next.js route collision. The existing split is a
 deliberate, documented decision in `OPEN-ITEMS.md`. Renaming would cost a migration across ~15 files plus
 redirects, to fix a cosmetic mismatch between a nav label and a URL that no visitor reads — and SEO
-migration is explicitly out of scope this phase (`Plan.md` §13). Revisit it there, where the redirects
+migration is explicitly out of scope this phase (`PLAN.md` §13). Revisit it there, where the redirects
 have to be written anyway.
 
-### Insights — *new*
+### Blog — *new*
 
 The open ground. Two or three short notes a year on what CMT is actually seeing in inspections — which
 corridors are absorbing stock, what banks are lending against. The prototype already has the teaser band
@@ -205,7 +205,7 @@ and *what you need it for*. Purpose pages are what convert; asset pages are what
 ├── /properties
 │   └── /[slug]                       detail page, as now
 │
-├── /insights                                                                   [new]
+├── /blog                                                                   [new]
 │   └── /[slug]                       market notes, 2–3 a year
 │
 └── /contact
@@ -222,11 +222,11 @@ under About, add `/about/people` and `/about/credentials`. Every purpose page ca
 the `/valuations` hub rather than its own route. Property routes stay where they are. This needs no client
 input beyond confirming the credentials.
 
-**Insights does not ship in phase 1.** The nav item stays out until the first note exists — an empty
-Insights section advertises that the firm started something and stopped. Phase 1 therefore ships a
+**Blog does not ship in phase 1.** The nav item stays out until the first note exists — an empty
+blog advertises that the firm started something and stopped. Phase 1 therefore ships a
 **five-item nav**: About · Valuations · Advisory · Properties · Contact.
 
-**Phase 2 — as content lands.** Promote the five purpose pages to real routes, open `/insights` with the
+**Phase 2 — as content lands.** Promote the five purpose pages to real routes, open `/blog` with the
 first market note, add the Kenya offices. Each purpose page needs roughly 250 words and one worked
 example — a single afternoon with a director, not a content project.
 

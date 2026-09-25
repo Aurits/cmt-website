@@ -9,7 +9,7 @@ const tones: Record<PillTone, string> = {
   muted: 'bg-cream-deep/60 text-muted border-rule',
 };
 
-/** A control-radius tag for row status — never rounded-brand, since it behaves like a chip. */
+/** A control-radius tag for row status, never rounded-brand, since it behaves like a chip. */
 export function StatusPill({ tone, children }: { tone: PillTone; children: React.ReactNode }) {
   return (
     <span

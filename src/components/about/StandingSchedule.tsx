@@ -10,7 +10,7 @@ import { cx } from '@/lib/cx';
  * UNCONFIRMED ROWS STAY. A registration we have not had confirmed renders as "pending" rather
  * than disappearing — the reader sees the shape of the claim and we do not make it. That is the
  * same posture as the empty testimonials state and the WhatsApp number: where CMT has not
- * supplied something, the UI says so instead of filling the gap. See OPEN-ITEMS.md #1.
+ * supplied something, the UI says so instead of filling the gap. See docs/OPEN-ITEMS.md #1.
  */
 export function StandingSchedule({ className }: { className?: string }) {
   if (firmRegistrations.length === 0) return null;

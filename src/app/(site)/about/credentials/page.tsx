@@ -20,7 +20,7 @@ export const metadata: Metadata = {
  *
  * The page that answers "why should this figure be believed". Every registration renders whether
  * or not it is confirmed — an unconfirmed one shows its status instead of a number, so the reader
- * sees the shape of the claim without us making it. See OPEN-ITEMS.md #1.
+ * sees the shape of the claim without us making it. See docs/OPEN-ITEMS.md #1.
  */
 const standards = [
   {
