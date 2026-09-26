@@ -289,12 +289,12 @@ export default function HomePage() {
                     {/* Fixed height, so the title below starts on the same line in every card
                         whether the corner holds a figure and its unit or a one-line phrase. */}
                     <span className="flex min-h-[3.25rem] items-start justify-between gap-4">
-                      <PurposeIcon
-                        slug={slug}
-                        width={30}
-                        height={30}
-                        className="text-green transition-colors group-hover:text-gold-deep"
-                      />
+                      {/* On a tile, not floating: a bare 30px outline in a card corner reads as
+                          decoration, the same mark on a solid square reads as a sign. Turns green
+                          with a gold mark on hover, the card's one moving part. */}
+                      <span className="flex h-12 w-12 shrink-0 items-center justify-center bg-mist text-green transition-colors group-hover:bg-green group-hover:text-gold">
+                        <PurposeIcon slug={slug} width={24} height={24} />
+                      </span>
                       <span className="text-right">
                         {timing ? (
                           <>

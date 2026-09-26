@@ -58,6 +58,8 @@ export function Select({
 }) {
   const listboxId = `${useId()}-listbox`;
   const [open, setOpen] = useState(false);
+  // Which way the list opens. Measured each time it opens, from the space actually left.
+  const [upward, setUpward] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -71,7 +73,18 @@ export function Select({
   );
   const selected = options[selectedIndex];
 
+  /*
+   * Opens downward unless there is not room for the list below the trigger and there is more
+   * room above it, as near the bottom of the screen. It used to always open downward, so on
+   * /listings the filters' lists ran off the bottom edge of the viewport.
+   */
   const openList = (startAt = selectedIndex) => {
+    const rect = triggerRef.current?.getBoundingClientRect();
+    if (rect) {
+      const wanted = Math.min(options.length * 45, 272) + 8;
+      const below = window.innerHeight - rect.bottom;
+      setUpward(below < wanted && rect.top > below);
+    }
     setActiveIndex(startAt);
     setOpen(true);
   };
@@ -87,17 +100,29 @@ export function Select({
     close();
   };
 
-  // Focus the list when it opens, so arrow keys land somewhere sensible.
+  // Focus the list when it opens, so arrow keys land somewhere sensible. preventScroll, because
+  // focusing an element is itself allowed to scroll its ancestors into view.
   useEffect(() => {
-    if (open) listRef.current?.focus();
+    if (open) listRef.current?.focus({ preventScroll: true });
   }, [open]);
 
-  // Keep the active row in view when arrowing through a long list.
+  /*
+   * Keep the active row in view when arrowing through a long list, by scrolling THE LIST ONLY.
+   *
+   * This used scrollIntoView, which scrolls every scrollable ancestor, and an overflow:hidden box
+   * still counts as one. The homepage hero clips its drawing with overflow:hidden, so opening a
+   * dropdown in the search counter scrolled the whole hero 147px upward inside itself: the
+   * content above the dropdown visibly jumped. Adjusting the list's own scrollTop cannot touch
+   * anything outside it.
+   */
   useEffect(() => {
     if (!open) return;
-    listRef.current
-      ?.querySelector(`[data-index="${activeIndex}"]`)
-      ?.scrollIntoView({ block: 'nearest' });
+    const list = listRef.current;
+    const row = list?.querySelector<HTMLElement>(`[data-index="${activeIndex}"]`);
+    if (!list || !row) return;
+    if (row.offsetTop < list.scrollTop) list.scrollTop = row.offsetTop;
+    else if (row.offsetTop + row.offsetHeight > list.scrollTop + list.clientHeight)
+      list.scrollTop = row.offsetTop + row.offsetHeight - list.clientHeight;
   }, [open, activeIndex]);
 
   // A click anywhere else closes it, without stealing focus back.
@@ -198,7 +223,13 @@ export function Select({
           'flex w-full items-center justify-between gap-3 rounded-control border text-left transition-colors duration-150',
           heights,
           tone === 'cream' ? 'bg-cream' : 'bg-paper',
-          open ? 'border-green' : 'border-rule-strong hover:border-green/60',
+          // One indicator, not two: the border turns green with a soft halo tight against it,
+          // for keyboard focus and for the open state alike. The site-wide focus outline sits
+          // 2px outside an element, which around a bordered control read as a second outline.
+          'focus-visible:border-green focus-visible:shadow-[0_0_0_3px_rgb(17_52_27/0.16)] focus-visible:outline-none',
+          open
+            ? 'border-green shadow-[0_0_0_3px_rgb(17_52_27/0.16)]'
+            : 'border-rule-strong hover:border-green/60',
         )}
       >
         <span className={cx('truncate', selected ? 'text-ink' : 'text-muted')}>
@@ -227,7 +258,13 @@ export function Select({
            * z-[35] sits above the sticky mobile CTA bar (z-30) and below the masthead
            * (z-40), which is the order you want if a list opens near either edge.
            */
-          className="absolute left-0 right-0 top-[calc(100%+4px)] z-[35] max-h-[17rem] overflow-y-auto rounded-brand border border-rule border-t-2 border-t-gold bg-paper shadow-[0_18px_40px_-18px_rgba(17,52,27,0.45)]"
+          className={cx(
+            'absolute right-0 left-0 z-[35] max-h-[17rem] overflow-y-auto rounded-brand border border-rule bg-paper shadow-[0_18px_40px_-18px_rgba(17,52,27,0.45)] outline-none',
+            // The gold rule marks the edge that meets the trigger, whichever way it opened.
+            upward
+              ? 'bottom-[calc(100%+4px)] border-b-2 border-b-gold'
+              : 'top-[calc(100%+4px)] border-t-2 border-t-gold',
+          )}
         >
           {options.map((option, index) => {
             const isSelected = option.value === value;

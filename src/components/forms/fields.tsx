@@ -7,13 +7,14 @@ import { cx } from '@/lib/cx';
 /*
  * One focus indicator, not two.
  *
- * This used to also swap the border to green on focus, which put a green border and the green
- * focus ring two pixels apart and read as a double border. The ring is the indicator; the border
- * just says where the field is, and keeps its resting colour throughout. Hover still darkens it,
- * because that is a different signal and never coincides with the ring.
+ * The site-wide focus outline is drawn 2px OUTSIDE an element, which is right for a link or a
+ * button but wrong for a bordered field: you get the field's border, a gap, then the outline, and
+ * that reads as a double outline however the colours are tuned. So fields opt out of it and show
+ * focus themselves: the border turns green and a soft halo sits tight against it, with no gap.
+ * The Select trigger uses the same treatment, so every control on a form focuses identically.
  */
 export const inputClass =
-  'w-full rounded-control border border-rule-strong bg-paper px-3.5 py-3 text-body text-ink placeholder:text-muted transition-colors hover:border-green/60';
+  'w-full rounded-control border border-rule-strong bg-paper px-3.5 py-3 text-body text-ink placeholder:text-muted transition-[border-color,box-shadow] hover:border-green/60 focus:border-green focus:shadow-[0_0_0_3px_rgb(17_52_27/0.16)] focus:outline-none';
 
 export function Label({
   htmlFor,

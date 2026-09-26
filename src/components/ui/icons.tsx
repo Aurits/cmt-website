@@ -10,7 +10,9 @@ function Icon({ children, ...props }: IconProps & { children: React.ReactNode })
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.6}
+      // 1.8, up from 1.6: at the 14-24px these are drawn at, 1.6 read as a wireframe beside
+      // semibold type. Heavier strokes sit at the same visual weight as the text they label.
+      strokeWidth={1.8}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
