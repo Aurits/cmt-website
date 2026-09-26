@@ -209,14 +209,18 @@ export default function HomePage() {
       <section className="bg-cream py-12 lg:py-16">
         <Container className="grid gap-10 lg:grid-cols-2 lg:gap-16">
           <Reveal className="relative order-2 aspect-[4/3] overflow-hidden rounded-brand border border-rule lg:order-1 lg:aspect-auto lg:min-h-[380px]">
-            {/* Abstract architectural texture beside a block of text, which is what this
-                photograph honestly is. See public/images/CREDITS.md. */}
+            {/* A report being read and signed at a client meeting: the section's own argument,
+                that a figure is only worth the valuer who signs it, shown rather than decorated.
+                It replaced an abstract balcony facade that said nothing about the work. The alt
+                describes what is in the frame and does not claim the person is a CMT valuer:
+                this is licensed stock (public/images/CREDITS.md). Cropped high so the face and
+                the pen both stay in frame at 4:3 and at full column height. */}
             <Image
-              src="/images/hero-home.jpg"
-              alt="Ribbon-like apartment balconies curving across a facade"
+              src="/images/services/lending.jpg"
+              alt="A professional reading and signing a report at a meeting"
               fill
               sizes="(min-width: 1024px) 48vw, 100vw"
-              className="object-cover"
+              className="object-cover object-[50%_30%]"
             />
           </Reveal>
 

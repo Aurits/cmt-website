@@ -65,7 +65,12 @@ export function InBrief({ className }: { className?: string }) {
       {statements.map((statement, index) => (
         <div key={statement.label} className="flex flex-col border-t border-rule pt-4">
           <dt className="flex items-baseline gap-3">
-            <span className="tnum text-label text-muted">{String(index + 1).padStart(2, '0')}</span>
+            {/* Gold display numerals, like every other numbered list on the site (the homepage
+                reasons, the advisory index, the history on About); this was the one set in small
+                grey label type. */}
+            <span className="tnum font-display text-lead text-gold-deep">
+              {String(index + 1).padStart(2, '0')}
+            </span>
             <span className="font-display text-h4 text-green">{statement.label}</span>
           </dt>
           <dd className="mt-2 flex flex-1 flex-col">

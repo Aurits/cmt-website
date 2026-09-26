@@ -169,8 +169,10 @@ market that leads with valuation open like the twentieth agency.
 
 Nothing is blocked on the client here. It is recorded because two things follow from it:
 
-- `public/images/hero-home.jpg` moved to the homepage identity section, where abstract architectural
-  texture is all that slot needs. It is not Kampala, and `public/images/CREDITS.md` now says so.
+- `public/images/hero-home.jpg` is now unused by any page. It moved to the homepage identity section,
+  then was replaced there by `services/lending.jpg` (a report being signed), which shows that section's
+  argument. It is not Kampala, and `public/images/CREDITS.md` says so. Still produced by
+  `scripts/prepare-images.mjs` (entry `ug-hero`); delete both if CMT does not want it back.
 - If CMT would rather have a photograph there, we need a real one: a Kampala building the firm has
   actually valued, or their own office. Licensed stock of an anonymous facade is the thing we removed,
   so replacing it with different stock would not be an improvement.

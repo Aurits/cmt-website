@@ -71,12 +71,14 @@ export default function CredentialsPage() {
               <Reveal as="li" key={`${holder.id}-${registration.authority}`} delay={index * 60}>
                 <div className="grid gap-3 border-b border-rule py-6 md:grid-cols-[1fr_auto] md:items-start md:gap-10">
                   <div className="flex gap-4">
-                    <ShieldIcon
-                      width={22}
-                      height={22}
-                      className="mt-1 shrink-0 text-gold-deep"
+                    {/* On a tile, the same device as the valuation purposes, so a credential
+                        row reads as a credential at a glance rather than as a bullet. */}
+                    <span
                       aria-hidden="true"
-                    />
+                      className="flex h-11 w-11 shrink-0 items-center justify-center bg-green text-gold"
+                    >
+                      <ShieldIcon width={22} height={22} />
+                    </span>
                     <div>
                       <h3 className="font-display text-h4 leading-snug text-green">
                         {registration.authorityFull}

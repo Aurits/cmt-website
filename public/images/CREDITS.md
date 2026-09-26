@@ -13,12 +13,12 @@ no longer sits on the homepage hero, where the claim mattered most.
 
 | File | Source | Description |
 | --- | --- | --- |
-| `hero-home.jpg` | https://unsplash.com/photos/1752654605009-3b12790fe738 | Ribbon-like apartment balconies. Identity section. NOT Kampala: an abstract facade, with a European street lamp in one corner. It was the homepage hero until that slot went to a real Kampala building |
+| `hero-home.jpg` | https://unsplash.com/photos/1752654605009-3b12790fe738 | Ribbon-like apartment balconies. NOT Kampala: an abstract facade, with a European street lamp in one corner. Currently unused; it was the homepage hero, then the identity section's image |
 | `identity-office.jpg` | https://unsplash.com/photos/1675756261486-09bd1e0f6c8a | Keith Kasaija: an office building in Kampala's business district by day. Homepage hero (clipped to its own massing, see ValuationElevation.tsx) and the /about identity section |
 | `cta-skyline.jpg` | https://unsplash.com/photos/1763220207281-c4d0febb61a8 | Kampala skyline at sunset, from Nsambya — CTA banner background |
 | `valuation-keys.jpg` | https://unsplash.com/photos/1560518883-ce09059eeffa | House model and keys — Services / valuation |
 | `services/valuation.jpg` | https://unsplash.com/photos/1716698286313-9a2349d41110 | A tape measure, held up — property valuation |
-| `services/lending.jpg` | https://www.pexels.com/photo/8730964/ | A report being signed — valuation for lending |
+| `services/lending.jpg` | https://www.pexels.com/photo/8730964/ | Mikhail Nilov: a professional reading and signing a report at a meeting. Homepage identity section ("A valuation firm first, an agency second") |
 | `services/consultancy.jpg` | https://www.pexels.com/photo/6282116/ | Hands over a blueprint — real estate consultancy |
 | `services/listing.jpg` | https://unsplash.com/photos/1741156386380-0236c72eb6f9 | House keys at the door — listing and sales management |
 | `categories/residential.jpg` | https://unsplash.com/photos/1578325872347-6cc1795a5fea | Kampala rooftops, Lake Victoria and a rainbow |
