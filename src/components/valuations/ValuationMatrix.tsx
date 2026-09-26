@@ -94,7 +94,7 @@ export function ValuationMatrix() {
         <div
           role="columnheader"
           aria-hidden="true"
-          className="hidden bg-cream-deep/60 px-4 py-3 font-sans text-label uppercase tracking-[0.12em] text-muted md:block"
+          className="hidden bg-mist px-4 py-3 font-sans text-label uppercase tracking-[0.12em] text-muted md:block"
         >
           Purpose / asset
         </div>
@@ -118,7 +118,7 @@ export function ValuationMatrix() {
             role="rowheader"
             className={cx(
               'px-4 py-3 transition-colors duration-150',
-              rowLit(purpose.slug) ? 'bg-gold/20' : 'bg-cream-deep/60',
+              rowLit(purpose.slug) ? 'bg-gold/20' : 'bg-mist',
             )}
           >
             <span className="font-display text-lead text-green">{purpose.name}</span>
@@ -136,11 +136,13 @@ export function ValuationMatrix() {
                 <div
                   key={asset.slug}
                   role="gridcell"
-                  className="flex min-h-[3.5rem] items-center gap-3 bg-cream-deep/25 px-4 py-3 text-muted md:min-h-[4.5rem] md:justify-center"
+                  className="flex min-h-[3.5rem] items-center gap-3 bg-mist/50 px-4 py-3 text-muted md:min-h-[4.5rem] md:justify-center"
                 >
                   <span className="text-micro md:hidden">{asset.short}</span>
-                  <span aria-hidden="true" className="md:mx-auto">
-                    &mdash;
+                  {/* Said in words rather than as a dash: a dash in a table asks the reader to
+                      guess whether it means "no", "not yet" or "not known". */}
+                  <span aria-hidden="true" className="text-micro md:mx-auto">
+                    Not offered
                   </span>
                   <span className="sr-only">Not offered for {asset.name}</span>
                 </div>

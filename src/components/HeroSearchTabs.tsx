@@ -94,7 +94,7 @@ export function HeroSearchTabs() {
               'relative flex min-h-[52px] flex-1 items-center justify-center px-2 py-3 text-center text-micro leading-tight transition-colors sm:px-3 sm:text-body',
               active === tab.id
                 ? 'bg-green text-cream'
-                : 'text-ink/75 hover:bg-cream-deep/60 hover:text-green',
+                : 'text-ink/75 hover:bg-mist hover:text-green',
             )}
           >
             {tab.label}
@@ -170,9 +170,12 @@ export function HeroSearchTabs() {
           </div>
         )}
 
+        {/* Green, the primary on a light ground, the same as the hero button directly above.
+            It was gold, so one screen showed "Request a valuation" in two colours. Gold is the
+            primary on dark grounds only: the masthead and the closing banner. */}
         <button
           type="submit"
-          className="rounded-control bg-gold px-6 py-3 text-body font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
+          className="rounded-control bg-green px-6 py-3 text-body font-medium text-cream transition-colors hover:text-gold"
         >
           {active === 'value' ? 'Request a valuation' : active === 'talk' ? 'Contact us' : 'Search'}
           <span className="sr-only">. {current.action}</span>
@@ -180,10 +183,10 @@ export function HeroSearchTabs() {
       </form>
 
       {active === 'value' && (
-        <p className="border-t border-rule px-4 pb-4 text-micro leading-relaxed text-muted sm:px-5 sm:pb-5">
-          Valuing plant, machinery or a shareholding instead? Those start from the{' '}
+        <p className="border-t border-rule px-4 py-3.5 text-micro leading-relaxed text-muted sm:px-5">
+          Valuing machinery, equipment or shares in a business? Start from{' '}
           <Link href="/valuations" className="text-green underline decoration-gold decoration-2 underline-offset-4">
-            full list of {valuationPurposes.length} valuation purposes
+            all {valuationPurposes.length} valuation purposes
           </Link>
           .
         </p>

@@ -15,6 +15,15 @@ export function generateStaticParams() {
   return valuationPurposes.map((purpose) => ({ purpose: purpose.slug }));
 }
 
+/**
+ * "Valuation for lending" reads, because that purpose is named "For lending". The others are
+ * named plainly ("Financial reporting", "Insurance"), and the same template produced "Valuation
+ * financial reporting" in the browser tab and "Request a valuation insurance" on the banner. This
+ * adds the "for" wherever the name does not already carry it.
+ */
+const forPhrase = (name: string) =>
+  /^for /i.test(name) ? name.toLowerCase() : `for ${name.toLowerCase()}`;
+
 export async function generateMetadata({
   params,
 }: {
@@ -24,7 +33,7 @@ export async function generateMetadata({
   const purpose = purposeBySlug[slug as ValuationPurposeSlug];
   if (!purpose) return {};
   return {
-    title: `Valuation ${purpose.name.toLowerCase()}`,
+    title: `Valuation ${forPhrase(purpose.name)}`,
     description: purpose.situation,
   };
 }
@@ -79,7 +88,7 @@ export default async function ValuationPurposePage({
 
           <span aria-hidden="true" className="mb-5 block h-[3px] w-10 bg-gold" />
           <h1 className="max-w-[24ch] text-h1 text-cream">
-            Valuation {purpose.name.toLowerCase()}
+            Valuation {forPhrase(purpose.name)}
           </h1>
           <p className="mt-5 max-w-[42ch] font-display text-subhead leading-snug text-cream/90">
             {purpose.situation}
@@ -176,7 +185,7 @@ export default async function ValuationPurposePage({
       </section>
 
       {/* Related purposes, as an index rather than cards. */}
-      <section className="bg-cream-deep/45 py-12 lg:py-16">
+      <section className="bg-mist py-12 lg:py-16">
         <Container>
           <SectionHeading
             title="The other reasons people instruct us"
@@ -208,7 +217,7 @@ export default async function ValuationPurposePage({
       </section>
 
       <CTABanner
-        title={`Request a valuation ${purpose.name.toLowerCase()}`}
+        title={`Request a valuation ${forPhrase(purpose.name)}`}
         lead="Tell us what needs valuing and when you need the report. You speak to a valuer, not a call centre."
         primary={{
           label: 'Request a valuation',

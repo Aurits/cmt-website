@@ -1,44 +1,33 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Container } from '@/components/ui/Container';
-import {
-  FacebookIcon,
-  InstagramIcon,
-  LinkedInIcon,
-  MailIcon,
-  PhoneIcon,
-  PinIcon,
-  TikTokIcon,
-  WhatsAppIcon,
-  XIcon,
-  YouTubeIcon,
-} from '@/components/ui/icons';
+import { MailIcon, PhoneIcon, PinIcon, ShieldIcon } from '@/components/ui/icons';
 import { categories } from '@/data/categories';
-import { aboutPages, nav, site, whatsappHref } from '@/data/site';
+import { aboutPages, nav, site } from '@/data/site';
+import { valuationPurposes } from '@/data/valuations';
+
+const headingClass =
+  'font-sans text-label font-semibold uppercase tracking-[0.12em] text-gold';
 
 /**
- * WhatsApp always links: without a number it routes to /contact#whatsapp, like every other
- * WhatsApp CTA. The rest link only once site.social holds a real profile URL.
+ * The site footer.
+ *
+ * Two changes worth recording, because both were gaps rather than preferences.
+ *
+ * THE SOCIAL ROW MOVED TO THE MASTHEAD (Header.tsx). It sat here, at the very bottom of every
+ * page, which is where a link goes when nobody expects it to be used. The utility strip already
+ * carries the phone number and the email address, and a social profile is the same kind of
+ * thing: a way to reach CMT. Putting all of them in one rail means there is one answer to
+ * "where do I find them", at the top, before the reader has scrolled anything.
+ *
+ * VALUATIONS NOW HAS A COLUMN. It did not, which was the odd part: the footer gave five links
+ * to property types and none at all to valuation, in the footer of a firm whose own navigation
+ * and homepage both argue that it is a valuation firm first and an agency second. Every other
+ * surface on the site says the same thing; this one quietly said the opposite.
+ *
+ * The grid is twelve columns rather than four named fractions, so a fifth column could be added
+ * without re-tuning the other four by eye.
  */
-const socialLinks = [
-  { label: 'Facebook', href: site.social.facebook, Icon: FacebookIcon },
-  { label: 'X', href: site.social.x, Icon: XIcon },
-  { label: 'Instagram', href: site.social.instagram, Icon: InstagramIcon },
-  { label: 'LinkedIn', href: site.social.linkedin, Icon: LinkedInIcon },
-  { label: 'YouTube', href: site.social.youtube, Icon: YouTubeIcon },
-  { label: 'TikTok', href: site.social.tiktok, Icon: TikTokIcon },
-  {
-    label: 'WhatsApp',
-    href: whatsappHref('Hello CMT Realtors, I have a property enquiry.'),
-    Icon: WhatsAppIcon,
-  },
-];
-
-// 44px on touch screens, the minimum comfortable tap target; 36px from sm up, where a pointer
-// does the aiming and the row should not shout.
-const socialClass =
-  'flex h-11 w-11 items-center justify-center rounded-control border border-cream/25 text-cream/85 sm:h-9 sm:w-9';
-
 export function Footer() {
   const year = new Date().getFullYear();
 
@@ -47,8 +36,8 @@ export function Footer() {
     // separates it from whatever green CTA banner sits immediately above.
     <footer className="border-t border-gold/30 bg-green text-cream">
       <Container className="py-14 lg:py-16">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
-          <div>
+        <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-12">
+          <div className="lg:col-span-3">
             <Image
               src="/brand/cmt-logo.png"
               alt={site.name}
@@ -56,41 +45,21 @@ export function Footer() {
               height={431}
               className="-ml-4 h-14 w-auto"
             />
-            <p className="mt-5 max-w-[34ch] text-sm leading-relaxed text-cream/75">
-              Valuation and property consultancy in Uganda, regulated by the {site.regulator}.
+            <p className="mt-5 max-w-[34ch] text-body leading-relaxed text-cream/75">
+              Valuation and property consultancy. We put a figure on property that a bank will
+              lend against.
             </p>
-            <ul aria-label="Follow CMT Realtors" className="mt-6 flex flex-wrap gap-2">
-              {socialLinks.map(({ label, href, Icon }) => (
-                <li key={label}>
-                  {href ? (
-                    <a
-                      href={href}
-                      aria-label={label}
-                      title={label}
-                      {...(href.startsWith('http') && { target: '_blank', rel: 'noopener noreferrer' })}
-                      className={`${socialClass} transition-colors hover:border-gold hover:text-gold`}
-                    >
-                      <Icon width={16} height={16} />
-                    </a>
-                  ) : (
-                    <span
-                      title={`${label} (link coming soon)`}
-                      className={`${socialClass} cursor-default opacity-40`}
-                    >
-                      <Icon width={16} height={16} />
-                      <span className="sr-only">{label}, link coming soon</span>
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
+            {/* The standing, restated at the foot of the page. It is the claim the whole site
+                rests on and it costs one line to repeat where a reader ends up. */}
+            <p className="mt-6 flex items-center gap-2.5 border-t border-cream/15 pt-5 text-micro text-cream/70">
+              <ShieldIcon width={16} height={16} className="shrink-0 text-gold" />
+              Regulated by the {site.regulator}
+            </p>
           </div>
 
-          <nav aria-label="Footer">
-            <h2 className="font-sans text-label font-semibold uppercase tracking-[0.12em] text-gold">
-              Site
-            </h2>
-            <ul className="mt-4 space-y-2.5 text-sm">
+          <nav aria-label="Footer" className="lg:col-span-2">
+            <h2 className={headingClass}>Site</h2>
+            <ul className="mt-4 space-y-2.5 text-body">
               {nav.map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className="text-cream/80 hover:text-gold">
@@ -114,11 +83,28 @@ export function Footer() {
             </ul>
           </nav>
 
-          <div>
-            <h2 className="font-sans text-label font-semibold uppercase tracking-[0.12em] text-gold">
-              Property types
-            </h2>
-            <ul className="mt-4 space-y-2.5 text-sm">
+          <div className="lg:col-span-2">
+            <h2 className={headingClass}>Valuations</h2>
+            {/* The purposes, not the asset classes: a visitor arrives knowing what the figure
+                is for, rarely knowing which of our three asset types it falls under. Same axis
+                the masthead menu and the /valuations matrix lead with. */}
+            <ul className="mt-4 space-y-2.5 text-body">
+              {valuationPurposes.map((purpose) => (
+                <li key={purpose.slug}>
+                  <Link
+                    href={`/valuations/${purpose.slug}`}
+                    className="text-cream/80 hover:text-gold"
+                  >
+                    {purpose.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="lg:col-span-2">
+            <h2 className={headingClass}>Property types</h2>
+            <ul className="mt-4 space-y-2.5 text-body">
               {categories.map((category) => (
                 <li key={category.slug}>
                   <Link href={`/listings/${category.slug}`} className="text-cream/80 hover:text-gold">
@@ -129,11 +115,9 @@ export function Footer() {
             </ul>
           </div>
 
-          <div>
-            <h2 className="font-sans text-label font-semibold uppercase tracking-[0.12em] text-gold">
-              Office
-            </h2>
-            <address className="mt-4 space-y-3 text-sm not-italic text-cream/80">
+          <div className="lg:col-span-3">
+            <h2 className={headingClass}>Office</h2>
+            <address className="mt-4 space-y-3 text-body not-italic text-cream/80">
               <p className="flex gap-3">
                 <PinIcon width={16} height={16} className="mt-0.5 shrink-0 text-gold" />
                 <span>

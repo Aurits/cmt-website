@@ -122,13 +122,6 @@ export default function OfficesPage() {
                 </ul>
               </div>
 
-              {!site.regionConfirmed && (
-                <p className="mt-6 border-t border-rule pt-5 text-micro leading-relaxed text-muted">
-                  How the two practices relate as legal entities is being confirmed with CMT before
-                  we describe them as one firm. Until then this page says what can be seen: two
-                  practices, a shared director, one standard of report.
-                </p>
-              )}
             </div>
           </Reveal>
         </Container>
@@ -150,7 +143,7 @@ export default function OfficesPage() {
           <PropertyMap
             className="mt-8"
             center={site.address.coords}
-            label={`${site.name} — ${site.address.building}, ${site.address.street}`}
+            label={`${site.name}, ${site.address.building}, ${site.address.street}`}
             zoom={16}
             height="h-[380px]"
             caption={`${site.address.building}, ${site.address.line1}. Pin is placed at street level from the published address and is not a surveyed position.`}

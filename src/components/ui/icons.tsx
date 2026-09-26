@@ -112,6 +112,53 @@ export const ShieldIcon = (props: IconProps) => (
   </Icon>
 );
 
+/*
+ * Valuation purposes. One mark per purpose, in the same grammar as the icons above, used where
+ * five near-identical text rows otherwise rely on position alone to be told apart: the homepage
+ * purpose cards and the valuation matrix. Each is the object the purpose is about, not a
+ * metaphor for it, so a lender sees a bank rather than a handshake.
+ */
+export const LendingIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path d="M3.5 9 12 4l8.5 5" />
+    <path d="M4.5 9h15M5.5 20h13M3.5 20h17" />
+    <path d="M7 12v5M10.3 12v5M13.7 12v5M17 12v5" />
+  </Icon>
+);
+
+export const ReportingIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path d="M6 3.5h8.5L18 7v13.5H6Z" />
+    <path d="M14 3.5V7h4" />
+    <path d="M9 17v-3M12 17v-5.5M15 17v-2" />
+  </Icon>
+);
+
+export const InsuranceIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path d="M3.5 12a8.5 8.5 0 0 1 17 0Z" />
+    <path d="M12 12v6.5a2 2 0 0 1-4 0" />
+    <path d="M12 3.5V2.5" />
+  </Icon>
+);
+
+export const LitigationIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path d="M12 4v16M8 20h8M5 7h14" />
+    <path d="M5 7 2.5 13a2.5 2.5 0 0 0 5 0Z" />
+    <path d="M19 7l-2.5 6a2.5 2.5 0 0 0 5 0Z" />
+  </Icon>
+);
+
+/* A plot with a road cut through it: land taken for infrastructure, which is what compensation
+ * work is. An earlier plus sign in the middle read as first aid. */
+export const CompensationIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path d="M3.5 18.5 6 5.5l12.5-1.5 2 14.5Z" />
+    <path d="M8.6 5.2 11.4 18.5M13.4 4.6 16 18.5" />
+  </Icon>
+);
+
 /* Brand marks. Filled, like WhatsAppIcon, because each platform's mark is a solid glyph. */
 function BrandIcon({ children, ...props }: IconProps & { children: React.ReactNode }) {
   return (

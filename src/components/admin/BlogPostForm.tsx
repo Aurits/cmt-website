@@ -152,7 +152,7 @@ export function BlogPostForm({ initial, isNew }: { initial: AdminBlogPost; isNew
         </div>
 
         {draft.pullFigure && (
-          <div className="border-l-[3px] border-gold bg-cream-deep/40 px-4 py-3">
+          <div className="border-l-[3px] border-gold bg-mist/50 px-4 py-3">
             <p className="text-micro text-muted">How it will read</p>
             <p className="tnum mt-1 font-display text-figure leading-none text-green">
               {draft.pullFigure}

@@ -170,8 +170,13 @@ export const stats = [
   {
     value: String(offices.length),
     unit: 'offices',
-    label: 'Across Uganda and Kenya, head offices in Kampala and Nairobi',
+    // Counted from `offices`, not written out, so it stays true when an office opens. Kenya is
+    // named as the linked practice it is until site.regionConfirmed says otherwise
+    // (docs/OPEN-ITEMS.md #2), the same wording InBrief uses.
+    label: `${offices.filter((o) => o.country === 'Uganda').length} in Uganda, ${
+      offices.filter((o) => o.country === 'Kenya').length
+    } ${site.regionConfirmed ? 'in Kenya' : 'with our linked Kenya practice'}`,
   },
-  { value: '14', unit: 'institutions', label: 'Banks, agencies and corporates instructed us' },
-  { value: 'UIS', unit: 'regulated', label: 'Uganda Institution of Surveyors' },
+  { value: '14', unit: 'institutions', label: 'Banks, agencies and companies that instruct us' },
+  { value: 'UIS', unit: 'regulated', label: 'By the Uganda Institution of Surveyors' },
 ] as const;

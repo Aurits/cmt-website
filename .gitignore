@@ -43,3 +43,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /.cache/
+
+# local screenshot tooling
+.tmp-shot/
+.tmp-preview/

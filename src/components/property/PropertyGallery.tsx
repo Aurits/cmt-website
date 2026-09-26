@@ -24,7 +24,7 @@ export function PropertyGallery({
 
   return (
     <figure>
-      <div className="relative aspect-[4/3] overflow-hidden rounded-brand border border-rule bg-cream-deep sm:aspect-[3/2]">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-brand border border-rule bg-mist sm:aspect-[3/2]">
         <Image
           key={current.src}
           src={current.src}

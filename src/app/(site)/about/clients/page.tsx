@@ -55,7 +55,7 @@ export default function ClientsPage() {
         </section>
       )}
 
-      <section className="bg-cream-deep/45 py-14 lg:py-20">
+      <section className="bg-mist py-14 lg:py-20">
         <Container className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
             <SectionHeading

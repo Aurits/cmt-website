@@ -16,8 +16,20 @@
   exports' tiles turned out to be a few RGB steps apart; this is the second value, not the
   first.
 
-  Gold and cream are the brief's values, unchanged. Body text is a warm near-black
-  (#171612) rather than pure #000000, which reads harsh on cream.
+  THE PALETTE, AFTER THE SEPTEMBER OVERHAUL. Green and gold are fixed by the logo: the supplied
+  mark is a solid green tile with gold lettering and no transparency, so any change to either
+  and the logo shows as a rectangle on the masthead and the footer. Everything else was rebuilt
+  around them, because everything else was yellow. Paper, cream, the recessed sand, the rules
+  and the gold accents all sat in one yellow-beige family, the three light grounds could barely
+  be told apart, and the site read as vintage tan with green slabs in it.
+
+  The neutrals are now organised by TEMPERATURE, each derived from one of the two brand colours:
+  white for neutral, a warm ivory from the gold side, a cool sage mist from the green side. Two
+  light grounds side by side now differ in warmth, which the eye reads instantly, instead of by
+  three or four units of lightness, which it mostly does not. Ink and muted text are green-tinted
+  neutrals rather than a warm near-black and an olive grey, so the text belongs to the brand too.
+  Every text colour clears WCAG AA on every light ground it is used on; the figures are beside
+  each token below.
 */
 @theme {
   --color-green: #11341b;
@@ -30,21 +42,37 @@
    * (6.2:1). What it cannot do is be text on a light ground — gold on cream is 1.97:1, which is
    * not a contrast problem so much as an invisibility one.
    *
-   * gold-deep is that missing half of the pair, and it was previously #a67f05, which only reached
-   * 3.3:1 on cream and so failed AA everywhere it was used for words rather than icons. At
-   * #816304 it clears AA on every ground the site puts it on — 5.03 on cream, 5.55 on paper, 4.55
-   * on cream-deep — and it also works the other way round, as a fill with cream text over it,
-   * which is what the gold button's hover state needs.
+   * gold-deep is that missing half of the pair. It was #a67f05 once, which only reached 3.3:1 on
+   * cream and failed AA wherever it was used for words; then #816304. It is now #7d6003, a
+   * touch deeper, which buys headroom on the new mist ground: 5.92 on paper, 5.39 on cream,
+   * 5.08 on mist, where the old value sat at 4.53 on the old sand. It still works the other way
+   * round, as a fill with cream text over it, which the gold button's hover state needs.
    *
    * The rule: gold for fills and for dark grounds, gold-deep for words and icons on light ones.
    */
-  --color-gold-deep: #816304;
-  --color-cream: #f7f2dd;
-  --color-cream-deep: #efe7c9;
-  --color-paper: #fffdf7;
-  --color-ink: #171612;
-  --color-muted: #5c6353;
-  --color-rule: #ded5b6;
+  --color-gold-deep: #7d6003;
+  /*
+   * Ivory: the WARM light ground, and the light text colour on green. It was #f7f2dd, a cream
+   * with enough yellow in it that beside gold everything read as one colour. This is the same
+   * warmth with most of the yellow taken out. Cream on green: 12.48:1.
+   */
+  --color-cream: #f7f4ec;
+  /*
+   * Mist: the COOL light ground, a pale sage taken from the brand green. It replaces
+   * cream-deep, a sand that was the same temperature as cream and so could only step back by
+   * being darker, which it could not do without taking gold-deep text under AA. Mist steps
+   * back by being cooler instead. Ink 14.27, muted 5.61, gold-deep 5.08, green 11.76.
+   */
+  --color-mist: #eaefe8;
+  /* White, and meant: the brightest ground and the one the hero sits on. Was #fffdf7. */
+  --color-paper: #ffffff;
+  /* Green-black, so body text is a very dark version of the brand rather than a stranger to it.
+     16.64 on paper. Was a warm #171612. */
+  --color-ink: #14211a;
+  /* Secondary text: a green-grey neutral, 6.54 on paper, 5.95 on cream, 5.61 on mist. */
+  --color-muted: #566059;
+  /* A neutral hairline with a trace of warmth. It was a yellow sand, #ded5b6. */
+  --color-rule: #e0ded6;
   /*
    * Hairlines versus control boundaries.
    *
@@ -52,10 +80,10 @@
    * information on its own, so its 1.4:1 against paper is a deliberate lightness rather than a
    * failure. The border of an input or a Select IS information — it is the thing telling you
    * where the control is — and WCAG asks for 3:1 on those. At --color-rule they were effectively
-   * invisible. rule-strong is the same warm sand stepped down until it clears that bar (3.66 on
-   * paper, 3.32 on cream) and is used only on things you can type into or open.
+   * invisible. rule-strong is the hairline stepped down until it clears that bar (3.65 on
+   * paper, 3.32 on cream, 3.13 on mist) and is used only on things you can type into or open.
    */
-  --color-rule-strong: #918455;
+  --color-rule-strong: #8a8676;
   /*
    * Destructive, and the only colour on the site outside the brand.
    *
@@ -71,7 +99,7 @@
   --color-flag: #991b1b;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-display: var(--font-newsreader), ui-serif, Georgia, serif;
 
   /*
    * THE SCALE. Eleven steps, each with one job.
@@ -137,19 +165,48 @@
    * the page that says "this is different" — and it reads as far more of an exception
    * against 0 and 4px than it ever did against a uniform 10px.
    *
-   * --radius-overlay (12px) is a layer that a control OPENS — the nav menus (NavMenus.tsx).
-   * They are not page content but part of the pill nav that spawned them, so they take a
-   * softened corner from it rather than the document edge. Only the corners that float get
-   * it: a menu's top edge hangs flush from the masthead hairline and stays square. Anything
-   * nested inside one steps down a size (radius minus 4px) so the curves stay concentric
-   * instead of the inner one looking pinched.
+   * The nav menus (NavMenus.tsx) briefly took a third radius, --radius-overlay, on the
+   * theory that a layer a control opens belongs to that control rather than to the page.
+   * That held while the panel floated as a 1200px card. It stopped holding the moment the
+   * panel went full-bleed: a surface that runs into both viewport edges has no side corners
+   * to soften, and rounding only its bottom two made it read as a dropped card rather than
+   * as what it now is, which is the masthead itself extending. It takes --radius-brand with
+   * every other surface, and the third radius is gone rather than left unused.
    *
    * The radius the client asked to modernise is still tunable from one place: raise
    * --radius-brand and every surface follows, exactly as before.
    */
   --radius-brand: 0;
   --radius-control: 0.25rem;
-  --radius-overlay: 0.75rem;
+
+  /*
+   * THE GROUND LADDER. Four surfaces, in order of how far forward they sit.
+   *
+   * The site had all four already and used them by feel, which produced two problems worth
+   * naming. Cream is the body background, so any section that set no ground got cream by
+   * default, which was most of them, and the page read as one continuous tan field with green slabs
+   * dropped into it. Meanwhile paper, the brightest surface we own, was used on exactly one
+   * four-line bar on the homepage, and the recessed ground appeared at six different alphas
+   * (/25, /40, /45, /50, /60 and full) for what was always the same job. Nobody chose /45 over
+   * /50; it drifted, the same way the type sizes drifted before the scale above was written
+   * down. The overhaul normalised every one of them: section grounds and solid surfaces are
+   * full-strength mist, inset panels are mist/50, and there is nothing else.
+   *
+   *   --color-paper   WHITE, the working ground. Where reading and comparing happen: cards,
+   *                   the schedules, the hero. The brightest thing on the site.
+   *   --color-cream   IVORY, the warm ground. The body default, and the editorial sections
+   *                   that want to feel like paper stock rather than like a screen.
+   *   --color-mist    SAGE, the cool ground. A band that steps back so the one after it steps
+   *                   forward, and it does so by temperature, not by darkness. Full strength
+   *                   as a section ground; /50 as an inset panel. Nothing between.
+   *   --color-green      PUNCTUATION. Never a default, never twice in a row, and no more than
+   *                      three times on a page. It is the loudest thing we have and it stops
+   *                      meaning anything the moment it becomes the background.
+   *
+   * The rule that does the actual work: no two adjacent sections share a ground. A page reads
+   * as a sequence of decisions when the ground changes under each one, and as a single long
+   * scroll when it does not.
+   */
 }
 
 @layer base {
@@ -200,7 +257,7 @@
   }
 
   /*
-   * Headlines carry the personality: Fraunces, tight, optically sized.
+   * Headlines carry the personality: Newsreader, tight, optically sized.
    *
    * `.font-display` is in this selector deliberately. The rule used to name only h1-h3, so a
    * small heading written as a <dt>, a <p> or a <span> — which is most of the schedule labels,
@@ -300,9 +357,11 @@
 
 /* ---------------------------------------------------------------------------
    Motion
-   Three deliberate kinds, and nothing else: content arriving as you scroll,
-   the hero carousel drifting, and the client conveyor. All three stop dead
-   under prefers-reduced-motion, at the bottom of this file.
+   Five deliberate kinds, and nothing else: content arriving as you scroll, the
+   hero carousel drifting, the client conveyor, the hero drawing assembling
+   itself, and the drawing sheet behind it drifting as the hero scrolls away. All of them stop dead under prefers-reduced-motion, at the bottom of
+   this file, and none of them is load-bearing: every element they touch is
+   legible, in position and at full contrast with motion disabled.
    --------------------------------------------------------------------------- */
 
 @keyframes rise {
@@ -352,6 +411,151 @@
 .reveal.is-revealed {
   opacity: 1;
   transform: none;
+}
+
+/* ---------------------------------------------------------------------------
+   The hero elevation (components/home/HeroElevation.tsx)
+
+   A measured survey drawing assembling itself in about two seconds, in the
+   order one is actually produced: the ground line is laid, the masses go up on
+   it, the glazing comes in, then the drawing is dimensioned. The last step is
+   the point, so it is the one that lands last.
+
+   Everything here is transform, opacity or stroke-dashoffset. Nothing animates
+   width, height, top or left, so no frame of this costs a layout.
+   --------------------------------------------------------------------------- */
+
+/* The drawing sheet behind the hero (HeroSheet): engineering paper, major lines
+   every 120px and minor every 24px, in gold faint enough to read as texture
+   rather than as rules. Anchored to the bottom so its lines meet the ground
+   line, and masked into an ellipse centred low, where the building is, so it
+   dissolves toward the edges and the top instead of ruling the whole screen. */
+@utility drafting-grid {
+  --grid-major: color-mix(in srgb, var(--color-gold) 16%, transparent);
+  --grid-minor: color-mix(in srgb, var(--color-gold) 8%, transparent);
+  background-image:
+    linear-gradient(to right, var(--grid-major) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-major) 1px, transparent 1px),
+    linear-gradient(to right, var(--grid-minor) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-minor) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: center bottom;
+  -webkit-mask-image: radial-gradient(ellipse 62% 78% at 50% 72%, #000 25%, transparent 78%);
+  mask-image: radial-gradient(ellipse 62% 78% at 50% 72%, #000 25%, transparent 78%);
+}
+
+/* The one scroll-linked effect on the site, and a progressive enhancement:
+   where the browser supports scroll-driven animation, the sheet drifts slower
+   than the page as the hero scrolls away, so the drawing reads as having depth
+   under the words. Elsewhere it simply scrolls with the page, which is also
+   correct. It lives inside the no-preference query rather than relying on the
+   reduced-motion collapse at the bottom of this file, because a scroll-linked
+   animation has no duration for that rule to collapse. */
+@keyframes sheet-drift {
+  to { transform: translateY(18%); }
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-sheet-drift {
+      animation: sheet-drift linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+  }
+}
+
+/* The datum: the ground line, laid first, left to right, before anything
+   stands on it. scaleX rather than width, so it composites. */
+@keyframes datum-draw {
+  from { transform: scaleX(0); }
+  to { transform: none; }
+}
+
+@utility hero-datum {
+  transform-origin: left center;
+  animation: datum-draw 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--datum-delay, 0ms);
+}
+
+/* The halo behind the hero's words (page.tsx): solid paper at the core so no line of the
+   drawing runs through text, dissolving outward into the street. Wider on a phone, where the
+   column of text is narrow and tall and a 46% ellipse would leave its edges on the drawing. */
+@utility hero-halo {
+  background: radial-gradient(
+    ellipse 95% 44% at 50% 34%,
+    var(--color-paper) 0%,
+    var(--color-paper) 52%,
+    color-mix(in srgb, var(--color-paper) 80%, transparent) 68%,
+    transparent 100%
+  );
+  @media (min-width: 640px) {
+    background: radial-gradient(
+      ellipse 46% 40% at 50% 34%,
+      var(--color-paper) 0%,
+      var(--color-paper) 48%,
+      color-mix(in srgb, var(--color-paper) 80%, transparent) 64%,
+      transparent 100%
+    );
+  }
+}
+
+/* Survey hatching under the ground line, in CSS so it runs the full width of
+   any viewport without an SVG having to be stretched to reach it. 135deg gives
+   the "/" stroke a section drawing uses for earth. */
+@utility datum-hatch {
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--color-gold) 0 1px,
+    transparent 1px 13px
+  );
+}
+
+/* Each mass, rising from the ground line. --rise-delay set per element. */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: none; }
+}
+
+@utility hero-rise-in {
+  animation: rise-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--rise-delay, 0ms);
+}
+
+/* The glazing, coming on floor by floor. Opacity only: these are already in
+   position, so moving them would read as the building settling twice. */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@utility hero-fade-in {
+  animation: fade-in 0.5s linear both;
+  animation-delay: var(--fade-delay, 0ms);
+}
+
+/* The dimensions, drawn on last. pathLength="1" in the markup normalises every
+   path to a length of one regardless of its real geometry, so one dasharray
+   value draws all of them and any of them can be retimed by changing a delay
+   rather than by re-measuring a path. */
+@keyframes draw-on {
+  to { stroke-dashoffset: 0; }
+}
+
+@utility hero-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw-on 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--draw-delay, 0ms);
+}
+
+@keyframes glow-breathe {
+  from { opacity: 0.45; }
+  to { opacity: 1; }
+}
+
+@utility hero-glow {
+  animation: glow-breathe 5s cubic-bezier(0.45, 0, 0.55, 1) 1.6s infinite alternate;
 }
 
 /* Slow drift across the active carousel frame. Restarts with each slide change. */
@@ -447,7 +651,7 @@
 */
 .leaflet-container {
   font-family: var(--font-sans);
-  background: var(--color-cream-deep);
+  background: var(--color-mist);
   isolation: isolate;
 }
 
@@ -477,12 +681,20 @@
     scroll-behavior: auto;
   }
 
+  /*
+    Delays are cleared as well as durations. Collapsing only the duration left every staggered
+    element sitting in its `from` state for the length of its delay: someone who had asked for no
+    motion still waited up to 2.4s for the hero drawing's dimensions to pop in, and for the
+    headline's last word. Everything should simply be there.
+  */
   *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
   }
 
   /* Nothing may depend on motion to become visible or legible. */
@@ -493,15 +705,36 @@
 
   .conveyor__track {
     animation: none;
-    /* A still belt shows one set of marks, centred and wrapped — never the clones. */
-    justify-content: center;
+    /* A still belt shows one set of marks, wrapped, never the clones. It sits on the page's
+       1200px measure and starts at its left edge, under the heading it belongs to: centred, a
+       short last row left one logo stranded mid-page. */
+    justify-content: flex-start;
     flex-wrap: wrap;
     width: 100%;
-    row-gap: 0.75rem;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    gap: 0.75rem;
+  }
+
+  /* The animated belt spaces items with a trailing margin (so its two halves tile without a
+     seam). Still, that margin put every row 6px left of centre; the track's gap does it here. */
+  .conveyor__item {
+    margin-right: 0;
   }
 
   .conveyor__item[data-clone='true'] {
     display: none;
+  }
+
+  /*
+    The hero elevation, still. The global rule above collapses every duration,
+    which already leaves the masses, the glazing and the drawn dimensions at
+    their end state because all three use `both`. The infinite ones do not end
+    anywhere useful, so they are pinned explicitly rather than left to it.
+  */
+  .hero-glow {
+    opacity: 1;
   }
 
   .conveyor__veil {

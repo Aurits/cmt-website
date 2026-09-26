@@ -42,7 +42,7 @@ function LatestNote({ note }: { note: BlogPost }) {
   const author = note.authorId ? agentById[note.authorId] : undefined;
 
   return (
-    <article className="border-y border-rule bg-cream-deep/40">
+    <article className="border-y border-rule bg-mist/50">
       <Container className="py-12 lg:py-16">
         <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-end lg:gap-16">
           <div>

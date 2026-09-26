@@ -28,16 +28,16 @@ const kenyaHead = kenyaOffices.find((office) => office.role === 'Head office')?.
 const statements = [
   {
     label: 'Who we are',
-    body: `${site.name}: a valuation and property consultancy regulated by the ${site.regulator}, valuing property for ${site.yearsInBusiness} years.`,
+    body: `${site.name} is a valuation and property consultancy, regulated by the ${site.regulator} and valuing property for ${site.yearsInBusiness} years.`,
     link: { label: 'About us', href: '/about' },
   },
   {
     label: 'Where we work',
-    body: `Across Uganda from ${list(ugandaOffices.map((office) => office.city))}${
+    body: `From offices in ${list(ugandaOffices.map((office) => office.city))}${
       kenyaHead
         ? site.regionConfirmed
           ? `, and across Kenya from ${kenyaHead}`
-          : `, with a linked practice in Kenya headquartered in ${kenyaHead}`
+          : `, with a linked practice in Kenya based in ${kenyaHead}`
         : ''
     }.`,
     link: { label: 'Our offices', href: '/about/offices' },
@@ -49,7 +49,7 @@ const statements = [
   },
   {
     label: 'What we provide',
-    body: `Valuations for ${list(valuationPurposes.map((purpose) => purpose.name.replace(/^For /, '').toLowerCase()))}; ${count(advisoryServices.length)} advisory services; and property sales and lettings.`,
+    body: `We value property for ${list(valuationPurposes.map((purpose) => purpose.name.replace(/^For /, '').toLowerCase()))}. We also offer ${count(advisoryServices.length)} kinds of property advice, and we sell and let property.`,
     link: { label: 'Advisory', href: '/advisory' },
   },
 ];

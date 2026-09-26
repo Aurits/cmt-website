@@ -10,7 +10,7 @@ import { cx } from '@/lib/cx';
 const LeafletMap = dynamic(() => import('./LeafletMap'), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full w-full items-center justify-center bg-cream-deep text-sm text-muted">
+    <div className="flex h-full w-full items-center justify-center bg-mist text-sm text-muted">
       Loading map
     </div>
   ),

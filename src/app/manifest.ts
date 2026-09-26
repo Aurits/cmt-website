@@ -8,12 +8,13 @@ import { site } from '@/data/site';
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `${site.name} — ${site.tagline}`,
+    // The name shown under the icon when the site is installed on a phone: the firm, nothing more.
+    name: site.name,
     short_name: site.shortName,
     description: site.description,
     start_url: '/',
     display: 'standalone',
-    background_color: '#f7f2dd',
+    background_color: '#f7f4ec',
     theme_color: '#11341b',
     icons: [
       { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },

@@ -36,7 +36,7 @@ export function StandingSchedule({ className }: { className?: string }) {
           >
             {registration.confirmed && registration.number
               ? registration.number
-              : '— pending'}
+              : 'Awaiting confirmation'}
           </dd>
         </div>
       ))}

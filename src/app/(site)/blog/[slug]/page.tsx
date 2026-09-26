@@ -168,7 +168,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       </section>
 
       {others.length > 0 && (
-        <section className="bg-cream-deep/45 py-12 lg:py-16">
+        <section className="bg-mist py-12 lg:py-16">
           <Container>
             <h2 className="text-label uppercase tracking-[0.12em] text-muted">More from the blog</h2>
             <ul className="mt-6 border-t border-rule">

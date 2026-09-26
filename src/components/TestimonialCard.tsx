@@ -129,7 +129,7 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
  */
 export function TestimonialsPending() {
   return (
-    <div className="rounded-brand border border-dashed border-green/30 bg-cream-deep/50 p-6 sm:p-7">
+    <div className="rounded-brand border border-dashed border-green/30 bg-mist/50 p-6 sm:p-7">
       <p className="max-w-[52ch] font-display text-h3 leading-snug text-green">
         References from the banks, agencies and corporate clients CMT already works for
         will sit here.

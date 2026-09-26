@@ -99,7 +99,7 @@ export function ListingForm({ initial, isNew }: { initial: AdminListing; isNew: 
         <div className="grid gap-5 sm:grid-cols-3">
           <div>
             <Label htmlFor="reference">Reference</Label>
-            <input id="reference" value={draft.reference} readOnly className={cx(inputClass, 'tnum bg-cream-deep/50 text-muted')} />
+            <input id="reference" value={draft.reference} readOnly className={cx(inputClass, 'tnum bg-mist/50 text-muted')} />
           </div>
           <div>
             <Label htmlFor="price">Price (UGX)</Label>

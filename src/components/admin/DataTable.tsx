@@ -60,7 +60,7 @@ export function DataTable<T>({
     <div className={cx('overflow-x-auto rounded-brand border border-rule bg-paper', className)}>
       <table className="w-full min-w-[720px] border-collapse text-body">
         <thead>
-          <tr className="border-b border-rule bg-cream-deep/60">
+          <tr className="border-b border-rule bg-mist">
             {columns.map((column) => (
               <th
                 key={column.key}

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { CTABanner } from '@/components/CTABanner';
-import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Reveal } from '@/components/ui/Reveal';
@@ -102,7 +101,7 @@ export default function CredentialsPage() {
                     {registration.confirmed && registration.number ? (
                       registration.number
                     ) : (
-                      <span className="inline-block border border-rule bg-cream-deep/50 px-2.5 py-1 text-micro">
+                      <span className="inline-block border border-rule bg-mist/50 px-2.5 py-1 text-micro">
                         Awaiting confirmation
                       </span>
                     )}
@@ -112,24 +111,18 @@ export default function CredentialsPage() {
             ))}
           </ul>
 
-          <div className="mt-6 max-w-[68ch] border-l-[3px] border-gold bg-cream-deep/40 p-5">
-            <p className="text-body leading-relaxed text-muted">
-              <span className="font-medium text-ink">Why these say &ldquo;awaiting
-              confirmation&rdquo;.</span>{' '}
-              We know these registrations are held, because they are published across CMT&rsquo;s own
-              material. But a registration number is a verifiable fact, and the person it belongs to
-              should confirm it before it goes on a website. When CMT sends them, every number on
-              this page and the credential line in the homepage hero switch on together.
-            </p>
-          </div>
+          <p className="mt-6 max-w-[62ch] text-micro leading-relaxed text-muted">
+            Registration numbers are published here once each holder has confirmed them in writing.
+          </p>
         </Container>
       </section>
 
-      <section className="bg-green py-12 text-cream lg:py-16">
+      {/* Mist, not green: with the to-do section that used to follow it removed, a green band
+          here would sit directly against the green closing banner. */}
+      <section className="bg-mist py-12 lg:py-16">
         <Container>
           <Reveal>
             <SectionHeading
-              onDark
               title="The standard every report is written to"
               lead="Regulation sets the floor. These four are what a bank, an auditor or a court actually needs from the document."
             />
@@ -137,64 +130,15 @@ export default function CredentialsPage() {
           <ul className="mt-8 grid gap-5 sm:grid-cols-2">
             {standards.map((standard, index) => (
               <Reveal as="li" key={standard.title} delay={index * 70} className="flex">
-                <div className="flex w-full flex-col border border-cream/20 p-6">
-                  <h3 className="text-h4 text-cream">{standard.title}</h3>
-                  <p className="mt-2.5 text-body leading-relaxed text-cream/80">
+                <div className="flex w-full flex-col border border-rule bg-paper p-6">
+                  <h3 className="text-h4 text-green">{standard.title}</h3>
+                  <p className="mt-2.5 text-body leading-relaxed text-muted">
                     {standard.body}
                   </p>
                 </div>
               </Reveal>
             ))}
           </ul>
-        </Container>
-      </section>
-
-      <section className="py-12 lg:py-16">
-        <Container>
-          <div className="grid gap-8 lg:grid-cols-2 lg:gap-16">
-            <div>
-              <Reveal>
-                <SectionHeading
-                  title="Still to be added here"
-                  lead="Stated rather than quietly omitted, because a credentials page that hides its gaps is the wrong kind of credentials page."
-                />
-              </Reveal>
-            </div>
-            <Reveal delay={70}>
-              <dl className="border-t border-rule">
-                {[
-                  [
-                    'Registration numbers',
-                    'For each registration above, confirmed by the holder.',
-                  ],
-                  [
-                    'Further memberships',
-                    'Any additional professional bodies the practice or its valuers belong to.',
-                  ],
-                  [
-                    'A redacted sample report',
-                    'One blurred contents page answers “what do I receive” better than any paragraph.',
-                  ],
-                  [
-                    'Professional indemnity cover',
-                    'The level carried, which institutional clients routinely ask for at panel stage.',
-                  ],
-                ].map(([label, detail]) => (
-                  <div key={label} className="border-b border-rule py-4">
-                    <dt className="font-display text-lead text-green">{label}</dt>
-                    <dd className="mt-1.5 max-w-[52ch] text-body leading-relaxed text-muted">
-                      {detail}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-              <div className="mt-6">
-                <Button href="/about/people" variant="quiet">
-                  The people these belong to
-                </Button>
-              </div>
-            </Reveal>
-          </div>
         </Container>
       </section>
 

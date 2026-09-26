@@ -54,11 +54,17 @@ type PanelBox = { left: number; width: number; bridge: number };
  * tabbing out all close it too. Closed, a panel is `invisible`, which also takes its links out
  * of the tab order.
  *
- * Each panel stays inside its <li> so it follows its item in the tab order, but it is sized to
- * the header's content box (the Container, less its padding) and dropped to the masthead's
- * bottom edge. Both are measured, like the capsule: the track is centred by flex, so its offset
- * from the page margin changes with every breakpoint. `bridge` is the padding that spans the
- * gap between the pill and the hairline, so the pointer never leaves the menu on its way down.
+ * Each panel stays inside its <li> so it follows its item in the tab order, but it is drawn
+ * full-bleed: edge to edge across the viewport, hanging from the masthead's gold hairline. It
+ * is not a card that drops out of the nav, it is the masthead continuing downward, and that is
+ * why it has no corner radius and why its own content still sits inside a Container on the
+ * 1200px measure. The surface goes wide; the words stay on the page's column, in line with the
+ * logo above them.
+ *
+ * Both numbers are measured rather than assumed, like the capsule: the track is centred by
+ * flex, so its offset from x=0 changes with every breakpoint and with the length of the CTA
+ * beside it. `bridge` is the padding that spans the gap between the pill and the hairline, so
+ * the pointer never leaves the menu on its way down.
  */
 export function PillNav({ isActive }: { isActive: (href: string) => boolean }) {
   const trackRef = useRef<HTMLUListElement>(null);
@@ -93,17 +99,30 @@ export function PillNav({ isActive }: { isActive: (href: string) => boolean }) {
   useIsomorphicLayoutEffect(() => {
     const measure = () => {
       const track = trackRef.current;
-      const container = track?.closest('nav')?.parentElement;
       const header = track?.closest('header');
-      if (!track || !container || !header) return;
+      if (!track || !header) return;
       const trackBox = track.getBoundingClientRect();
-      const box = container.getBoundingClientRect();
-      const style = getComputedStyle(container);
-      const left = box.left + parseFloat(style.paddingLeft);
-      const right = box.right - parseFloat(style.paddingRight);
+      /*
+       * The panel runs the full width of the viewport, so it needs the distance from the
+       * track's own left edge back to x=0. The panel is absolutely positioned inside the
+       * track, which is the nearest positioned ancestor, so that offset is simply the
+       * negative of the track's viewport x.
+       *
+       * The width is documentElement.clientWidth rather than 100vw, and the difference is
+       * not academic: 100vw includes the space a classic scrollbar occupies, so on Windows
+       * and on any platform not using overlay scrollbars the panel would overhang the
+       * right edge by 15-17px and put a horizontal scrollbar on every page that opens a
+       * menu. clientWidth is the viewport minus that gutter, which is what "full width"
+       * means to a reader.
+       */
       setPanelBox({
-        left: left - trackBox.left,
-        width: right - left,
+        // clientLeft is the track's border width. An absolutely positioned child measures from
+        // inside its container's border, not from the outer edge getBoundingClientRect reports,
+        // so without it every panel sat 1px to the right: its right edge at 1441 on a 1440
+        // screen, and every page on the site scrolled sideways by one pixel even with the
+        // menus closed, because an invisible panel still takes up space.
+        left: -(trackBox.left + track.clientLeft),
+        width: document.documentElement.clientWidth,
         bridge: header.getBoundingClientRect().bottom - trackBox.bottom,
       });
     };
@@ -159,10 +178,20 @@ export function PillNav({ isActive }: { isActive: (href: string) => boolean }) {
     else itemRefs.current.delete(href);
   };
 
+  /*
+   * Until the capsule has been measured, the active item carries its own gold pill.
+   *
+   * The capsule is client state: it does not exist in the server HTML and only appears once this
+   * component has hydrated and measured the track. The active item's text, though, is green from
+   * the first byte, because the server knows the route. So before hydration the current page was
+   * green text on the green masthead, invisible, for as long as the JavaScript took to arrive:
+   * a moment on a laptop, several seconds on a phone on mobile data. Now the link paints the pill
+   * itself until `rect` exists, then hands over to the sliding capsule, which covers it exactly.
+   */
   const itemClass = (href: string) =>
     cx(
       'relative z-10 block rounded-full px-3 py-2 text-body transition-colors duration-200 xl:px-4',
-      href === active ? 'text-green' : 'text-cream/85 hover:text-cream',
+      href === active ? cx('text-green', !rect && 'bg-gold') : 'text-cream/85 hover:text-cream',
     );
 
   return (

@@ -90,11 +90,9 @@ export default function AboutPage() {
                 Under what authority
               </p>
               <StandingSchedule />
-              <p className="mt-3 max-w-[52ch] text-micro leading-relaxed text-cream/55">
-                Registration numbers are shown once CMT has confirmed them in writing. We will not
-                publish a professional credential we have not verified. On a site whose whole
-                argument is that its figures can be checked, that would be the one claim you could
-                not.
+              <p className="mt-3 max-w-[52ch] text-micro leading-relaxed text-cream/70">
+                Registration numbers are published here once each holder has confirmed them in
+                writing.
               </p>
             </div>
           </div>
@@ -152,7 +150,7 @@ export default function AboutPage() {
       </section>
 
       {/* The story, as a vertical schedule rather than a 2x2 grid. */}
-      <section className="bg-cream-deep/45 py-12 lg:py-16">
+      <section className="bg-mist py-12 lg:py-16">
         <Container>
           <Reveal>
             <SectionHeading
@@ -180,10 +178,6 @@ export default function AboutPage() {
               </Reveal>
             ))}
           </ol>
-          <p className="mt-5 max-w-[62ch] text-micro leading-relaxed text-muted">
-            Written as stages rather than dated milestones: CMT has not published a Uganda founding
-            year and we would rather not invent one. See docs/OPEN-ITEMS.md.
-          </p>
         </Container>
       </section>
 
@@ -201,7 +195,7 @@ export default function AboutPage() {
               }
             />
           </Reveal>
-          <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:max-w-[820px]">
+          <ul className="mt-8 grid gap-6 sm:grid-cols-2">
             {directors.map((agent, index) => (
               <Reveal as="li" key={agent.id} delay={index * 80} className="flex">
                 <AgentCard agent={agent} variant="feature" className="w-full" />

@@ -57,7 +57,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
 
   return (
     <>
-      <div className="border-b border-rule bg-cream-deep/40">
+      <div className="border-b border-rule bg-mist/50">
         <Container className="py-4">
           <nav aria-label="Breadcrumb">
             <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-micro text-muted">
@@ -161,7 +161,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
               <PropertyMap
                 className="mt-4"
                 center={listing.coords}
-                label={`${listing.title} — ${listing.area}, ${listing.city}`}
+                label={`${listing.title} (${listing.area}, ${listing.city})`}
                 caption={`Pin shows ${listing.area} at neighbourhood level, not the exact plot. We give the precise location when a viewing is arranged.`}
               />
             </div>
@@ -206,7 +206,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
       </section>
 
       {related.length > 0 && (
-        <section className="bg-cream-deep/45 py-16 lg:py-20">
+        <section className="bg-mist py-16 lg:py-20">
           <Container>
             <SectionHeading
               title="Similar property on our books"

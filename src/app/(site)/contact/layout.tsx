@@ -38,7 +38,7 @@ export default function ContactLayout({ children }: { children: React.ReactNode 
           <PropertyMap
             className="mt-8"
             center={site.address.coords}
-            label={`${site.name} — ${site.address.building}, ${site.address.street}`}
+            label={`${site.name}, ${site.address.building}, ${site.address.street}`}
             zoom={16}
             height="h-[380px]"
             caption={`${site.address.building}, ${site.address.line1}. Pin is placed at street level from the published address and is not a surveyed position.`}

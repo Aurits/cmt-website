@@ -51,9 +51,8 @@ export function OfficePanel() {
             </div>
           ) : (
             <p className="mt-2 max-w-[46ch] text-body leading-relaxed text-muted">
-              CMT publishes a landline, which cannot receive WhatsApp. Once the office mobile is
-              confirmed, every WhatsApp button on the site starts working from one setting. Until
-              then, please call or email.
+              WhatsApp is not available on our office line yet. Please call or email instead, and
+              we will reply the same working day.
             </p>
           )}
         </div>
@@ -73,7 +72,10 @@ export function OfficePanel() {
           </dl>
           {!site.hoursConfirmed && (
             <p className="mt-3 text-micro leading-relaxed text-muted">
-              Hours shown are a placeholder and need confirming by CMT.
+              {/* Addressed to the visitor. It used to read "Hours shown are a placeholder and
+                  need confirming by CMT", a note to the client printed on the public page. The
+                  open item itself lives in docs/CONTENT-NEEDED.md. */}
+              Please call ahead to confirm opening hours before you visit.
             </p>
           )}
         </div>

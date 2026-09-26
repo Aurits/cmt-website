@@ -121,13 +121,15 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
             />
 
             <Container className="relative flex h-full flex-col justify-end pb-24 pt-20 sm:pb-28">
-              <div className="max-w-[46ch]">
+              {/* rem, not ch: ch here is measured at body size, which made a 400px column and
+                  broke a two-line listing title over three. */}
+              <div className="max-w-[36rem]">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge tone="type">{listingTypeLabel(listing)}</Badge>
                   <Badge tone="categoryOnDark">{category.name}</Badge>
                 </div>
 
-                <h2 className="mt-5 text-h1 text-cream">
+                <h2 className="mt-5 text-h1 text-balance text-cream">
                   <Link
                     href={`/properties/${listing.slug}`}
                     tabIndex={active ? 0 : -1}

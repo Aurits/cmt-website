@@ -33,7 +33,7 @@ export function IntentTabs({ active }: { active: IntentId }) {
                   'border-b border-rule last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0',
                   isActive
                     ? 'bg-green text-cream'
-                    : 'text-ink/75 hover:bg-cream-deep/60 hover:text-green',
+                    : 'text-ink/75 hover:bg-mist hover:text-green',
                 )}
               >
                 {intent.label}

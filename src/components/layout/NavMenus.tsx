@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Container } from '@/components/ui/Container';
 import { ChevronIcon } from '@/components/ui/icons';
 import { advisoryServices } from '@/data/advisory';
 import { categories } from '@/data/categories';
@@ -122,7 +123,7 @@ export const navMenus: Record<NavMenuKey, NavMenu> = {
     intro: {
       eyebrow: 'Properties',
       title: 'Property on our books',
-      lead: `${listings.length} instructions across five property classes and four cities.`,
+      lead: `${listings.length} properties across five property types and four cities.`,
       actions: [
         { label: 'For sale', href: '/listings?type=sale' },
         { label: 'To let', href: '/listings?type=rent' },
@@ -158,14 +159,22 @@ const labelClass = 'font-sans text-label font-semibold uppercase tracking-[0.12e
  * structural motif): numbered, ruled, figures in tabular numerals, because that is how CMT sets
  * things out in a report, and it is what makes these a valuer's menus rather than a template's.
  *
- * It spans the page's content width, sharing its edges with the logo and the header CTA, and
- * hangs from the masthead's gold hairline, which serves as its top rule. PillNav positions it.
+ * FULL-BLEED SURFACE, CONTAINED CONTENT. The panel runs the whole width of the viewport and its
+ * text does not. Those are two separate decisions and both matter. Edge to edge, hanging off the
+ * masthead's gold hairline with no corner radius anywhere, it reads as the masthead extending
+ * rather than as a card dropping out of it, which is the one reading that justifies covering a
+ * third of the screen. Keeping the columns inside a Container then means the eyebrow lines up
+ * with the logo above it and the feature tile with the header CTA, so opening a menu does not
+ * move the page's spine. A panel stretched to 1900px of text would be wide for the sake of it.
  *
- * Its floating corners take --radius-overlay (see globals.css): the menu belongs to the pill nav
- * that opened it, not to the page. The feature tile nests one size down.
+ * It sits on paper, the brightest ground we have (see the ground ladder in globals.css), which
+ * is both the right surface for scanning and the sharpest possible break from the green above.
+ * That makes it a light surface inside a dark one, so it resets the focus ring to green (see
+ * :focus-visible in globals.css); the feature, a green surface, takes gold, drawn inset.
  *
- * The panel is a cream surface inside the green masthead, so it resets the focus ring to green
- * (see :focus-visible in globals.css); the feature, a green surface, takes gold, drawn inset.
+ * The foot bar is the part that actually earns the extra width: one recessed rule across the
+ * whole viewport carrying the section's landing page on the left and the phone number on the
+ * right, for the visitor who has read four rows and still wants a person.
  */
 export function NavMenuPanel({
   menu,
@@ -181,87 +190,100 @@ export function NavMenuPanel({
   return (
     <div
       id={id}
-      className="grid grid-cols-12 gap-8 rounded-b-overlay border border-t-0 border-rule bg-cream p-8 text-ink shadow-[0_28px_56px_-24px_rgba(10,30,15,0.5)] [--focus-ring:var(--color-green)] xl:gap-10"
+      className="border-b border-rule bg-paper text-ink shadow-[0_28px_56px_-24px_rgba(10,30,15,0.5)] [--focus-ring:var(--color-green)]"
     >
-      <div className="col-span-3 flex flex-col">
-        <p className={`${labelClass} text-muted`}>{intro.eyebrow}</p>
-        <p className="mt-3 font-display text-h4 leading-tight text-green">{intro.title}</p>
-        <p className="mt-2 text-sm leading-relaxed text-muted">{intro.lead}</p>
-        {intro.actions && (
-          <div className="mt-5 flex gap-2">
-            {intro.actions.map((action) => (
-              <Link
-                key={action.href}
-                href={action.href}
-                onClick={onNavigate}
-                className="rounded-control border border-rule-strong px-3.5 py-1.5 text-sm text-green transition-colors hover:border-green hover:bg-green hover:text-cream"
-              >
-                {action.label}
-              </Link>
-            ))}
-          </div>
-        )}
-        <Link
-          href={intro.more.href}
-          onClick={onNavigate}
-          className="group mt-auto flex items-center gap-1 pt-6 text-sm font-medium text-green"
-        >
-          <span className="underline decoration-gold decoration-2 underline-offset-4">
-            {intro.more.label}
-          </span>
-          <ChevronIcon
-            width={14}
-            height={14}
-            className="transition-transform group-hover:translate-x-0.5"
-          />
-        </Link>
-      </div>
-
-      <div className="col-span-5">
-        <div className="flex items-baseline justify-between pb-2">
-          <p className={`${labelClass} text-muted`}>{schedule.caption}</p>
-          {schedule.figureCaption && (
-            <p className={`${labelClass} text-muted`}>{schedule.figureCaption}</p>
+      <Container className="grid grid-cols-12 gap-8 py-8 xl:gap-10">
+        <div className="col-span-3 flex flex-col">
+          <p className={`${labelClass} text-muted`}>{intro.eyebrow}</p>
+          <p className="mt-3 font-display text-h4 leading-tight text-green">{intro.title}</p>
+          <p className="mt-2 text-body leading-relaxed text-muted">{intro.lead}</p>
+          {intro.actions && (
+            <div className="mt-auto flex gap-2 pt-6">
+              {intro.actions.map((action) => (
+                <Link
+                  key={action.href}
+                  href={action.href}
+                  onClick={onNavigate}
+                  className="rounded-control border border-rule-strong px-3.5 py-1.5 text-body text-green transition-colors hover:border-green hover:bg-green hover:text-cream"
+                >
+                  {action.label}
+                </Link>
+              ))}
+            </div>
           )}
         </div>
-        <ol className="border-b border-rule">
-          {schedule.rows.map((row, index) => (
-            <li key={row.href}>
-              <Link href={row.href} onClick={onNavigate} className="group schedule-row items-center">
-                <span className="flex items-baseline gap-4">
-                  <span className="tnum w-5 shrink-0 text-label text-muted">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  <span>
-                    <span className="block font-display text-body text-green transition-colors group-hover:text-gold-deep">
-                      {row.label}
-                    </span>
-                    <span className="block text-micro text-muted">{row.note}</span>
-                  </span>
-                </span>
-                <span className="flex shrink-0 items-center gap-2">
-                  {row.figure && (
-                    <span className="tnum whitespace-nowrap text-body text-ink">{row.figure}</span>
-                  )}
-                  <ChevronIcon
-                    width={14}
-                    height={14}
-                    className="-translate-x-1 text-gold-deep opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100"
-                  />
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ol>
-      </div>
 
-      <FeatureTile feature={feature} onNavigate={onNavigate} />
+        <div className="col-span-5">
+          <div className="flex items-baseline justify-between pb-2">
+            <p className={`${labelClass} text-muted`}>{schedule.caption}</p>
+            {schedule.figureCaption && (
+              <p className={`${labelClass} text-muted`}>{schedule.figureCaption}</p>
+            )}
+          </div>
+          <ol className="border-b border-rule">
+            {schedule.rows.map((row, index) => (
+              <li key={row.href}>
+                <Link href={row.href} onClick={onNavigate} className="group schedule-row items-center">
+                  <span className="flex items-baseline gap-4">
+                    <span className="tnum w-5 shrink-0 text-label text-muted">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <span>
+                      <span className="block font-display text-body text-green transition-colors group-hover:text-gold-deep">
+                        {row.label}
+                      </span>
+                      <span className="block text-micro text-muted">{row.note}</span>
+                    </span>
+                  </span>
+                  <span className="flex shrink-0 items-center gap-2">
+                    {row.figure && (
+                      <span className="tnum whitespace-nowrap text-body text-ink">{row.figure}</span>
+                    )}
+                    <ChevronIcon
+                      width={14}
+                      height={14}
+                      className="-translate-x-1 text-gold-deep opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100"
+                    />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <FeatureTile feature={feature} onNavigate={onNavigate} />
+      </Container>
+
+      <div className="border-t border-rule bg-mist">
+        <Container className="flex flex-wrap items-center justify-between gap-x-8 gap-y-2 py-3">
+          <Link
+            href={intro.more.href}
+            onClick={onNavigate}
+            className="group flex items-center gap-1 text-body font-medium text-green"
+          >
+            <span className="underline decoration-gold decoration-2 underline-offset-4">
+              {intro.more.label}
+            </span>
+            <ChevronIcon
+              width={14}
+              height={14}
+              className="transition-transform group-hover:translate-x-0.5"
+            />
+          </Link>
+          <p className="text-micro text-muted">
+            Not sure where to start?{' '}
+            <a href={site.phone.href} className="tnum font-medium text-green hover:text-gold-deep">
+              {site.phone.display}
+            </a>
+          </p>
+        </Container>
+      </div>
     </div>
   );
 }
 
 const featureClass =
-  'group relative col-span-4 flex min-h-[300px] flex-col overflow-hidden rounded-[calc(var(--radius-overlay)-0.25rem)] p-6 text-cream [--focus-ring:var(--color-gold)] focus-visible:outline-offset-[-4px]';
+  'group relative col-span-4 flex min-h-[300px] flex-col overflow-hidden rounded-brand p-6 text-cream [--focus-ring:var(--color-gold)] focus-visible:outline-offset-[-4px]';
 
 function FeatureCta({ feature }: { feature: Feature }) {
   return (
@@ -272,7 +294,7 @@ function FeatureCta({ feature }: { feature: Feature }) {
         <ChevronIcon width={18} height={18} className="transition-transform group-hover:translate-x-1" />
       </span>
       {feature.kind === 'photo' && (
-        <span className="mt-1.5 block text-sm leading-snug text-cream/80">{feature.lead}</span>
+        <span className="mt-1.5 block text-body leading-snug text-cream/80">{feature.lead}</span>
       )}
     </span>
   );
@@ -297,7 +319,7 @@ function FeatureTile({ feature, onNavigate }: { feature: Feature; onNavigate: ()
               <dt className="sr-only">{stat.label}</dt>
               <dd className="flex items-baseline gap-1.5">
                 <span className="tnum font-display text-h3 leading-none text-gold">{stat.value}</span>
-                <span className="text-sm text-cream/80">{stat.unit}</span>
+                <span className="text-body text-cream/80">{stat.unit}</span>
               </dd>
             </div>
           ))}

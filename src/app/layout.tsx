@@ -1,12 +1,20 @@
 import type { Metadata, Viewport } from 'next';
-import { Fraunces, Inter } from 'next/font/google';
+import { Inter, Newsreader } from 'next/font/google';
 import './globals.css';
 import { site } from '@/data/site';
 
 /**
- * Inter for everything you read and operate; Fraunces for headlines, picking up the tall
- * serif of the CMT wordmark. Both self-hosted through next/font, so no render-blocking
- * request to Google and no layout shift on a slow mobile connection.
+ * Inter for everything you read and operate; Newsreader for headlines. Both self-hosted through
+ * next/font, so no render-blocking request to Google and no layout shift on a slow connection.
+ *
+ * Newsreader replaced Fraunces after both were compared on the rendered page, alongside Source
+ * Serif 4, Playfair Display, Libre Caslon and Cormorant Garamond. Fraunces is a soft, ball-
+ * terminal display face that reads as a lifestyle magazine; beside a regulated valuer's wordmark
+ * it was the wrong register. Playfair matched the wordmark's contrast best but sets old-style
+ * figures, so "10–15 working days" shrank to lowercase height, and a firm whose headings are so
+ * often numbers cannot have numerals that duck. Newsreader keeps lining figures, holds up at the
+ * 17px the ledger labels use, and carries an optical-size axis: the same family draws finer
+ * contrast at hero size and sturdier strokes in a card title, without a second font.
  */
 const inter = Inter({
   subsets: ['latin'],
@@ -14,21 +22,24 @@ const inter = Inter({
   display: 'swap',
 });
 
-const fraunces = Fraunces({
+const newsreader = Newsreader({
   subsets: ['latin'],
-  variable: '--font-fraunces',
+  variable: '--font-newsreader',
   display: 'swap',
-  weight: ['500', '600', '700'],
+  // Variable weight plus the optical-size axis; see above for why opsz is the point.
+  axes: ['opsz'],
 });
 
 export const metadata: Metadata = {
   title: {
-    default: `${site.name} — ${site.tagline}`,
-    template: `%s — ${site.shortName}`,
+    // A vertical bar, not an em dash: the standard separator in a tab or a search result, and the
+    // site keeps em dashes out of anything a visitor reads.
+    default: `${site.name} | ${site.tagline}`,
+    template: `%s | ${site.shortName}`,
   },
   description: site.description,
   openGraph: {
-    title: `${site.name} — ${site.tagline}`,
+    title: `${site.name} | ${site.tagline}`,
     description: site.description,
     type: 'website',
     locale: 'en_UG',
@@ -56,8 +67,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
      * reported. Do not add this prop further down the tree to quieten a warning — there it
      * would hide a real bug.
      */
-    <html lang="en-UG" suppressHydrationWarning>
-      <body className={`${inter.variable} ${fraunces.variable}`} suppressHydrationWarning>
+    /*
+     * The font variables go on <html>, not <body>, and this is load-bearing. Tailwind emits the
+     * theme tokens (--font-sans: var(--font-inter), --font-display: var(--font-newsreader)) on
+     * :root, and a custom property resolves its var() where it is DECLARED. With the next/font
+     * variables on <body>, :root had no font variable to point at, both tokens resolved to
+     * empty, and every page silently fell back to the system font stack: the site shipped in
+     * Segoe UI on Windows, with neither brand font ever requested.
+     */
+    <html
+      lang="en-UG"
+      className={`${inter.variable} ${newsreader.variable}`}
+      suppressHydrationWarning
+    >
+      <body suppressHydrationWarning>
         {/*
           Scroll-revealed sections start hidden and are shown by an observer. Without
           JavaScript that observer never runs, so this pins them visible instead of

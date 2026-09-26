@@ -44,9 +44,10 @@ export function CTABanner({
         </>
       )}
       <Container className="relative py-14 lg:py-20">
-        <div className="max-w-[46ch]">
+        {/* rem, not ch, for the same reason as SectionHeading: 46ch at body size is ~400px. */}
+        <div className="max-w-[40rem]">
           <span aria-hidden="true" className="mb-5 block h-[3px] w-10 bg-gold" />
-          <h2 className="text-h2 text-cream">{title}</h2>
+          <h2 className="max-w-[20ch] text-h2 text-balance text-cream">{title}</h2>
           {lead && (
             <p className="mt-4 max-w-[52ch] text-lead leading-relaxed text-cream/80">
               {lead}

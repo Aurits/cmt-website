@@ -186,3 +186,30 @@ export const featuredPurposes: ValuationPurposeSlug[] = [
   'financial-reporting',
   'compensation',
 ];
+
+/**
+ * How an instruction runs, start to signed report.
+ *
+ * Shared by /valuations, which sets it as a four-cell grid, and the homepage, which draws it on a
+ * datum. One list, so the two can never describe the process differently: a firm that says one
+ * thing about its method on its homepage and another on its services page has told a lender
+ * something about its reports too.
+ */
+export const valuationSteps: { title: string; body: string }[] = [
+  {
+    title: 'Instruction and scope',
+    body: 'We agree what is being valued, why, and for whom. A bank, a court and a seller each need a different basis of value, so we settle it before anyone visits.',
+  },
+  {
+    title: 'Title and inspection',
+    body: 'We check the title and tenure, then inspect and measure the property and photograph everything the report will rely on.',
+  },
+  {
+    title: 'Evidence and analysis',
+    body: 'We gather recent sales and lettings of similar property nearby and adjust them to fit. Where rent drives the value, we work from the rent roll.',
+  },
+  {
+    title: 'Signed report',
+    body: 'You receive a written report signed by a named valuer, with the assumptions, the evidence and the limits set out plainly.',
+  },
+];

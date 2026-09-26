@@ -55,7 +55,11 @@ export function AgentCard({
     >
       {feature ? (
         <>
-          <div className="relative aspect-[4/5] w-full overflow-hidden border border-rule bg-green">
+          {/* 4:3, not 4:5. A portrait tile forced the directors' grid to be capped at 820px or
+              each card would stand over 700px tall, which left a blank third of the page beside
+              them. Landscape lets two directors fill the full width at a sensible height, and a
+              headshot still crops well to it from the top. */}
+          <div className="relative aspect-[4/3] w-full overflow-hidden border border-rule bg-green">
             {agent.photo ? (
               <Image
                 src={agent.photo}
@@ -108,25 +112,23 @@ export function AgentCard({
         <p className="mt-4 text-body leading-relaxed text-muted">{agent.bio}</p>
       )}
 
-      {/* Credentials, gated. */}
-      {agent.qualifications && agent.qualifications.length > 0 && variant !== 'contact' && (
+      {/* Credentials, gated: the whole block appears once they are confirmed, and not before.
+          The unconfirmed branch used to print "awaiting confirmation from Godfrey", an internal
+          status in a visitor's space; the open item lives in docs/CONTENT-NEEDED.md. */}
+      {agent.credentialsConfirmed &&
+        agent.qualifications &&
+        agent.qualifications.length > 0 &&
+        variant !== 'contact' && (
         <div className="mt-5 border-t border-rule pt-4">
           <p className="text-label uppercase tracking-[0.1em] text-muted">Qualifications</p>
-          {agent.credentialsConfirmed ? (
-            <ul className="mt-2.5 space-y-1.5">
-              {agent.qualifications.map((qualification) => (
-                <li key={qualification} className="flex gap-2.5 text-body text-ink">
-                  <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 bg-gold" />
-                  {qualification}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-2 max-w-[44ch] text-micro leading-relaxed text-muted">
-              Held, and awaiting confirmation from {agent.name.split(' ')[0]} before we publish
-              them. We do not put a professional qualification on the page unverified.
-            </p>
-          )}
+          <ul className="mt-2.5 space-y-1.5">
+            {agent.qualifications.map((qualification) => (
+              <li key={qualification} className="flex gap-2.5 text-body text-ink">
+                <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 bg-gold" />
+                {qualification}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
@@ -140,14 +142,18 @@ export function AgentCard({
           <PhoneIcon width={16} height={16} className="text-green/70" />
           <span className="tnum">{phoneDisplay}</span>
         </a>
-        <a
-          href={whatsappHref(message)}
-          className="flex items-center gap-3 py-1.5 text-ink hover:text-green"
-        >
-          <WhatsAppIcon width={16} height={16} className="text-green/70" />
-          WhatsApp
-          {!site.whatsapp && <span className="text-label text-muted">(number pending)</span>}
-        </a>
+        {/* Only once there is a number to message. Without one this row used to read
+            "WhatsApp (number pending)", which told a visitor the site was unfinished and gave them
+            nothing to act on; phone and email above and below are both real. */}
+        {site.whatsapp && (
+          <a
+            href={whatsappHref(message)}
+            className="flex items-center gap-3 py-1.5 text-ink hover:text-green"
+          >
+            <WhatsAppIcon width={16} height={16} className="text-green/70" />
+            WhatsApp
+          </a>
+        )}
         <a href={emailHref} className="flex items-center gap-3 py-1.5 text-ink hover:text-green">
           <MailIcon width={16} height={16} className="text-green/70" />
           <span className="break-all">{agent.email ?? site.email}</span>

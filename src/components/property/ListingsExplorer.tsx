@@ -265,7 +265,7 @@ export function ListingsExplorer({
           ))}
         </ul>
       ) : (
-        <div className="mt-8 border border-dashed border-green/30 bg-cream-deep/50 p-8 text-center">
+        <div className="mt-8 border border-dashed border-green/30 bg-mist/50 p-8 text-center">
           <p className="font-display text-h3 text-green">
             Nothing on our books matches that yet
           </p>

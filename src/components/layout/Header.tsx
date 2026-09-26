@@ -9,16 +9,46 @@ import { Button } from '@/components/ui/Button';
 import {
   ChevronIcon,
   CloseIcon,
+  FacebookIcon,
+  InstagramIcon,
+  LinkedInIcon,
   MailIcon,
   MenuIcon,
   PhoneIcon,
   ShieldIcon,
+  TikTokIcon,
   WhatsAppIcon,
+  XIcon,
+  YouTubeIcon,
 } from '@/components/ui/icons';
 import { PillNav } from '@/components/layout/PillNav';
 import { navMenus } from '@/components/layout/NavMenus';
 import { nav, site, whatsappHref } from '@/data/site';
 import { cx } from '@/lib/cx';
+
+/**
+ * The social row, in the utility strip rather than the footer.
+ *
+ * It belongs at the top for the reason the phone number does: these are the ways to reach
+ * CMT, and the strip is the row that carries them. In the footer it was the last thing on
+ * the page, which is where a link goes when nobody expects it to be used.
+ *
+ * WhatsApp is not in this list. It is a channel people actually transact on here rather than
+ * a profile to follow, so it keeps its own button beside the masthead CTA.
+ *
+ * An account with no URL yet still shows, dimmed and labelled, rather than disappearing. Same
+ * posture as the pending registration rows and the empty testimonials: where CMT has not
+ * supplied something, the UI says so. Paste a URL into site.social and the icon goes live.
+ * See docs/OPEN-ITEMS.md #13.
+ */
+const socialLinks = [
+  { label: 'Facebook', href: site.social.facebook, Icon: FacebookIcon },
+  { label: 'X', href: site.social.x, Icon: XIcon },
+  { label: 'Instagram', href: site.social.instagram, Icon: InstagramIcon },
+  { label: 'LinkedIn', href: site.social.linkedin, Icon: LinkedInIcon },
+  { label: 'YouTube', href: site.social.youtube, Icon: YouTubeIcon },
+  { label: 'TikTok', href: site.social.tiktok, Icon: TikTokIcon },
+];
 
 /**
  * Masthead.
@@ -75,9 +105,17 @@ export function Header() {
 
   return (
     <>
-      {/* Utility strip: scrolls away, unlike the nav bar, but shares its green. */}
+      {/*
+        Utility strip: scrolls away, unlike the nav bar, but shares its green.
+
+        Three groups, left to right: how to reach us, what we are regulated by, where to
+        follow us. Its height is pinned at h-9 because --header-h (globals.css) is the sum of
+        this strip and the nav bar, and the homepage hero sizes itself against that. Adding
+        the social row must not change it, so the icons are 14px and unboxed: a bordered
+        button at this scale would crowd a 36px rail that is meant to be read past, not at.
+      */}
       <div className="hidden bg-green text-cream/85 md:block">
-        <Container className="flex h-9 items-center justify-between border-b border-cream/12 text-micro">
+        <Container className="flex h-9 items-center justify-between gap-6 border-b border-cream/12 text-micro">
           <div className="flex items-center gap-6">
             <a href={site.phone.href} className="flex items-center gap-2 hover:text-gold">
               <PhoneIcon width={14} height={14} />
@@ -88,10 +126,42 @@ export function Header() {
               {site.email}
             </a>
           </div>
-          <p className="flex items-center gap-2 text-cream/70">
-            <ShieldIcon width={14} height={14} />
-            Regulated by the {site.regulator}
-          </p>
+
+          <div className="flex items-center gap-4">
+            {/* Dropped below lg, where the social row and the two contact links have already
+                taken the width. It is on every page in the footer and on /about/credentials. */}
+            <p className="hidden items-center gap-2 text-cream/70 lg:flex">
+              <ShieldIcon width={14} height={14} />
+              Regulated by the {site.regulator}
+            </p>
+            <span aria-hidden="true" className="hidden h-3.5 w-px bg-cream/20 lg:block" />
+            <ul aria-label="Follow CMT Realtors" className="flex items-center gap-1">
+              {socialLinks.map(({ label, href, Icon }) => (
+                <li key={label} className="flex">
+                  {href ? (
+                    <a
+                      href={href}
+                      aria-label={label}
+                      title={label}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-7 w-7 items-center justify-center rounded-control text-cream/80 transition-colors hover:bg-cream/10 hover:text-gold"
+                    >
+                      <Icon width={14} height={14} />
+                    </a>
+                  ) : (
+                    <span
+                      title={`${label} (link coming soon)`}
+                      className="flex h-7 w-7 items-center justify-center text-cream/35"
+                    >
+                      <Icon width={14} height={14} />
+                      <span className="sr-only">{label}, link coming soon</span>
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
         </Container>
       </div>
 

@@ -10,7 +10,7 @@ import { Reveal } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { agents } from '@/data/agents';
 import { allPartners } from '@/data/partners';
-import { assetBySlug, purposeBySlug, LEAD, valuationPurposes } from '@/data/valuations';
+import { LEAD, assetBySlug, purposeBySlug, valuationPurposes, valuationSteps } from '@/data/valuations';
 import { site } from '@/data/site';
 
 export const metadata: Metadata = {
@@ -26,25 +26,6 @@ export const metadata: Metadata = {
  * table before showing it has already lost the reader who arrived with a specific question. See
  * docs/LAYOUT-SPECS.md A-03.
  */
-const steps = [
-  {
-    title: 'Instruction and scope',
-    body: 'We agree what is being valued, why, and for whom. A bank, a court and a seller each need a different basis of value, and that is settled before anyone travels.',
-  },
-  {
-    title: 'Title and inspection',
-    body: 'We verify the title and tenure, then inspect and measure, photographing what the report will rely on.',
-  },
-  {
-    title: 'Evidence and analysis',
-    body: 'Comparable transactions in the same market are gathered and adjusted. Where income drives value, we work from the rent roll.',
-  },
-  {
-    title: 'Signed report',
-    body: 'A written report under a named valuer, with the assumptions, the evidence and the limitations stated plainly.',
-  },
-];
-
 export default function ValuationsPage() {
   const lead = purposeBySlug[LEAD.purpose];
   const leadAsset = assetBySlug[LEAD.asset];
@@ -72,7 +53,7 @@ export default function ValuationsPage() {
       </section>
 
       {/* How it runs */}
-      <section className="bg-cream-deep/45 py-12 lg:py-16">
+      <section className="bg-mist py-12 lg:py-16">
         <Container>
           <Reveal>
             <SectionHeading
@@ -81,7 +62,7 @@ export default function ValuationsPage() {
             />
           </Reveal>
           <ol className="mt-8 grid gap-px border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
-            {steps.map((step, index) => (
+            {valuationSteps.map((step, index) => (
               <Reveal as="li" key={step.title} delay={index * 70} className="flex">
                 <div className="flex w-full flex-col bg-paper p-5 lg:p-6">
                   <span className="tnum font-display text-figure leading-none text-gold-deep">

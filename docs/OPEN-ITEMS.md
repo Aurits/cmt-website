@@ -8,6 +8,14 @@ This file is the record — the site itself no longer carries the small on-page 
 prototype visibly annotating its own gaps reads as unfinished rather than in-progress. Every fact those
 notes carried is still here.
 
+**For CMT, read `CONTENT-NEEDED.md` instead.** That is the same list in plain language, grouped for
+the people who will answer it. This file is the technical record behind it: where each item lives in
+the code and what it switches on.
+
+**Revised 26 September 2026** after a full review of every public page. The remaining on-page notes
+addressed to CMT were removed in that pass (on About, Our people, Credentials, Offices and Contact),
+completing the instruction above; each fact they carried is in both documents.
+
 **Revised 15 September 2026** against a review of CMT's own published material (Uganda and Kenya sites)
 and the competitive field — see `SITE-STRATEGY.md`. That review closed two items, materially changed a
 third, and opened three new ones that now block more than anything else on this list.
@@ -27,7 +35,8 @@ cross-border work.
 
 We will not publish a professional credential we have not had confirmed by the holder. Needed: the
 registration numbers, the correct post-nominals, and the firm's own registration. Until they arrive the
-credential line on the homepage renders nothing and the standing schedule on About shows `— pending`.
+credential line on the homepage renders nothing, the standing schedule on About and the registrations on
+Credentials show "Awaiting confirmation", and agent cards omit the Qualifications block entirely.
 
 ## 2. The relationship between the Uganda and Kenya entities — a structural decision
 
@@ -98,13 +107,12 @@ Also still outstanding from the original review:
 - Several source files are small — KCB, Stanbic, UBA and VisionFund are around 73px tall — so
   higher-resolution versions would sharpen the conveyor on retina screens.
 
-Note the stats strip currently hardcodes `12`, the data file holds 14, and CMT says 20+. Three numbers,
-none confirmed. `src/data/site.ts` carries the one on screen.
+The ledger shows 14, the number of logos we hold (`stats` in `src/data/site.ts`); CMT says 20+.
 
 ## 8. Office hours
 
-Not published anywhere. The Contact page shows a plausible placeholder with a visible note that it needs
-confirming. Set `hours` and flip `hoursConfirmed` to `true` in `src/data/site.ts`.
+Not published anywhere. The Contact page shows plausible hours with a visitor-facing line asking people
+to call ahead. Set `hours` and flip `hoursConfirmed` to `true` in `src/data/site.ts` and the line goes.
 
 ## 9. One redacted sample report
 
@@ -143,10 +151,29 @@ all.
 
 ## 13. Social profile URLs
 
-The footer carries Facebook, X, Instagram, LinkedIn, YouTube, TikTok and WhatsApp icons. The icons on
-cmtrealtors.com link to `#`, so we have no profile URLs we can publish. Paste each URL into `site.social`
-in `src/data/site.ts` and that icon becomes a live link. Unlinked icons show dimmed until then. Say which
-platforms CMT has no presence on and we will drop those icons.
+The masthead utility strip carries Facebook, X, Instagram, LinkedIn, YouTube and TikTok icons, beside
+the phone number and the email address. The icons on cmtrealtors.com link to `#`, so we have no profile
+URLs we can publish. Paste each URL into `site.social` in `src/data/site.ts` and that icon becomes a
+live link. Unlinked icons show dimmed until then. Say which platforms CMT has no presence on and we
+will drop those icons.
+
+WhatsApp is not in that row. It is a channel people transact on here rather than a profile to follow,
+so it keeps its own button beside the masthead CTA (and see item 3 for the number itself).
+
+## 14. A hero photograph, if one is wanted at all
+
+The homepage hero no longer carries a photograph. It carries an illustrated, dimensioned street
+elevation, blurred, behind the headline (`src/components/home/HeroElevation.tsx`), because the slot
+previously held licensed stock architecture that said nothing about CMT and made the one firm in this
+market that leads with valuation open like the twentieth agency.
+
+Nothing is blocked on the client here. It is recorded because two things follow from it:
+
+- `public/images/hero-home.jpg` moved to the homepage identity section, where abstract architectural
+  texture is all that slot needs. It is not Kampala, and `public/images/CREDITS.md` now says so.
+- If CMT would rather have a photograph there, we need a real one: a Kampala building the firm has
+  actually valued, or their own office. Licensed stock of an anonymous facade is the thing we removed,
+  so replacing it with different stock would not be an improvement.
 
 ## Closed by the 15 September review
 
@@ -177,8 +204,9 @@ The one figure still genuinely missing is the **Uganda founding year**. We would
 
 ## Decisions we made rather than blocking on
 
-- **Body text is `#171612`**, a warm near-black, not pure `#000000`. The brief invited this judgement: pure
-  black on the cream ground reads harsh and slightly cold.
+- **Body text is `#14211a`**, a green-black, not pure `#000000`, and the neutrals are organised by
+  temperature (white, ivory, sage mist) after the September palette overhaul. See the note at the top of
+  `src/app/globals.css`.
 - **Prices render as `UGX 2,800,000,000`**. `Intl` renders UGX as "USh", which is not how Ugandan property
   is advertised or valued.
 - **Property detail lives at `/properties/[slug]`**, so `/listings/[category]` stays clean for the five

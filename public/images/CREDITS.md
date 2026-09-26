@@ -7,12 +7,14 @@ each Kampala/Uganda shot. Listings imagery (`listings/*`) is generic and
 representative on purpose — none of it is a real CMT property yet, and it is replaced
 with client-supplied photography at the same paths when that exists. Everywhere else —
 hero, identity photo, CTA banner and four of the five property-class cards — is
-genuine, identifiable Kampala or Uganda photography.
+genuine, identifiable Kampala or Uganda photography, with one exception now corrected:
+`hero-home.jpg` was listed here as Kampala and is not. It is an abstract balcony facade. It
+no longer sits on the homepage hero, where the claim mattered most.
 
 | File | Source | Description |
 | --- | --- | --- |
-| `hero-home.jpg` | https://unsplash.com/photos/1752654605009-3b12790fe738 | Wavy, ribbon-like apartment balconies — homepage hero |
-| `identity-office.jpg` | https://unsplash.com/photos/1675756261486-09bd1e0f6c8a | Kampala's business district by day — About / identity section |
+| `hero-home.jpg` | https://unsplash.com/photos/1752654605009-3b12790fe738 | Ribbon-like apartment balconies. Identity section. NOT Kampala: an abstract facade, with a European street lamp in one corner. It was the homepage hero until that slot went to a real Kampala building |
+| `identity-office.jpg` | https://unsplash.com/photos/1675756261486-09bd1e0f6c8a | Keith Kasaija: an office building in Kampala's business district by day. Homepage hero (clipped to its own massing, see ValuationElevation.tsx) and the /about identity section |
 | `cta-skyline.jpg` | https://unsplash.com/photos/1763220207281-c4d0febb61a8 | Kampala skyline at sunset, from Nsambya — CTA banner background |
 | `valuation-keys.jpg` | https://unsplash.com/photos/1560518883-ce09059eeffa | House model and keys — Services / valuation |
 | `services/valuation.jpg` | https://unsplash.com/photos/1716698286313-9a2349d41110 | A tape measure, held up — property valuation |

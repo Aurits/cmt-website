@@ -70,7 +70,7 @@ export default function AdvisoryPage() {
       </section>
 
       {/* The one photograph on the page. */}
-      <section className="bg-cream-deep/45 py-12 lg:py-16">
+      <section className="bg-mist py-12 lg:py-16">
         <Container className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-14">
           <Reveal className="relative aspect-[3/2] overflow-hidden border border-rule">
             <Image
@@ -126,7 +126,7 @@ export default function AdvisoryPage() {
           <Reveal>
             <SectionHeading
               title="Where we have done this work"
-              lead={`Across all five property classes, in ${site.cities.join(', ')} and beyond.`}
+              lead={`Across all five property types, in ${site.cities.join(', ')} and beyond.`}
             />
           </Reveal>
           <ul className="mt-8 flex flex-wrap gap-2">
