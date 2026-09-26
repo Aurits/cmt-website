@@ -74,7 +74,10 @@ export function InBrief({ className }: { className?: string }) {
             <span className="font-display text-h4 text-green">{statement.label}</span>
           </dt>
           <dd className="mt-2 flex flex-1 flex-col">
-            <p className="text-body leading-relaxed text-muted">{statement.body}</p>
+            {/* Hidden on a phone, where this block would repeat, a scroll later, what the hero
+                and the identity section have just said. There it reads as a four-line index:
+                label and link. */}
+            <p className="text-body leading-relaxed text-muted max-sm:hidden">{statement.body}</p>
             <Link
               href={statement.link.href}
               className="group mt-auto flex items-center gap-1 pt-4 text-sm font-medium text-green"

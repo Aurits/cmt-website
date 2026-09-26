@@ -24,6 +24,7 @@ import { allPartners, partnerCount } from '@/data/partners';
 import { advisoryServices } from '@/data/advisory';
 import { featuredPurposes, purposeBySlug } from '@/data/valuations';
 import { site, stats } from '@/data/site';
+import { cx } from '@/lib/cx';
 import { testimonials } from '@/data/testimonials';
 
 /**
@@ -208,7 +209,9 @@ export default function HomePage() {
       {/* Identity. The thesis, directly under the claim it explains. */}
       <section className="bg-cream py-12 lg:py-16">
         <Container className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-          <Reveal className="relative order-2 aspect-[4/3] overflow-hidden rounded-brand border border-rule lg:order-1 lg:aspect-auto lg:min-h-[380px]">
+          {/* 3:2 on a phone rather than 4:3: the photograph follows the text there, and at
+              full column width a squarer frame spent 60px on desk and sleeve. */}
+          <Reveal className="relative order-2 aspect-[3/2] overflow-hidden rounded-brand border border-rule sm:aspect-[4/3] lg:order-1 lg:aspect-auto lg:min-h-[380px]">
             {/* A report being read and signed at a client meeting: the section's own argument,
                 that a figure is only worth the valuer who signs it, shown rather than decorated.
                 It replaced an abstract balcony facade that said nothing about the work. The alt
@@ -229,6 +232,7 @@ export default function HomePage() {
               <SectionHeading
                 title="A valuation firm first, an agency second"
                 lead="Most people meet us through their bank. A loan depends on a figure, the figure depends on a valuer, and the valuer has to be one the lender trusts. That is the work we have spent sixteen years building."
+                leadShort="A loan depends on a figure, and the figure on a valuer the lender trusts."
               />
             </Reveal>
             {/* Numbered as a ledger: three claims, each one checkable, in the order a lender
@@ -245,7 +249,9 @@ export default function HomePage() {
                     </span>
                     <div>
                       <dt className="font-display text-lead text-green">{reason.title}</dt>
-                      <dd className="mt-1.5 max-w-[60ch] text-body leading-relaxed text-muted">
+                      {/* Title only on a phone: the three titles are the claims, and each body
+                          restates its title at length. */}
+                      <dd className="mt-1.5 max-w-[60ch] text-body leading-relaxed text-muted max-sm:hidden">
                         {reason.body}
                       </dd>
                     </div>
@@ -269,6 +275,7 @@ export default function HomePage() {
             <SectionHeading
               title="What we are usually asked to do"
               lead="Most of our work starts with one of these three. Each calls for a different basis of value, which changes the figure, so we agree it with you before anyone visits the property."
+              leadShort="Most of our work starts with one of these three."
               action={
                 <Button href="/valuations" variant="outline" size="md">
                   All valuation services
@@ -276,7 +283,9 @@ export default function HomePage() {
               }
             />
           </Reveal>
-          <ul className="mt-8 grid gap-4 sm:grid-cols-3">
+          {/* A rail below sm (see "THE MOBILE SYSTEM" in globals.css): three 440px cards
+              stacked were a screen and a half; swiped, they are one card tall. */}
+          <ul className="rail mt-8 sm:grid sm:grid-cols-3 sm:gap-4">
             {featuredPurposes.map((slug, index) => {
               const purpose = purposeBySlug[slug];
               /* The turnaround is the fact people decide on, so it leads each card as a
@@ -363,6 +372,7 @@ export default function HomePage() {
               onDark
               title="Advice before you commit"
               lead="Beyond the valuation: what a site can hold, what to pay for it, and how to run it once it is yours. Every job is scoped and priced in writing before it starts."
+              leadShort="What a site can hold, what to pay for it, and how to run it."
               action={
                 <Button href="/advisory" variant="onDark" size="md">
                   All advisory work
@@ -408,11 +418,15 @@ export default function HomePage() {
             <SectionHeading
               title="Five kinds of property, five kinds of question"
               lead="Valuing a warehouse and valuing a coffee farm are different jobs. Start with the kind of property you have."
+              leadShort="Start with the kind of property you have."
             />
           </Reveal>
           {/* auto-rows-fr: every row takes the height of the tallest card, so the two rows
               match instead of the "not sure" card stretching only its own. */}
-          <ul className="mt-8 grid auto-rows-fr gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* A rail below sm: six stacked image cards were nearly two screens on a phone. The
+              "not sure" card rides at the end of the rail, where a reader who swiped past all
+              five types is exactly the reader it is for. */}
+          <ul className="rail mt-8 sm:grid sm:auto-rows-fr sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
             {categories.map((category, index) => (
               <Reveal as="li" key={category.slug} delay={index * 70} className="flex">
                 <CategoryCard
@@ -469,6 +483,7 @@ export default function HomePage() {
             <SectionHeading
               title="Who instructs us"
               lead="Banks and institutions keep coming back to valuers whose reports hold up to their own checks. These are some of ours."
+              leadShort="The banks and institutions that keep coming back."
               action={
                 <Button href="/about/clients" variant="outline" size="md">
                   Our clients in full
@@ -485,7 +500,10 @@ export default function HomePage() {
           slot carries four plain statements about the firm instead: CMT speaking for itself,
           under its own heading, never set as a quote.
         */}
-        <Container className="mt-12">
+        {/* Desktop only while it holds the four "in brief" statements: on a phone they repeat
+            what the hero and the identity section said two screens earlier. Real testimonials,
+            once they exist, show everywhere, because a named reference never repeats anything. */}
+        <Container className={cx('mt-12', testimonials.length === 0 && 'max-sm:hidden')}>
           <Reveal>
             <h3 className="font-display text-h3 text-green">
               {testimonials.length > 0 ? 'In their words' : `${site.shortName} in brief`}

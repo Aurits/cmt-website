@@ -16,12 +16,15 @@ import { cx } from '@/lib/cx';
  *
  * Three things are deliberate:
  *
- * ONE DOM, TWO LAYOUTS. Below `md` the same elements reflow to a stacked list — each purpose
- * becomes a heading with its available assets as rows beneath it — rather than scrolling
- * sideways. A horizontally scrolling matrix on a phone is a matrix nobody reads, and rendering a
- * second copy of the markup for small screens would duplicate every link for a screen reader.
- * The column headers are hidden below `md` and each cell carries its own asset name instead, so
- * the stacked version reads as complete sentences rather than orphaned ticks.
+ * TWO LAYOUTS, ONLY ONE EVER ON SCREEN. From `md` up it is the grid. Below `md` it is a compact
+ * list, one row per purpose: the name, the turnaround once, and the asset types it covers.
+ *
+ * This replaced an earlier choice, one DOM reflowed into a stacked list, which on a phone
+ * rendered all fifteen purpose-and-asset cells in a column, repeated "We value this" and the
+ * same turnaround three times per purpose, and ran to about 1,900px: more than two screens to
+ * read five facts. The turnaround is per purpose, not per cell, so the phone list loses nothing.
+ * The two layouts are `hidden` at each other's breakpoints (display:none), so a screen reader
+ * only ever meets one of them and nothing is duplicated.
  *
  * CELLS ARE LINKS, NOT STATE. There is no filter to manage and nothing to hydrate before the page
  * works: every filled cell is an anchor to a real route. The crosshair below is decoration on top
@@ -79,12 +82,49 @@ export function ValuationMatrix() {
   const colLit = (a: ValuationAssetSlug) => cursor?.asset === a;
 
   return (
+    <>
+    {/* Phone: one row per purpose. */}
+    <ul className="border-t border-rule md:hidden">
+      {valuationPurposes.map((purpose) => {
+        const covered = valuationAssets.filter((asset) => purposeCovers(purpose, asset.slug));
+        const isLeadRow = LEAD.purpose === purpose.slug;
+        return (
+          <li key={purpose.slug} className="border-b border-rule">
+            <Link
+              href={`/valuations/${purpose.slug}`}
+              className="group flex items-start justify-between gap-4 py-4"
+            >
+              <span className="min-w-0">
+                <span className="flex items-center gap-2 font-display text-lead text-green">
+                  {purpose.name}
+                  {isLeadRow && (
+                    <span className="bg-gold px-1.5 py-0.5 font-sans text-label font-semibold text-green">
+                      Most asked
+                    </span>
+                  )}
+                </span>
+                <span className="mt-1 block text-micro text-muted">
+                  {covered.map((asset) => asset.short).join(' · ')}
+                </span>
+              </span>
+              <span className="tnum shrink-0 pt-1 text-right text-micro text-ink">
+                {purpose.turnaround.replace(' working days', '')}
+                <span className="block text-label text-muted">
+                  {/\d/.test(purpose.turnaround) ? 'working days' : ''}
+                </span>
+              </span>
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+
     <div
       role="grid"
       aria-label="Valuation services by purpose and asset class"
       onMouseLeave={() => setCursor(null)}
       className={cx(
-        'grid gap-px bg-rule',
+        'grid gap-px bg-rule max-md:hidden',
         // One column on a phone; the corner cell plus three asset columns from md.
         'grid-cols-1 md:grid-cols-[minmax(11rem,1fr)_repeat(3,1fr)]',
       )}
@@ -184,8 +224,9 @@ export function ValuationMatrix() {
               </Link>
             );
           })}
-        </div>
+                </div>
       ))}
     </div>
+    </>
   );
 }

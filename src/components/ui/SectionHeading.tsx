@@ -8,6 +8,7 @@ import { cx } from '@/lib/cx';
 export function SectionHeading({
   title,
   lead,
+  leadShort,
   action,
   align = 'left',
   onDark = false,
@@ -16,6 +17,13 @@ export function SectionHeading({
 }: {
   title: string;
   lead?: string;
+  /**
+   * The lead as it should read on a phone, where it replaces `lead` below 640px. One sentence,
+   * written to stand on its own rather than cut from the long one. Leave it out and the full
+   * lead shows everywhere, which is right for anything already short. See "THE MOBILE SYSTEM"
+   * in globals.css.
+   */
+  leadShort?: string;
   action?: React.ReactNode;
   align?: 'left' | 'center';
   onDark?: boolean;
@@ -63,7 +71,16 @@ export function SectionHeading({
               onDark ? 'text-cream/80' : 'text-muted',
             )}
           >
-            {lead}
+            {/* Two spans rather than two paragraphs, so the spacing is identical and a screen
+                reader, which skips display:none, only ever hears the one on screen. */}
+            {leadShort ? (
+              <>
+                <span className="sm:hidden">{leadShort}</span>
+                <span className="max-sm:hidden">{lead}</span>
+              </>
+            ) : (
+              lead
+            )}
           </p>
         )}
       </div>

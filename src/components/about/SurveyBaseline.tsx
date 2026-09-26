@@ -45,16 +45,15 @@ function Station({ office, vertical }: { office: Office; vertical?: boolean }) {
 
   if (vertical) {
     return (
-      <li className="relative flex h-12 items-center gap-4">
+      <li className="relative flex h-9 items-center gap-3">
         <span className="flex w-3.5 justify-center">
           <Marker head={isHead} />
         </span>
-        <span className={cx('text-body text-ink', isHead && 'font-medium')}>{office.city}</span>
-        {isHead && (
-          <span className="text-label font-semibold uppercase tracking-[0.1em] text-gold-deep">
-            Head office
-          </span>
-        )}
+        {/* "Head office" is said by the filled marker and the key below, not by a label on the
+            row: at half the screen width there is not room for both. */}
+        <span className={cx('text-body text-ink', isHead && 'font-semibold text-green')}>
+          {office.city}
+        </span>
       </li>
     );
   }
@@ -103,25 +102,33 @@ export function SurveyBaseline() {
         </div>
       </div>
 
-      {/* Rotated ninety degrees below md — same drawing, not a reflow. */}
+      {/*
+        Below md: the two countries side by side, each its own short vertical line. Stacked, the
+        nine stations ran to 550px; paired, about 230. The border between them is the gap, and
+        the key underneath says what the filled marker means.
+      */}
       <div className="mx-auto w-full max-w-[1200px] px-4 md:hidden">
-        <div className="relative">
-          <span aria-hidden="true" className="absolute top-8 bottom-4 left-[6px] w-[2px] bg-gold/60" />
-          <p className="mb-1 text-label font-semibold tracking-[0.12em] text-green">Uganda</p>
-          <ul>
-            {ugandaOffices.map((office) => (
-              <Station key={office.city} office={office} vertical />
-            ))}
-          </ul>
-          <p className="relative mt-4 mb-1 bg-cream pt-3 text-label font-semibold tracking-[0.12em] text-green before:absolute before:top-0 before:left-0 before:h-[3px] before:w-10 before:bg-gold">
-            Kenya
-          </p>
-          <ul>
-            {kenyaOffices.map((office) => (
-              <Station key={office.city} office={office} vertical />
-            ))}
-          </ul>
+        <div className="grid grid-cols-2 gap-6">
+          {[
+            { name: 'Uganda', list: ugandaOffices },
+            { name: 'Kenya', list: kenyaOffices },
+          ].map((country) => (
+            <div key={country.name} className="relative">
+              <p className="mb-1 border-b-2 border-gold pb-1.5 text-label font-semibold tracking-[0.12em] text-green">
+                {country.name}
+              </p>
+              <span aria-hidden="true" className="absolute top-10 bottom-4 left-[6px] w-[2px] bg-gold/60" />
+              <ul>
+                {country.list.map((office) => (
+                  <Station key={office.city} office={office} vertical />
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
+        <p className="mt-4 flex items-center gap-2 text-micro text-muted">
+          <Marker head /> Head office
+        </p>
       </div>
     </section>
   );

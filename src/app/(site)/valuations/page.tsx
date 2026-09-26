@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { CTABanner } from '@/components/CTABanner';
 import { AgentCard } from '@/components/AgentCard';
+import { ProcessDatum } from '@/components/home/ProcessDatum';
 import { PartnerConveyor } from '@/components/PartnerConveyor';
 import { ValuationMatrix } from '@/components/valuations/ValuationMatrix';
 import { Button } from '@/components/ui/Button';
@@ -8,9 +9,9 @@ import { Container } from '@/components/ui/Container';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Reveal } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { agents } from '@/data/agents';
+import { directors } from '@/data/agents';
 import { allPartners } from '@/data/partners';
-import { LEAD, assetBySlug, purposeBySlug, valuationPurposes, valuationSteps } from '@/data/valuations';
+import { LEAD, assetBySlug, purposeBySlug, valuationPurposes } from '@/data/valuations';
 import { site } from '@/data/site';
 
 export const metadata: Metadata = {
@@ -40,14 +41,16 @@ export default function ValuationsPage() {
       <section className="py-12 lg:py-16">
         <Container>
           <ValuationMatrix />
-          <p className="mt-4 max-w-[68ch] text-body leading-relaxed text-muted">
+          {/* Desktop only: on a phone the matrix collapses to one line per purpose (see
+              ValuationMatrix), which already says what this paragraph explains. */}
+          <p className="mt-4 max-w-[68ch] text-body leading-relaxed text-muted max-sm:hidden">
             <span className="font-medium text-ink">
               {lead.name} on {leadAsset.short.toLowerCase()}
             </span>{' '}
             is the majority of what we are instructed to do, and the reason most people are on this
             page. Every combination above leads to what the report contains, what it is based on and
-            how long it takes. A dash means we do not offer it. We would rather say so than take the
-            instruction.
+            how long it takes. Where a cell says &ldquo;Not offered&rdquo;, we would rather say so
+            than take the instruction.
           </p>
         </Container>
       </section>
@@ -58,28 +61,22 @@ export default function ValuationsPage() {
           <Reveal>
             <SectionHeading
               title="How a valuation actually runs"
-              lead="Four steps, and you are told at the start which of them affect the timeline."
+              lead="Four steps. We tell you at the start which of them could affect your deadline."
             />
           </Reveal>
-          <ol className="mt-8 grid gap-px border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
-            {valuationSteps.map((step, index) => (
-              <Reveal as="li" key={step.title} delay={index * 70} className="flex">
-                <div className="flex w-full flex-col bg-paper p-5 lg:p-6">
-                  <span className="tnum font-display text-figure leading-none text-gold-deep">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  <h3 className="mt-4 text-h4 text-green">{step.title}</h3>
-                  <p className="mt-2 text-body leading-relaxed text-muted">{step.body}</p>
-                </div>
-              </Reveal>
-            ))}
-          </ol>
+          {/* The same timeline as the homepage, from the same data, so the two pages cannot
+              describe the method differently or draw it two ways. */}
+          <Reveal className="mt-2">
+            <ProcessDatum />
+          </Reveal>
         </Container>
       </section>
 
-      {/* The deliverable — OPEN ITEM #9: a redacted sample report would replace this panel. */}
+      {/* The deliverable. A redacted sample report belongs beside this schedule once CMT supplies
+          one (docs/CONTENT-NEEDED.md, "Proof from clients"); until then the schedule stands alone
+          rather than beside a panel describing its absence, which is what used to sit here. */}
       <section className="py-12 lg:py-16">
-        <Container className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-14">
+        <Container className="max-w-[860px]">
           <Reveal>
             <SectionHeading
               title="What you actually receive"
@@ -101,19 +98,7 @@ export default function ValuationsPage() {
               ))}
             </dl>
           </Reveal>
-          <Reveal delay={80}>
-            <div className="border border-rule bg-paper p-6 lg:p-8">
-              <p className="font-display text-h4 leading-snug text-green">
-                A sample report, redacted, will sit here.
-              </p>
-              <p className="mt-3 text-body leading-relaxed text-muted">
-                No firm in this market shows one, and a single redacted contents page answers
-                &ldquo;what do I actually get&rdquo; better than any paragraph could. We have asked CMT
-                for one rather than mocking up a document that does not exist.
-              </p>
-              <p className="mt-4 text-micro text-muted">See docs/OPEN-ITEMS.md, item 9.</p>
-            </div>
-          </Reveal>
+
         </Container>
       </section>
 
@@ -127,8 +112,10 @@ export default function ValuationsPage() {
               lead={`Every report goes out under a named valuer practising under the ${site.regulator}. If the figure is challenged, that person answers for it.`}
             />
           </Reveal>
+          {/* Directors only: they are the ones who sign. The property agents were listed here too,
+              under a heading that says who signs, and they do not. */}
           <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:max-w-[760px]">
-            {agents.map((agent, index) => (
+            {directors.map((agent, index) => (
               <Reveal as="li" key={agent.id} delay={index * 80} className="flex">
                 <AgentCard agent={agent} className="w-full" />
               </Reveal>

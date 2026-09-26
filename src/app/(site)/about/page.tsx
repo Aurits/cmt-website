@@ -79,9 +79,16 @@ export default function AboutPage() {
                 A figure is only worth the name on it
               </h1>
               <p className="mt-5 max-w-[56ch] text-lead leading-relaxed text-cream/80">
-                {site.name} is a valuation and property consultancy practice working in Uganda and
-                Kenya. Banks lend against our figures, auditors rely on them, public bodies use them
-                to assess compensation, and owners use them to price property honestly.
+                {/* Short on a phone, where the full list pushed the registrations off the first
+                    screen. See "THE MOBILE SYSTEM" in globals.css. */}
+                <span className="sm:hidden">
+                  Banks lend against our figures. Auditors and public bodies rely on them.
+                </span>
+                <span className="max-sm:hidden">
+                  {site.name} is a valuation and property consultancy practice working in Uganda
+                  and Kenya. Banks lend against our figures, auditors rely on them, public bodies use
+                  them to assess compensation, and owners use them to price property honestly.
+                </span>
               </p>
             </div>
 
@@ -110,10 +117,13 @@ export default function AboutPage() {
               <SectionHeading
                 title="What the years actually buy you"
                 lead="Not a longer brochure, but a body of evidence. Valuation is a judgement made under professional liability, and the firms that last are the ones whose judgement holds up when a lender, a court or a tax authority tests it."
+                leadShort="Firms last when their judgement holds up to a lender, a court or a tax authority."
               />
             </Reveal>
             <Reveal delay={70}>
-              <div className="mt-8 space-y-5 text-lead leading-relaxed text-muted">
+              {/* Desktop only: the named valuer is the page title's claim, and the offices and
+                  client count sit in the ledger directly above this section. */}
+              <div className="mt-8 space-y-5 text-lead leading-relaxed text-muted max-sm:hidden">
                 <p>
                   Every report goes out under a named valuer practising under the {site.regulator}.
                   That matters most when a figure is contested: there is a professional standard
@@ -156,13 +166,14 @@ export default function AboutPage() {
             <SectionHeading
               title="How the practice grew"
               lead="Four stages, from a single valuation desk in Kampala to two practices working either side of the border."
+              leadShort="From one valuation desk in Kampala to two practices."
             />
           </Reveal>
           <ol className="mt-8 border-t border-rule">
             {chapters.map((chapter, index) => (
               <Reveal as="li" key={chapter.stage} delay={index * 70}>
-                <div className="grid gap-2 border-b border-rule py-6 md:grid-cols-[4rem_14rem_1fr] md:gap-8">
-                  <span className="tnum font-display text-figure leading-none text-gold-deep">
+                <div className="grid grid-cols-[2.75rem_1fr] items-baseline gap-2 border-b border-rule py-4 sm:py-6 md:grid-cols-[4rem_14rem_1fr] md:gap-8">
+                  <span className="tnum font-display text-h4 leading-none text-gold-deep sm:text-figure">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <div>
@@ -171,7 +182,10 @@ export default function AboutPage() {
                       {chapter.title}
                     </h3>
                   </div>
-                  <p className="max-w-[62ch] text-body leading-relaxed text-muted">
+                  {/* Desktop only: on a phone the four titles read as the story in one breath,
+                      "A valuation practice on Kampala Road, onto the bank panels, instructions
+                      outside Kampala, a second practice in Kenya". */}
+                  <p className="max-w-[62ch] text-body leading-relaxed text-muted max-sm:hidden">
                     {chapter.body}
                   </p>
                 </div>

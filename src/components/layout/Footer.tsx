@@ -36,8 +36,11 @@ export function Footer() {
     // separates it from whatever green CTA banner sits immediately above.
     <footer className="border-t border-gold/30 bg-green text-cream">
       <Container className="py-14 lg:py-16">
-        <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-12">
-          <div className="lg:col-span-3">
+        {/* Two columns from the smallest screen, not one: stacked, the four link lists made the
+            footer 1,700px on a phone, longer than most of the pages above it. The brand block
+            takes the full width; the lists pair up beneath it. */}
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:gap-x-8 sm:gap-y-12 lg:grid-cols-12">
+          <div className="col-span-2 lg:col-span-3">
             <Image
               src="/brand/cmt-logo.png"
               alt={site.name}
@@ -115,7 +118,8 @@ export function Footer() {
             </ul>
           </div>
 
-          <div className="lg:col-span-3">
+          {/* Full width on a phone: at half width the email address broke mid-word. */}
+          <div className="col-span-2 lg:col-span-3">
             <h2 className={headingClass}>Office</h2>
             <address className="mt-4 space-y-3 text-body not-italic text-cream/80">
               <p className="flex gap-3">

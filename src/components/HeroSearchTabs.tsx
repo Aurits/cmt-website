@@ -183,7 +183,9 @@ export function HeroSearchTabs() {
       </form>
 
       {active === 'value' && (
-        <p className="border-t border-rule px-4 py-3.5 text-micro leading-relaxed text-muted sm:px-5">
+        // Hidden on a phone: the /valuations link it offers is one tap away in the menu, and
+        // under a full-width button it was a fourth line of small print in the first screen.
+        <p className="border-t border-rule px-4 py-3.5 text-micro leading-relaxed text-muted max-sm:hidden sm:px-5">
           Valuing machinery, equipment or shares in a business? Start from{' '}
           <Link href="/valuations" className="text-green underline decoration-gold decoration-2 underline-offset-4">
             all {valuationPurposes.length} valuation purposes

@@ -59,7 +59,9 @@ export function AgentCard({
               each card would stand over 700px tall, which left a blank third of the page beside
               them. Landscape lets two directors fill the full width at a sensible height, and a
               headshot still crops well to it from the top. */}
-          <div className="relative aspect-[4/3] w-full overflow-hidden border border-rule bg-green">
+          {/* 2:1 on a phone: a 4:3 tile holding only initials was a 250px green square per
+              director. A top-cropped headshot still reads at 2:1. */}
+          <div className="relative aspect-[2/1] w-full overflow-hidden border border-rule bg-green sm:aspect-[4/3]">
             {agent.photo ? (
               <Image
                 src={agent.photo}
