@@ -76,13 +76,16 @@ export default function ValuationsPage() {
           one (docs/CONTENT-NEEDED.md, "Proof from clients"); until then the schedule stands alone
           rather than beside a panel describing its absence, which is what used to sit here. */}
       <section className="py-12 lg:py-16">
-        <Container className="max-w-[860px]">
+        <Container>
           <Reveal>
             <SectionHeading
               title="What you actually receive"
               lead="Every report carries the same structure, whoever instructed it and whatever it is for."
             />
-            <dl className="mt-7">
+            {/* The measure is on the schedule, not the Container: the Container's own
+                max-w-[1200px] wins over a second max-width on the same element, and a label and
+                its detail 900px apart stop reading as a pair. */}
+            <dl className="mt-7 max-w-[760px]">
               {[
                 ['Basis of value', 'Stated on the first page, with the definition, not assumed'],
                 ['The figure', 'And the forced-sale position where a lender requires it'],

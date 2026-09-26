@@ -94,6 +94,7 @@ export default function BlogPage() {
       <PageHeader
         title="What we are actually seeing"
         lead="A few posts a year, written from the instructions we took rather than from press releases. Short, dated, and each one built around a number you can quote."
+        leadShort="Written from the instructions we took, not from press releases."
         breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Blog' }]}
       />
 

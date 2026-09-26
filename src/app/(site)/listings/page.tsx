@@ -36,6 +36,7 @@ export default async function ListingsPage({
       <PageHeader
         title="Property on our books"
         lead={`${listings.length} properties across five property types and four cities. Filter to what you are after, or start from a property type.`}
+        leadShort={`${listings.length} properties across five types and four cities.`}
         breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Property Listings' }]}
       >
         <ul className="flex flex-wrap gap-2">

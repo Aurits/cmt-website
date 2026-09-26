@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { CTABanner } from '@/components/CTABanner';
 import { Container } from '@/components/ui/Container';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { ChevronIcon } from '@/components/ui/icons';
 import { Reveal } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { advisoryServices } from '@/data/advisory';
@@ -30,6 +31,7 @@ export default function AdvisoryPage() {
       <PageHeader
         title="Advice before you commit"
         lead="Everything that is not a valuation report. Each engagement is scoped in writing before it starts, so the fee and the deliverable are agreed up front rather than discovered later."
+        leadShort="Everything that is not a valuation report, priced in writing before it starts."
         breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Advisory' }]}
       />
 
@@ -54,13 +56,39 @@ export default function AdvisoryPage() {
                     <p className="max-w-[62ch] text-body leading-relaxed text-ink/85">
                       {service.summary}
                     </p>
-                    <dl className="mt-4">
+                    {/* Desktop: the deliverables in the open. */}
+                    <dl className="mt-4 max-sm:hidden">
                       {service.deliverables.map((item) => (
                         <dd key={item} className="schedule-row text-body text-muted">
                           <span>{item}</span>
                         </dd>
                       ))}
                     </dl>
+                    {/*
+                      Phone: folded into a native disclosure, closed by default. Open, five
+                      services' deliverables were 1,000px of list a reader scrolls past to reach
+                      the next service. <details> needs no JavaScript, is keyboard and screen
+                      reader accessible for free, and the summary says how many are inside.
+                      Only one of the two lists is ever displayed.
+                    */}
+                    <details className="group/d mt-3 border-t border-rule sm:hidden">
+                      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between py-2 text-body font-medium text-green [&::-webkit-details-marker]:hidden">
+                        What you receive ({service.deliverables.length})
+                        <ChevronIcon
+                          width={16}
+                          height={16}
+                          aria-hidden="true"
+                          className="rotate-90 transition-transform group-open/d:-rotate-90"
+                        />
+                      </summary>
+                      <ul className="pb-2">
+                        {service.deliverables.map((item) => (
+                          <li key={item} className="schedule-row text-body text-muted">
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
                   </div>
                 </div>
               </Reveal>

@@ -22,6 +22,7 @@ export default function ClientsPage() {
       <PageHeader
         title="The institutions that instruct us"
         lead={`${partnerCount} organisations across banking, government and corporate sectors. Most valuation work arrives as repeat instruction, which is the only recommendation that really counts in this trade.`}
+        leadShort={`${partnerCount} institutions, most of them repeat clients.`}
         breadcrumbs={[
           { label: 'Home', href: '/' },
           { label: 'About', href: '/about' },

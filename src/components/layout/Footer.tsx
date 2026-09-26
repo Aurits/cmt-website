@@ -60,7 +60,11 @@ export function Footer() {
             </p>
           </div>
 
-          <nav aria-label="Footer" className="lg:col-span-2">
+          {/* Site and Property types are desktop only. On a phone the menu one tap away already
+              lists every page, and the footer was 1,300px of links repeating it. What a phone
+              reader needs at the foot of a page is the office and the valuation routes, so those
+              stay. The links remain in the markup, so they are still crawled. */}
+          <nav aria-label="Footer" className="max-sm:hidden lg:col-span-2">
             <h2 className={headingClass}>Site</h2>
             <ul className="mt-4 space-y-2.5 text-body">
               {nav.map((item) => (
@@ -86,7 +90,7 @@ export function Footer() {
             </ul>
           </nav>
 
-          <div className="lg:col-span-2">
+          <div className="max-sm:col-span-2 lg:col-span-2">
             <h2 className={headingClass}>Valuations</h2>
             {/* The purposes, not the asset classes: a visitor arrives knowing what the figure
                 is for, rarely knowing which of our three asset types it falls under. Same axis
@@ -105,7 +109,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div className="lg:col-span-2">
+          <div className="max-sm:hidden lg:col-span-2">
             <h2 className={headingClass}>Property types</h2>
             <ul className="mt-4 space-y-2.5 text-body">
               {categories.map((category) => (

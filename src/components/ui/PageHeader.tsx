@@ -8,19 +8,23 @@ import { Container } from '@/components/ui/Container';
 export function PageHeader({
   title,
   lead,
+  leadShort,
   breadcrumbs,
   children,
 }: {
   title: string;
   lead?: string;
+  /** The lead on a phone; see SectionHeading and "THE MOBILE SYSTEM" in globals.css. */
+  leadShort?: string;
   breadcrumbs?: { label: string; href?: string }[];
   children?: React.ReactNode;
 }) {
   return (
     <section className="bg-green text-cream">
-      <Container className="py-12 lg:py-16">
+      {/* py-9 on a phone: the green header was 330px of the first screen before any content. */}
+      <Container className="py-9 sm:py-12 lg:py-16">
         {breadcrumbs && breadcrumbs.length > 0 && (
-          <nav aria-label="Breadcrumb" className="mb-6">
+          <nav aria-label="Breadcrumb" className="mb-5 sm:mb-6">
             <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-micro text-cream/70">
               {breadcrumbs.map((crumb, index) => (
                 <li key={crumb.label} className="flex items-center gap-2">
@@ -48,7 +52,14 @@ export function PageHeader({
         <h1 className="max-w-[30ch] text-h1 text-cream">{title}</h1>
         {lead && (
           <p className="mt-5 max-w-[62ch] text-lead leading-relaxed text-cream/80">
-            {lead}
+            {leadShort ? (
+              <>
+                <span className="sm:hidden">{leadShort}</span>
+                <span className="max-sm:hidden">{lead}</span>
+              </>
+            ) : (
+              lead
+            )}
           </p>
         )}
         {children && <div className="mt-8">{children}</div>}
