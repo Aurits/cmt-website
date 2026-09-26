@@ -185,7 +185,10 @@ export default function AboutPage() {
                   {/* Desktop only: on a phone the four titles read as the story in one breath,
                       "A valuation practice on Kampala Road, onto the bank panels, instructions
                       outside Kampala, a second practice in Kenya". */}
-                  <p className="max-w-[62ch] text-body leading-relaxed text-muted max-sm:hidden">
+                  {/* col-start-2 between sm and md: the row is two columns there (number,
+                      heading), so without it the paragraph fell into the 44px number column and
+                      ran one word per line. From md it takes the grid's third column as before. */}
+                  <p className="max-w-[62ch] text-body leading-relaxed text-muted max-sm:hidden sm:col-start-2 md:col-start-auto">
                     {chapter.body}
                   </p>
                 </div>
