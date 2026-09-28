@@ -47,3 +47,6 @@ next-env.d.ts
 # local screenshot tooling
 .tmp-shot/
 .tmp-preview/
+
+# Word lock files, created while a document is open
+~$*
