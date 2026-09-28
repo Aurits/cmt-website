@@ -111,11 +111,10 @@ photo is sharp and taken in good light.
 |---|---|---|---|:---:|
 | **6.1** | Team headshots | One photo of each person on the site: head and shoulders, a plain light background, looking at the camera. The same style for everyone. | Everyone | ☐ |
 | **6.2** | The team together | A group photo in the office, or outside Ambassador House. | 1 or 2 | ☐ |
-| **6.3** | Ambassador House from the outside | The building seen from the street in daylight, so visitors recognise it when they arrive. | 2 or 3 | ☐ |
-| **6.4** | Inside the office | The reception and working areas, tidy and well lit. | 3 to 5 | ☐ |
-| **6.5** | Valuers at work | During an inspection: measuring, checking documents, taking notes on site. Faces do not need to show. | 5 to 10 | ☐ |
-| **6.6** | Buildings CMT has valued | Known Kampala buildings CMT has worked on, only where the owner agrees. One could be used at the top of the homepage. | 3 to 6 | ☐ |
-| **6.7** | The other offices | Gulu, Mbale and Mbarara, and the Kenya offices if they should appear on the site. | 1 per office | ☐ |
+| **6.3** | Inside the office | The reception and working areas, tidy and well lit. | 3 to 5 | ☐ |
+| **6.4** | Valuers at work | During an inspection: measuring, checking documents, taking notes on site. Faces do not need to show. | 5 to 10 | ☐ |
+| **6.5** | Buildings CMT has valued | Known Kampala buildings CMT has worked on, only where the owner agrees. One could be used at the top of the homepage. | 3 to 6 | ☐ |
+| **6.6** | The other offices | Gulu, Mbale and Mbarara, and the Kenya offices if they should appear on the site. | 1 per office | ☐ |
 
 > **Tips for good photos.** Take photos in daylight, without flash. Hold the phone level, and turn it
 > sideways for buildings and rooms. Tidy the space first. Please send the original files by email or
@@ -127,7 +126,6 @@ photo is sharp and taken in good light.
 | No. | What we need | Notes or example | Done |
 |---|---|---|:---:|
 | **7.1** | The CMT logo as an original design file, ideally SVG | The gold logo on a transparent background, and a white version. The logo we have now has a green box built into it, which limits how we can use it. | ☐ |
-| **7.2** | Clearer logo files for KCB, Stanbic, UBA and VisionFund | The versions we have are small and look slightly blurry on sharp screens. | ☐ |
 
 ## 8. Before the website goes live
 
@@ -135,12 +133,6 @@ photo is sharp and taken in good light.
 |---|---|---|:---:|
 | **8.1** | Approval of a privacy policy | Uganda's Data Protection and Privacy Act 2019 requires one, because the website's forms collect names and phone numbers. We are happy to draft it for you to review. | ☐ |
 | **8.2** | Optional: two or three short articles for the blog | For example, "What a bank needs from a valuation". The blog stays hidden until the first article is ready. | ☐ |
-
-## 9. How to send things to us
-
-- By email, or in a shared folder such as Google Drive. Whatever is easiest for you.
-- Please mention the item number, or use it in the file name, for example `6.1 Godfrey Omondi.jpg`.
-- Send things as they are ready. A partial answer now is more useful than a complete one later.
 
 ---
 
