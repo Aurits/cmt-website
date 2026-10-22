@@ -235,6 +235,24 @@ export interface Database {
 let pool: Pool | null = null;
 let db: Kysely<Database> | null = null;
 
+/*
+ * How many connections this process may hold.
+ *
+ * Supabase's session-mode pooler (port 5432) allows 15 clients in total, across every process.
+ * `next build` renders pages in several workers at once, each with its own pool, and at 5 apiece
+ * the build alone asked for 35 and was refused (EMAXCONNSESSION). So a build takes one connection
+ * per worker, and a running server takes 3 unless DATABASE_POOL_MAX says otherwise. Queries beyond
+ * that wait their turn in the pool rather than failing.
+ *
+ * The lasting fix is the transaction-mode pooler (port 6543), which is built for many short-lived
+ * clients; see docs/portability.md and the README.
+ */
+function poolSize(): number {
+  const configured = Number(process.env.DATABASE_POOL_MAX);
+  if (Number.isInteger(configured) && configured > 0) return configured;
+  return process.env.NEXT_PHASE === 'phase-production-build' ? 1 : 3;
+}
+
 /**
  * One pool for the process. Serverless reuses a warm instance between invocations, so building a
  * pool per request is how a connection limit gets exhausted on the first busy afternoon.
@@ -243,7 +261,7 @@ export function getDb(): Kysely<Database> {
   if (db) return db;
   pool = new Pool({
     connectionString: databaseUrl(),
-    max: 5,
+    max: poolSize(),
     // Fail in seconds, not minutes. pg waits forever for a connection by default, so a paused or
     // unreachable database left every page request hanging until the network gave up; with a
     // limit the request errors quickly and says why.
