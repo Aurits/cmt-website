@@ -241,7 +241,16 @@ let db: Kysely<Database> | null = null;
  */
 export function getDb(): Kysely<Database> {
   if (db) return db;
-  pool = new Pool({ connectionString: databaseUrl(), max: 5 });
+  pool = new Pool({
+    connectionString: databaseUrl(),
+    max: 5,
+    // Fail in seconds, not minutes. pg waits forever for a connection by default, so a paused or
+    // unreachable database left every page request hanging until the network gave up; with a
+    // limit the request errors quickly and says why.
+    connectionTimeoutMillis: 5_000,
+    // Close connections left idle, so a serverless instance does not hold the pooler's slots.
+    idleTimeoutMillis: 30_000,
+  });
   db = new Kysely<Database>({ dialect: new PostgresDialect({ pool }) });
   return db;
 }
