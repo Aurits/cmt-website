@@ -60,7 +60,14 @@ export function Select({
   const listboxId = `${useId()}-listbox`;
   const [open, setOpen] = useState(false);
   // Where the list draws: measured from the trigger each time it opens (see openList).
-  const [place, setPlace] = useState<{ left: number; width: number; top?: number; bottom?: number; upward: boolean } | null>(null);
+  const [place, setPlace] = useState<{
+    left: number;
+    width: number;
+    top?: number;
+    bottom?: number;
+    upward: boolean;
+    sharp: boolean;
+  } | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -88,6 +95,9 @@ export function Select({
     setPlace({
       left: rect.left,
       width: rect.width,
+      // The list is portalled to <body>, outside any .admin-sharp scope, so it takes the
+      // trigger's own field radius with it: rounded on the site, square in the CMS.
+      sharp: getComputedStyle(triggerRef.current!).borderTopLeftRadius === '0px',
       upward,
       ...(upward ? { bottom: window.innerHeight - rect.top + 4 } : { top: rect.bottom + 4 }),
     });
@@ -246,7 +256,7 @@ export function Select({
         onClick={() => (open ? close(false) : openList())}
         onKeyDown={onTriggerKeyDown}
         className={cx(
-          'flex w-full items-center justify-between gap-3 rounded-[14px] border text-left transition-colors duration-150',
+          'flex w-full items-center justify-between gap-3 rounded-(--radius-field) border text-left transition-colors duration-150',
           heights,
           tone === 'cream' ? 'bg-cream' : 'bg-white',
           // One indicator, not two: the border turns green with a soft halo tight against it,
@@ -289,9 +299,10 @@ export function Select({
           onKeyDown={onListKeyDown}
           style={{ left: place.left, width: place.width, top: place.top, bottom: place.bottom }}
           className={cx(
-            'fixed z-(--z-popover) max-h-[17rem] overflow-y-auto rounded-[18px] border border-green/10 bg-white p-1.5 font-sans shadow-[0_28px_56px_-20px_rgba(15,42,26,0.35)] outline-none',
+            'fixed z-(--z-popover) max-h-[17rem] overflow-y-auto border border-green/10 bg-white p-1.5 font-sans shadow-[0_28px_56px_-20px_rgba(15,42,26,0.35)] outline-none',
             // The gold rule marks the edge that meets the trigger, whichever way it opened.
             place.upward ? 'origin-bottom' : 'origin-top',
+            place.sharp ? 'rounded-none' : 'rounded-[18px]',
           )}
         >
           {options.map((option, index) => {
@@ -307,9 +318,10 @@ export function Select({
                 onClick={() => commit(index)}
                 onMouseEnter={() => setActiveIndex(index)}
                 className={cx(
-                  'flex cursor-pointer items-center justify-between gap-3 rounded-[12px] px-3.5 py-2.5 text-body transition-colors duration-100',
+                  'flex cursor-pointer items-center justify-between gap-3 px-3.5 py-2.5 text-body transition-colors duration-100',
                   isSelected ? 'font-semibold text-green' : 'text-green/85',
                   isActive && 'bg-sage-soft',
+                  !place.sharp && 'rounded-[12px]',
                 )}
               >
                 <span className="truncate">{option.label}</span>

@@ -222,6 +222,9 @@
   --radius-control: 0.75rem;
   --radius-card: 2rem;
   --radius-plate: 2.5rem;
+  /* Buttons and form fields, as tokens so the admin can square them (.admin-sharp below). */
+  --radius-button: 9999px;
+  --radius-field: 0.875rem;
 
   /*
    * THE GROUND LADDER (the public site now follows the one-ground rule in the palette note at the
@@ -759,4 +762,18 @@
   .report-range { width: 11%; }
   .report-text-a { opacity: 0; }
   .report-text-b { opacity: 1; }
+}
+
+/*
+ * THE ADMIN IS SHARP. The CMS (AdminShell.tsx) carries this class, which sets every radius token to
+ * 0, so cards, panels, buttons, fields and tags inside it are square while the public site keeps
+ * its rounds. Shapes that are circles by nature (avatars, icon discs, rounded-full) stay round.
+ */
+.admin-sharp {
+  --radius-brand: 0;
+  --radius-control: 0;
+  --radius-card: 0;
+  --radius-plate: 0;
+  --radius-button: 0;
+  --radius-field: 0;
 }

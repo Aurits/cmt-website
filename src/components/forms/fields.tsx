@@ -14,7 +14,7 @@ import { cx } from '@/lib/cx';
  * The Select trigger uses the same treatment, so every control on a form focuses identically.
  */
 export const inputClass =
-  'w-full rounded-[14px] border border-rule-strong bg-white px-4 py-3 text-body text-green placeholder:text-muted transition-[border-color,box-shadow] hover:border-green/60 focus:border-green focus:shadow-[0_0_0_3px_rgb(15_42_26/0.14)] focus:outline-none';
+  'w-full rounded-(--radius-field) border border-rule-strong bg-white px-4 py-3 text-body text-green placeholder:text-muted transition-[border-color,box-shadow] hover:border-green/60 focus:border-green focus:shadow-[0_0_0_3px_rgb(15_42_26/0.14)] focus:outline-none';
 
 export function Label({
   htmlFor,

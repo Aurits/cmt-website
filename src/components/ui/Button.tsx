@@ -11,7 +11,7 @@ type Size = 'sm' | 'md' | 'lg';
  * it carries the gold disc with an arrow at its right end, the one decorated button on a page.
  */
 const base =
-  'inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-full border font-semibold transition-[background-color,border-color,color,filter] duration-150 disabled:cursor-not-allowed disabled:opacity-60';
+  'inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-(--radius-button) border font-semibold transition-[background-color,border-color,color,filter] duration-150 disabled:cursor-not-allowed disabled:opacity-60';
 
 const variants: Record<Variant, string> = {
   primary: 'border-transparent bg-green text-white hover:brightness-125',
