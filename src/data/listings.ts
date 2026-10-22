@@ -1,9 +1,14 @@
 import type { Listing } from '@/lib/types';
 
 /**
- * MOCK STOCK. No database this phase.
+ * MOCK STOCK. What the site shows when no database is configured (src/lib/data/adapters/static.ts);
+ * with one, the listings come from the CMS instead.
  *
  * Prices, references and specifications are illustrative and are not CMT's real stock.
+ *
+ * NONE OF THESE CARRY `valuedOn`. The "Valued by CMT" badge is a factual claim that CMT valued
+ * the property, and CMT did not value an invented one. The badge still works: staff set the
+ * date on a real listing in the CMS and it appears on the card.
  * Photographs are generic stock imagery (see public/images/CREDITS.md), so a gallery
  * shows representative shots rather than one real building — the property detail page
  * says so on the page. Map pins are neighbourhood-level, which is also how a real agent
@@ -45,7 +50,6 @@ export const listings: Listing[] = [
       'Parking for six cars',
     ],
     agentId: 'kanshabe-lindah',
-    valuedOn: 'Mar 2026',
     featured: true,
   },
   {
@@ -81,7 +85,6 @@ export const listings: Listing[] = [
       'Fitted kitchen',
     ],
     agentId: 'kanshabe-lindah',
-    valuedOn: 'Feb 2026',
     featured: true,
   },
   {
@@ -218,7 +221,6 @@ export const listings: Listing[] = [
       'Standby generator',
     ],
     agentId: 'kanshabe-lindah',
-    valuedOn: 'Jan 2026',
     featured: true,
   },
   {
@@ -316,7 +318,6 @@ export const listings: Listing[] = [
       'Articulated vehicle access',
     ],
     agentId: 'waniala-andrew',
-    valuedOn: 'Apr 2026',
     featured: true,
   },
   {
@@ -408,7 +409,6 @@ export const listings: Listing[] = [
       'Level, ready to build',
     ],
     agentId: 'waniala-andrew',
-    valuedOn: 'Feb 2026',
     featured: true,
   },
   {
@@ -539,21 +539,28 @@ export const listingBySlug = Object.fromEntries(
   listings.map((listing) => [listing.slug, listing]),
 ) as Record<string, Listing>;
 
-export const featuredListings = listings.filter((listing) => listing.featured);
-
 export function listingsByCategory(category: Listing['category']): Listing[] {
   return listings.filter((listing) => listing.category === category);
 }
 
+/*
+ * The helpers below take the list as an argument rather than reading the one above, because the
+ * pages get their listings from the repository (src/lib/content.ts): this file without a
+ * database, Postgres with one.
+ */
+
 /** Same category first, then anything else, never the listing itself. */
-export function relatedListings(listing: Listing, count = 3): Listing[] {
-  const sameCategory = listings.filter(
+export function relatedListings(listing: Listing, all: Listing[], count = 3): Listing[] {
+  const sameCategory = all.filter(
     (item) => item.category === listing.category && item.slug !== listing.slug,
   );
-  const rest = listings.filter(
+  const rest = all.filter(
     (item) => item.category !== listing.category && item.slug !== listing.slug,
   );
   return [...sameCategory, ...rest].slice(0, count);
 }
 
-export const cities = [...new Set(listings.map((listing) => listing.city))].sort();
+/** The towns with property on the books, alphabetical, for the location filters. */
+export function citiesOf(all: Listing[]): string[] {
+  return [...new Set(all.map((listing) => listing.city))].sort();
+}

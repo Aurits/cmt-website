@@ -1,69 +1,54 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
+import { useEffect, useMemo, useState } from 'react';
+import { useSite } from '@/components/SiteProvider';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import {
-  ChevronIcon,
+  ChatIcon,
+  ChevronDownIcon,
   CloseIcon,
-  FacebookIcon,
-  InstagramIcon,
-  LinkedInIcon,
   MailIcon,
   MenuIcon,
   PhoneIcon,
   ShieldIcon,
-  TikTokIcon,
-  WhatsAppIcon,
-  XIcon,
-  YouTubeIcon,
 } from '@/components/ui/icons';
+import { Wordmark } from '@/components/layout/Wordmark';
 import { PillNav } from '@/components/layout/PillNav';
-import { navMenus } from '@/components/layout/NavMenus';
+import { buildNavMenus } from '@/components/layout/NavMenus';
 import { nav, site, whatsappHref } from '@/data/site';
+import type { NavFacts } from '@/lib/content';
 import { cx } from '@/lib/cx';
 
 /**
- * The social row, in the utility strip rather than the footer.
+ * Masthead, as the client's hero design (Hero.html) draws it.
  *
- * It belongs at the top for the reason the phone number does: these are the ways to reach
- * CMT, and the strip is the row that carries them. In the footer it was the last thing on
- * the page, which is where a link goes when nobody expects it to be used.
+ * Two rows. The utility strip is ink, 40px, and scrolls away: phone and email on the left, the
+ * regulator on the right (the right half drops below 960px, as in the design). The nav row sits
+ * on the page's own paper rather than on a coloured bar, so the masthead and the hero read as
+ * one sheet: the type wordmark, the pill nav, then a round WhatsApp button and the gold
+ * "Request a valuation" pill. It stays pinned while the page scrolls, and only once the page has
+ * moved does it take a hairline and a slight frost, so at rest it matches the design exactly.
  *
- * WhatsApp is not in this list. It is a channel people actually transact on here rather than
- * a profile to follow, so it keeps its own button beside the masthead CTA.
- *
- * An account with no URL yet still shows, dimmed and labelled, rather than disappearing. Same
- * posture as the pending registration rows and the empty testimonials: where CMT has not
- * supplied something, the UI says so. Paste a URL into site.social and the icon goes live.
- * See docs/OPEN-ITEMS.md #13.
+ * The social links moved to the footer (Footer.tsx): the design keeps the strip to the three
+ * facts a first-time visitor needs.
  */
-const socialLinks = [
-  { label: 'Facebook', href: site.social.facebook, Icon: FacebookIcon },
-  { label: 'X', href: site.social.x, Icon: XIcon },
-  { label: 'Instagram', href: site.social.instagram, Icon: InstagramIcon },
-  { label: 'LinkedIn', href: site.social.linkedin, Icon: LinkedInIcon },
-  { label: 'YouTube', href: site.social.youtube, Icon: YouTubeIcon },
-  { label: 'TikTok', href: site.social.tiktok, Icon: TikTokIcon },
-];
-
-/**
- * Masthead.
- *
- * Everything green on this site is one colour — the green inside the logo tile — so the
- * badge merges into the bar instead of reading as a pasted-on rectangle. The utility strip
- * carries that same green and is divided from the nav by a hairline rather than by a
- * change of colour: one continuous green block, articulated by rules.
- *
- * The gold hairline along the bottom edge marks where the masthead ends, which matters now
- * that the page header below it is the same green.
- */
-export function Header() {
+export function Header({ facts }: { facts: NavFacts }) {
+  const info = useSite();
   const pathname = usePathname();
+  // The menus print counts from the repository, read once on the server by the site layout.
+  const navMenus = useMemo(() => buildNavMenus(facts), [facts]);
   const [open, setOpen] = useState(false);
+  // Pinned masthead: plain paper at rest, a hairline and frost once the page has scrolled.
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 48);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
   // Which drawer section is expanded. A choice only holds on the page it was made on; otherwise
   // the section containing the current page is the one open, so the drawer starts short.
   const [expanded, setExpanded] = useState<{ path: string; href: string | null } | null>(null);
@@ -105,152 +90,92 @@ export function Header() {
 
   return (
     <>
-      {/*
-        Utility strip: scrolls away, unlike the nav bar, but shares its green.
-
-        Three groups, left to right: how to reach us, what we are regulated by, where to
-        follow us. Its height is pinned at h-9 because --header-h (globals.css) is the sum of
-        this strip and the nav bar, and the homepage hero sizes itself against that. Adding
-        the social row must not change it, so the icons are 14px and unboxed: a bordered
-        button at this scale would crowd a 36px rail that is meant to be read past, not at.
-      */}
-      <div className="hidden bg-green text-cream/85 md:block">
-        <Container className="flex h-9 items-center justify-between gap-6 border-b border-cream/12 text-micro">
-          <div className="flex items-center gap-6">
-            <a href={site.phone.href} className="flex items-center gap-2 hover:text-gold">
-              <PhoneIcon width={14} height={14} />
-              <span className="tnum">{site.phone.display}</span>
+      <div className="bg-green text-[13px] text-white/85">
+        <Container className="flex min-h-10 flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap gap-4 min-[601px]:gap-7">
+            <a href={info.phone.href} className="inline-flex items-center gap-2 hover:text-gold">
+              <PhoneIcon width={16} height={16} />
+              <span className="tnum">{info.phone.display}</span>
             </a>
-            <a href={`mailto:${site.email}`} className="flex items-center gap-2 hover:text-gold">
-              <MailIcon width={14} height={14} />
-              {site.email}
+            <a href={`mailto:${info.email}`} className="inline-flex items-center gap-2 hover:text-gold">
+              <MailIcon width={16} height={16} />
+              {info.email}
             </a>
           </div>
-
-          <div className="flex items-center gap-4">
-            {/* Dropped below lg, where the social row and the two contact links have already
-                taken the width. It is on every page in the footer and on /about/credentials. */}
-            <p className="hidden items-center gap-2 text-cream/70 lg:flex">
-              <ShieldIcon width={14} height={14} />
-              Regulated by the {site.regulator}
-            </p>
-            <span aria-hidden="true" className="hidden h-3.5 w-px bg-cream/20 lg:block" />
-            <ul aria-label="Follow CMT Realtors" className="flex items-center gap-1">
-              {socialLinks.map(({ label, href, Icon }) => (
-                <li key={label} className="flex">
-                  {href ? (
-                    <a
-                      href={href}
-                      aria-label={label}
-                      title={label}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex h-7 w-7 items-center justify-center rounded-control text-cream/80 transition-colors hover:bg-cream/10 hover:text-gold"
-                    >
-                      <Icon width={14} height={14} />
-                    </a>
-                  ) : (
-                    <span
-                      title={`${label} (link coming soon)`}
-                      className="flex h-7 w-7 items-center justify-center text-cream/35"
-                    >
-                      <Icon width={14} height={14} />
-                      <span className="sr-only">{label}, link coming soon</span>
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <p className="hidden items-center gap-2 min-[961px]:inline-flex">
+            <ShieldIcon width={16} height={16} />
+            Regulated by the {site.regulator}
+          </p>
         </Container>
       </div>
 
-      <header className="sticky top-0 z-40 border-b border-gold/45 bg-green">
-        <Container className="flex h-[80px] items-center justify-between gap-6 lg:h-[92px] xl:h-[104px]">
-          {/*
-            The badge carries 120px of its own left padding (16-20px once rendered).
-            Invisible while the tile was, but now that the green matches, it reads as the
-            wordmark being indented from everything below it — so the link is pulled back
-            by that amount to sit flush with the page margin.
-
-            The offset lives on the LINK, not on the image. The image is a flex item here,
-            and a negative margin on a shrinkable flex item reduces its resolved width:
-            with the height pinned, that squashed the mark horizontally (ratio 1.81 against
-            a true 2.088). shrink-0 on both is the belt to that braces.
-          */}
-          <Link
-            href="/"
-            className="-ml-4 flex shrink-0 items-center lg:-ml-[18px] xl:-ml-5"
-            aria-label={`${site.name} home`}
-          >
-            <Image
-              src="/brand/cmt-logo.png"
-              alt={site.name}
-              width={900}
-              height={431}
-              priority
-              className="h-14 w-auto shrink-0 lg:h-16 xl:h-[72px]"
-            />
+      <header
+        className={cx(
+          'sticky top-0 z-(--z-header) border-b transition-[background-color,border-color,box-shadow] duration-200',
+          scrolled
+            ? 'border-green/10 bg-cream/90 shadow-[0_10px_30px_-24px_rgba(15,42,26,0.5)] backdrop-blur-md'
+            : 'border-transparent bg-cream',
+        )}
+      >
+        <Container className="flex min-h-[92px] items-center justify-between gap-6">
+          <Link href="/" className="shrink-0" aria-label={`${site.name}, home`}>
+            <Wordmark />
           </Link>
 
-          <PillNav isActive={isActive} />
+          <PillNav isActive={isActive} menus={navMenus} />
 
-          <div className="hidden items-center gap-3 lg:flex">
+          <div className="flex items-center gap-3">
             <a
-              href={whatsappHref('Hello CMT Realtors, I have a property enquiry.')}
-              className="flex h-10 w-10 items-center justify-center rounded-control border border-cream/30 text-cream transition-colors hover:border-gold hover:text-gold"
+              href={whatsappHref(info.whatsapp, 'Hello CMT Realtors, I have a property enquiry.')}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-green/25 text-green transition-colors hover:bg-green/6"
               aria-label={
-                site.whatsapp
-                  ? 'Message us on WhatsApp'
-                  : 'WhatsApp, number pending. Opens the contact page'
+                info.whatsapp ? 'Chat on WhatsApp' : 'WhatsApp, number pending. Opens the contact page'
               }
             >
-              <WhatsAppIcon width={18} height={18} />
+              <ChatIcon width={20} height={20} />
             </a>
             {/* Valuation is the business; listing is a service. The masthead says so. */}
-            <Button href="/contact/request-a-valuation" variant="gold" size="sm">
+            <Button
+              href="/contact/request-a-valuation"
+              variant="gold"
+              size="sm"
+              className="max-nav:hidden"
+            >
               Request a valuation
             </Button>
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-green/25 text-green nav:hidden"
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+            >
+              <MenuIcon width={20} height={20} />
+              <span className="sr-only">Open menu</span>
+            </button>
           </div>
-
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="flex h-11 w-11 items-center justify-center rounded-control border border-cream/30 text-cream lg:hidden"
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-          >
-            <MenuIcon />
-            <span className="sr-only">Open menu</span>
-          </button>
         </Container>
       </header>
 
-      {/* Mobile drawer: same green, so the mark merges here too. */}
+      {/* Mobile drawer: ink, the design's dark, with the light wordmark. */}
       <div
         id="mobile-nav"
         hidden={!open}
-        className="fixed inset-0 z-50 flex flex-col bg-green text-cream lg:hidden"
+        className="fixed inset-0 z-(--z-drawer) flex flex-col bg-green text-cream nav:hidden"
       >
-        <div className="flex h-[80px] items-center justify-between border-b border-cream/15 px-4">
-          <Image
-            src="/brand/cmt-logo.png"
-            alt={site.name}
-            width={900}
-            height={431}
-            className="-ml-4 h-14 w-auto shrink-0"
-          />
+        <div className="flex min-h-[92px] items-center justify-between border-b border-white/12 px-5 min-[601px]:px-10">
+          <Wordmark tone="light" />
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="flex h-11 w-11 items-center justify-center rounded-control border border-cream/30"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/30"
           >
             <CloseIcon />
             <span className="sr-only">Close menu</span>
           </button>
         </div>
 
-        <nav aria-label="Main" className="flex-1 overflow-y-auto px-4 py-6">
+        <nav aria-label="Main" className="flex-1 overflow-y-auto px-5 py-6 min-[601px]:px-10">
           <ul>
             {nav.map((item) => (
               <li key={item.href} className="border-b border-cream/12">
@@ -277,14 +202,14 @@ export function Header() {
                           href: expandedHref === item.href ? null : item.href,
                         })
                       }
-                      className="flex h-11 w-11 items-center justify-center rounded-control border border-cream/20 text-cream"
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-cream"
                     >
-                      <ChevronIcon
+                      <ChevronDownIcon
                         width={18}
                         height={18}
                         className={cx(
                           'transition-transform duration-200',
-                          expandedHref === item.href ? '-rotate-90' : 'rotate-90',
+                          expandedHref === item.href && 'rotate-180',
                         )}
                       />
                       <span className="sr-only">{item.label} sections</span>
@@ -303,7 +228,7 @@ export function Header() {
                         <Link
                           href={row.href}
                           onClick={() => setOpen(false)}
-                          className="block py-1.5 text-base text-cream/75 hover:text-gold"
+                          className="block py-1.5 text-lead text-cream/75 hover:text-gold"
                         >
                           {row.label}
                         </Link>
@@ -313,7 +238,7 @@ export function Header() {
                       <Link
                         href={navMenus[item.menu].feature.cta.href}
                         onClick={() => setOpen(false)}
-                        className="block py-1.5 text-base font-medium text-gold"
+                        className="block py-1.5 text-lead font-medium text-gold"
                       >
                         {navMenus[item.menu].feature.cta.label}
                       </Link>
@@ -328,20 +253,20 @@ export function Header() {
             <Link
               href="/contact/request-a-valuation"
               onClick={() => setOpen(false)}
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-control bg-gold px-6 py-3.5 text-base font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
+              className="inline-flex min-h-[52px] items-center justify-center whitespace-nowrap rounded-full bg-gold px-[26px] text-body font-semibold text-green hover:brightness-[1.06]"
             >
               Request a valuation
             </Link>
-            <Button href={site.phone.href} variant="onDark" size="lg" fullWidth>
+            <Button href={info.phone.href} variant="onDark" size="lg" fullWidth>
               <PhoneIcon width={18} height={18} />
-              {site.phone.display}
+              {info.phone.display}
             </Button>
           </div>
 
-          <p className="mt-8 text-sm leading-relaxed text-cream/70">
-            {site.address.building}, {site.address.line1}
+          <p className="mt-8 text-body leading-relaxed text-cream/70">
+            {info.address.building}, {info.address.line1}
             <br />
-            {site.address.street}, {site.address.city}
+            {info.address.street}, {info.address.city}
           </p>
         </nav>
       </div>

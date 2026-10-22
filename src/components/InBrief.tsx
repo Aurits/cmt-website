@@ -28,7 +28,7 @@ const kenyaHead = kenyaOffices.find((office) => office.role === 'Head office')?.
 const statements = [
   {
     label: 'Who we are',
-    body: `${site.name} is a valuation and property consultancy, regulated by the ${site.regulator} and valuing property for ${site.yearsInBusiness} years.`,
+    body: `${site.name} is a valuation and property consultancy. For ${site.yearsInBusiness} years our valuers, registered with the ${site.regulator}, have put figures on property that banks lend against.`,
     link: { label: 'About us', href: '/about' },
   },
   {
@@ -63,12 +63,12 @@ export function InBrief({ className }: { className?: string }) {
   return (
     <dl className={`grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 ${className ?? ''}`}>
       {statements.map((statement, index) => (
-        <div key={statement.label} className="flex flex-col border-t border-rule pt-4">
+        <div key={statement.label} className="flex flex-col border-t border-hair pt-4">
           <dt className="flex items-baseline gap-3">
             {/* Gold display numerals, like every other numbered list on the site (the homepage
                 reasons, the advisory index, the history on About); this was the one set in small
                 grey label type. */}
-            <span className="tnum font-display text-lead text-gold-deep">
+            <span className="tnum font-display text-lead text-moss">
               {String(index + 1).padStart(2, '0')}
             </span>
             <span className="font-display text-h4 text-green">{statement.label}</span>
@@ -80,7 +80,7 @@ export function InBrief({ className }: { className?: string }) {
             <p className="text-body leading-relaxed text-muted max-sm:hidden">{statement.body}</p>
             <Link
               href={statement.link.href}
-              className="group mt-auto flex items-center gap-1 pt-4 text-sm font-medium text-green"
+              className="group mt-auto flex items-center gap-1 pt-4 text-body font-medium text-green"
             >
               <span className="underline decoration-gold decoration-2 underline-offset-4">
                 {statement.link.label}

@@ -107,7 +107,7 @@ export function ImageGalleryManager({
                 dragIndex === index && 'opacity-40',
               )}
             >
-              <div className="relative aspect-[4/3] overflow-hidden rounded-brand border border-rule bg-mist">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-brand border border-rule bg-stone">
                 <Image src={image.src} alt={image.alt || 'Listing photograph'} fill unoptimized className="object-cover" />
                 {index === 0 && (
                   <span className="absolute left-2 top-2 rounded-control bg-green px-2 py-0.5 text-label font-medium text-cream">

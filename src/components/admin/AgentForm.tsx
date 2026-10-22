@@ -143,6 +143,28 @@ export function AgentForm({ initial, isNew }: { initial: AdminAgent; isNew: bool
             Credentials confirmed by this person
           </label>
         </div>
+        {/* Both drive public pages: `listed` decides whether the person appears at all, and
+            `signsReports` puts them on the signatory roll and in the "registered valuers" count. */}
+        <div className="grid gap-5 sm:grid-cols-2">
+          <label className="flex items-center gap-2.5 text-body text-ink">
+            <input
+              type="checkbox"
+              checked={draft.listed !== false}
+              onChange={(e) => set('listed', e.target.checked ? undefined : false)}
+              className="h-4 w-4 rounded-[3px] border-rule-strong text-green accent-green"
+            />
+            Show on the public site
+          </label>
+          <label className="flex items-center gap-2.5 text-body text-ink">
+            <input
+              type="checkbox"
+              checked={Boolean(draft.signsReports)}
+              onChange={(e) => set('signsReports', e.target.checked || undefined)}
+              className="h-4 w-4 rounded-[3px] border-rule-strong text-green accent-green"
+            />
+            Registered valuer who signs reports
+          </label>
+        </div>
       </FormSection>
 
       <FormSection title="Assigned listings" lead="Which instructions this person handles.">

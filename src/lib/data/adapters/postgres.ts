@@ -89,6 +89,8 @@ interface AgentRow {
   qualifications: string[];
   credentials_confirmed: boolean;
   sourced_from: string;
+  listed: boolean;
+  signs_reports: boolean;
   sort_order: number;
 }
 
@@ -306,6 +308,8 @@ function mapAgent(row: AgentRow, registrations: AgentRegistrationRow[]): Agent {
     })),
     credentialsConfirmed: row.credentials_confirmed,
     sourcedFrom: row.sourced_from as Agent['sourcedFrom'],
+    ...(row.signs_reports ? { signsReports: true } : {}),
+    ...(row.listed ? {} : { listed: false }),
   };
 }
 
@@ -515,6 +519,8 @@ export function postgresRepository(): Repository {
             qualifications: agent.qualifications ?? [],
             credentials_confirmed: agent.credentialsConfirmed,
             sourced_from: agent.sourcedFrom,
+            listed: agent.listed !== false,
+            signs_reports: Boolean(agent.signsReports),
             updated_at: new Date(),
           };
 

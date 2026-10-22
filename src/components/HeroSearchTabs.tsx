@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Select } from '@/components/ui/Select';
 import { categories } from '@/data/categories';
-import { cities } from '@/data/listings';
-import { valuationPurposes } from '@/data/valuations';
 import { cx } from '@/lib/cx';
 
 type TabId = 'value' | 'browse' | 'talk';
@@ -32,7 +30,8 @@ const tabs: { id: TabId; label: string; action: string }[] = [
   { id: 'talk', label: 'Talk to a valuer', action: 'Reach the office' },
 ];
 
-export function HeroSearchTabs() {
+/** `cities` are the towns with stock, from the repository (citiesOf in src/data/listings.ts). */
+export function HeroSearchTabs({ cities }: { cities: string[] }) {
   const router = useRouter();
   const [active, setActive] = useState<TabId>('value');
   const [category, setCategory] = useState('any');
@@ -74,8 +73,13 @@ export function HeroSearchTabs() {
   const current = tabs.find((tab) => tab.id === active)!;
 
   return (
-    <div className="bg-paper shadow-[0_-1px_0_rgba(17,52,27,0.08)]">
-      <div role="tablist" aria-label="What would you like to do" className="flex border-b border-rule">
+    <div>
+      {/* A segmented pill control, the masthead nav's shape at a smaller size. */}
+      <div
+        role="tablist"
+        aria-label="What would you like to do"
+        className="mx-4 mt-4 flex gap-1 rounded-full border border-green/12 bg-cream p-[5px] sm:mx-5 sm:mt-5"
+      >
         {tabs.map((tab, index) => (
           <button
             key={tab.id}
@@ -91,10 +95,10 @@ export function HeroSearchTabs() {
             onKeyDown={(event) => onTabKey(event, index)}
             className={cx(
               // Two-line labels are normal at 390px, so the row centres rather than clips.
-              'relative flex min-h-[52px] flex-1 items-center justify-center px-2 py-3 text-center text-micro leading-tight transition-colors sm:px-3 sm:text-body',
+              'relative flex min-h-11 flex-1 items-center justify-center rounded-full px-2 py-2 text-center text-micro leading-tight transition-colors sm:px-3 sm:text-body',
               active === tab.id
-                ? 'bg-green text-cream'
-                : 'text-ink/75 hover:bg-mist hover:text-green',
+                ? 'bg-green font-semibold text-white'
+                : 'font-medium text-green/80 hover:bg-green/7',
             )}
           >
             {tab.label}
@@ -170,25 +174,26 @@ export function HeroSearchTabs() {
           </div>
         )}
 
-        {/* Green, the primary on a light ground, the same as the hero button directly above.
-            It was gold, so one screen showed "Request a valuation" in two colours. Gold is the
-            primary on dark grounds only: the masthead and the closing banner. */}
+        {/* The design's dark pill, the primary on a light ground. */}
         <button
           type="submit"
-          className="rounded-control bg-green px-6 py-3 text-body font-medium text-cream transition-colors hover:text-gold"
+          className="min-h-12 rounded-full bg-green px-6 text-body font-semibold text-white transition-[filter] hover:brightness-125"
         >
           {active === 'value' ? 'Request a valuation' : active === 'talk' ? 'Contact us' : 'Search'}
-          <span className="sr-only">. {current.action}</span>
+          {/* Only where the visible label differs, or a screen reader hears it twice. */}
+          {current.action !== (active === 'value' ? 'Request a valuation' : active === 'talk' ? 'Contact us' : 'Search') && (
+            <span className="sr-only">. {current.action}</span>
+          )}
         </button>
       </form>
 
       {active === 'value' && (
         // Hidden on a phone: the /valuations link it offers is one tap away in the menu, and
         // under a full-width button it was a fourth line of small print in the first screen.
-        <p className="border-t border-rule px-4 py-3.5 text-micro leading-relaxed text-muted max-sm:hidden sm:px-5">
-          Valuing machinery, equipment or shares in a business? Start from{' '}
+        <p className="border-t border-hair px-4 py-3.5 text-micro leading-relaxed text-muted max-sm:hidden sm:px-5">
+          Valuing machinery, equipment or shares in a business?{' '}
           <Link href="/valuations" className="text-green underline decoration-gold decoration-2 underline-offset-4">
-            all {valuationPurposes.length} valuation purposes
+            See every valuation we do
           </Link>
           .
         </p>

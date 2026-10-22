@@ -10,7 +10,7 @@ import { cx } from '@/lib/cx';
 const LeafletMap = dynamic(() => import('./LeafletMap'), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full w-full items-center justify-center bg-mist text-sm text-muted">
+    <div className="flex h-full w-full items-center justify-center bg-sage-soft text-body text-muted">
       Loading map
     </div>
   ),
@@ -32,12 +32,15 @@ export function PropertyMap({
   height?: string;
 }) {
   return (
-    <figure className={cx('overflow-hidden rounded-brand border border-rule', className)}>
+    // `isolate` keeps Leaflet's own stacking (panes at z-400, controls at z-1000) inside the
+    // figure. Without it the zoom buttons and markers painted over the sticky masthead (z-header)
+    // and any open dropdown as the page scrolled past the map.
+    <figure className={cx('isolate overflow-hidden rounded-brand border border-hair', className)}>
       <div className={cx('w-full', height)}>
         <LeafletMap center={center} label={label} zoom={zoom} />
       </div>
       {caption && (
-        <figcaption className="border-t border-rule bg-paper px-4 py-3 text-micro text-muted">
+        <figcaption className="border-t border-hair bg-white px-4 py-3 text-micro text-muted">
           {caption}
         </figcaption>
       )}

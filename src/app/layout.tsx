@@ -1,32 +1,26 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Newsreader } from 'next/font/google';
+import { Fraunces, Inter } from 'next/font/google';
 import './globals.css';
 import { site } from '@/data/site';
 
 /**
- * Inter for everything you read and operate; Newsreader for headlines. Both self-hosted through
+ * Fraunces for headlines, Inter for everything you read and operate: the pairing the client's
+ * hero design (Hero.html, October 2026) is set in, adopted as specified. Both self-hosted through
  * next/font, so no render-blocking request to Google and no layout shift on a slow connection.
  *
- * Newsreader replaced Fraunces after both were compared on the rendered page, alongside Source
- * Serif 4, Playfair Display, Libre Caslon and Cormorant Garamond. Fraunces is a soft, ball-
- * terminal display face that reads as a lifestyle magazine; beside a regulated valuer's wordmark
- * it was the wrong register. Playfair matched the wordmark's contrast best but sets old-style
- * figures, so "10–15 working days" shrank to lowercase height, and a firm whose headings are so
- * often numbers cannot have numerals that duck. Newsreader keeps lining figures, holds up at the
- * 17px the ledger labels use, and carries an optical-size axis: the same family draws finer
- * contrast at hero size and sturdier strokes in a card title, without a second font.
+ * Fraunces carries an optical-size axis, so the same family draws finer at hero size and
+ * sturdier in a card title. Inter keeps true tabular figures for the prices and the ledger.
  */
-const inter = Inter({
+const sans = Inter({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-sans-face',
   display: 'swap',
 });
 
-const newsreader = Newsreader({
+const display = Fraunces({
   subsets: ['latin'],
-  variable: '--font-newsreader',
+  variable: '--font-display-face',
   display: 'swap',
-  // Variable weight plus the optical-size axis; see above for why opsz is the point.
   axes: ['opsz'],
 });
 
@@ -48,7 +42,7 @@ export const metadata: Metadata = {
 
 /** Colours the browser chrome on mobile to match the masthead. */
 export const viewport: Viewport = {
-  themeColor: '#11341b',
+  themeColor: '#0f2a1a',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -69,7 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
      */
     /*
      * The font variables go on <html>, not <body>, and this is load-bearing. Tailwind emits the
-     * theme tokens (--font-sans: var(--font-inter), --font-display: var(--font-newsreader)) on
+     * theme tokens (--font-sans: var(--font-sans-face), --font-display: var(--font-display-face)) on
      * :root, and a custom property resolves its var() where it is DECLARED. With the next/font
      * variables on <body>, :root had no font variable to point at, both tokens resolved to
      * empty, and every page silently fell back to the system font stack: the site shipped in
@@ -77,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
      */
     <html
       lang="en-UG"
-      className={`${inter.variable} ${newsreader.variable}`}
+      className={`${sans.variable} ${display.variable}`}
       suppressHydrationWarning
     >
       <body suppressHydrationWarning>
@@ -92,7 +86,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-brand focus:bg-green focus:px-4 focus:py-2 focus:text-cream"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-(--z-skip) focus:rounded-brand focus:bg-green focus:px-4 focus:py-2 focus:text-cream"
         >
           Skip to content
         </a>

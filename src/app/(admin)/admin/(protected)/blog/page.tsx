@@ -6,7 +6,6 @@ import { DataTable, type DataTableColumn } from '@/components/admin/DataTable';
 import { FilterTabs } from '@/components/admin/FilterTabs';
 import { NotesIcon, PlusIcon } from '@/components/admin/icons';
 import { StatusPill, type PillTone } from '@/components/admin/StatusPill';
-import { agentById } from '@/data/agents';
 import { useAdmin } from '@/lib/admin/store';
 import type { AdminBlogPost, PostStatus } from '@/lib/admin/types';
 
@@ -71,7 +70,9 @@ export default function AdminBlogPostsPage() {
       header: 'Author',
       render: (row) => (
         <span className="text-body text-ink">
-          {row.authorId ? agentById[row.authorId]?.name ?? row.authorId : 'Unattributed'}
+          {row.authorId
+            ? (state.agents.find((agent) => agent.id === row.authorId)?.name ?? row.authorId)
+            : 'Unattributed'}
         </span>
       ),
     },

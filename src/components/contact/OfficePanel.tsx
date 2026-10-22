@@ -1,51 +1,53 @@
 import { Button } from '@/components/ui/Button';
+import { getSite } from '@/lib/content';
 import { ClockIcon, MailIcon, PhoneIcon, PinIcon, WhatsAppIcon } from '@/components/ui/icons';
-import { kenyaOffices, site, ugandaOffices, whatsappHref } from '@/data/site';
+import { kenyaOffices, ugandaOffices, whatsappHref } from '@/data/site';
 
 /**
  * The office card that sits beside every contact form. Uganda expanded, Kenya as a collapsed
  * summary linking through — nine offices listed in full here would bury the one you are actually
  * trying to reach.
  */
-export function OfficePanel() {
+export async function OfficePanel() {
+  const info = await getSite();
   return (
     <div>
-      <div className="border border-rule bg-paper p-6">
-        <h2 className="text-h3 text-green">Our office</h2>
+      <div className="rounded-(--radius-card) border border-green/8 bg-white p-6 sm:p-7">
+        <h2 className="font-display text-h3 font-semibold text-green">Our office</h2>
 
         <address className="mt-5 space-y-4 text-body not-italic">
           <p className="flex gap-3.5">
-            <PinIcon width={18} height={18} className="mt-0.5 shrink-0 text-gold-deep" />
+            <PinIcon width={18} height={18} className="mt-0.5 shrink-0 text-moss" />
             <span className="text-ink">
-              {site.address.building}
+              {info.address.building}
               <br />
-              {site.address.line1}
+              {info.address.line1}
               <br />
-              {site.address.street}, {site.address.city}, {site.address.country}
+              {info.address.street}, {info.address.city}, {info.address.country}
             </span>
           </p>
           <p className="flex gap-3.5">
-            <PhoneIcon width={18} height={18} className="mt-0.5 shrink-0 text-gold-deep" />
-            <a href={site.phone.href} className="tnum text-ink hover:text-green">
-              {site.phone.display}
+            <PhoneIcon width={18} height={18} className="mt-0.5 shrink-0 text-moss" />
+            <a href={info.phone.href} className="tnum text-ink hover:text-green">
+              {info.phone.display}
             </a>
           </p>
           <p className="flex gap-3.5">
-            <MailIcon width={18} height={18} className="mt-0.5 shrink-0 text-gold-deep" />
-            <a href={`mailto:${site.email}`} className="break-all text-ink hover:text-green">
-              {site.email}
+            <MailIcon width={18} height={18} className="mt-0.5 shrink-0 text-moss" />
+            <a href={`mailto:${info.email}`} className="break-all text-ink hover:text-green">
+              {info.email}
             </a>
           </p>
         </address>
 
-        <div id="whatsapp" className="mt-6 scroll-mt-32 border-t border-rule pt-5">
-          <h3 className="flex items-center gap-2.5 font-display text-lead text-green">
-            <WhatsAppIcon width={18} height={18} className="text-gold-deep" />
+        <div id="whatsapp" className="mt-6 scroll-mt-32 border-t border-hair pt-5">
+          <h3 className="flex items-center gap-2.5 font-display text-lead font-semibold text-green">
+            <WhatsAppIcon width={18} height={18} className="text-moss" />
             WhatsApp
           </h3>
-          {site.whatsapp ? (
+          {info.whatsapp ? (
             <div className="mt-3">
-              <Button href={whatsappHref()} variant="primary" size="sm">
+              <Button href={whatsappHref(info.whatsapp)} variant="primary" size="sm">
                 Open a WhatsApp chat
               </Button>
             </div>
@@ -57,20 +59,20 @@ export function OfficePanel() {
           )}
         </div>
 
-        <div className="mt-6 border-t border-rule pt-5">
-          <h3 className="flex items-center gap-2.5 font-display text-lead text-green">
-            <ClockIcon width={18} height={18} className="text-gold-deep" />
+        <div className="mt-6 border-t border-hair pt-5">
+          <h3 className="flex items-center gap-2.5 font-display text-lead font-semibold text-green">
+            <ClockIcon width={18} height={18} className="text-moss" />
             Office hours
           </h3>
           <dl className="mt-3">
-            {site.hours.map((entry) => (
+            {info.hours.map((entry) => (
               <div key={entry.days} className="schedule-row text-body">
                 <dt className="text-muted">{entry.days}</dt>
                 <dd className="tnum text-ink">{entry.time}</dd>
               </div>
             ))}
           </dl>
-          {!site.hoursConfirmed && (
+          {!info.hoursConfirmed && (
             <p className="mt-3 text-micro leading-relaxed text-muted">
               {/* Addressed to the visitor. It used to read "Hours shown are a placeholder and
                   need confirming by CMT", a note to the client printed on the public page. The
@@ -82,8 +84,8 @@ export function OfficePanel() {
       </div>
 
       {/* The other offices, briefly. */}
-      <div className="mt-6 border border-rule bg-paper p-6">
-        <h2 className="font-display text-h4 text-green">Elsewhere</h2>
+      <div className="mt-5 rounded-[24px] bg-sage-soft p-6 sm:p-7">
+        <h2 className="font-display text-h4 font-semibold text-green">Elsewhere</h2>
         <dl className="mt-4">
           <div className="schedule-row text-body">
             <dt className="text-muted">Uganda</dt>

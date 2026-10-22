@@ -1,65 +1,72 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { CTABanner } from '@/components/CTABanner';
-import { AnimatedStatValue } from '@/components/AnimatedStatValue';
+import { FactStrip } from '@/components/FactStrip';
 import { CategoryCard } from '@/components/CategoryCard';
 import { HeroSearchTabs } from '@/components/HeroSearchTabs';
 import { InBrief } from '@/components/InBrief';
 import { PartnerConveyor } from '@/components/PartnerConveyor';
-import { HeroDatum, HeroSheet, HeroSkyline } from '@/components/home/HeroElevation';
-import { ProcessDatum } from '@/components/home/ProcessDatum';
+import { ProcessSteps } from '@/components/ProcessSteps';
+import { HeroReport } from '@/components/home/HeroReport';
 import { PurposeIcon } from '@/components/valuations/PurposeIcon';
-import { ChevronIcon } from '@/components/ui/icons';
+import { ArrowRightIcon } from '@/components/ui/icons';
 import { Testimonials } from '@/components/TestimonialCard';
 import { FeaturedCarousel } from '@/components/property/FeaturedCarousel';
-import { CredentialLine } from '@/components/about/StandingSchedule';
-import { AnimatedHeadline } from '@/components/ui/AnimatedHeadline';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Reveal } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { categories } from '@/data/categories';
-import { featuredListings, listings, listingsByCategory } from '@/data/listings';
-import { allPartners, partnerCount } from '@/data/partners';
+import { citiesOf } from '@/data/listings';
+import { clientCount } from '@/data/clients';
 import { advisoryServices } from '@/data/advisory';
 import { featuredPurposes, purposeBySlug } from '@/data/valuations';
-import { site, stats } from '@/data/site';
+import { site } from '@/data/site';
 import { cx } from '@/lib/cx';
-import { testimonials } from '@/data/testimonials';
+import { getListings, getPartners, getTestimonials } from '@/lib/content';
+import { numberWord } from '@/lib/format';
 
 /**
- * Homepage.
+ * Homepage, in the client's hero design (Hero.html, October 2026).
  *
- * Section order follows the brief. Each section is kept to the shortest form that still
- * does its job, because the whole page has to be scrollable on a phone on mobile data:
- * the featured stock is a single full-bleed carousel rather than a grid, the client list
- * is one belt (the categorised belts live on /about/clients), and the identity section carries
- * three claims rather than four.
+ * The hero and the four facts under it are that design, built to its measurements: an ink
+ * headline with its last words underlined in gold, the lead, the dark pill with the gold arrow
+ * disc and the outlined pill, a line in the display serif, and on the right a sample valuation
+ * report on a sage plate with a gold disc behind its corner. No photograph and no background
+ * drawing: the paper is the ground.
  *
- * THE GROUND UNDER EACH SECTION IS CHOSEN, NOT INHERITED. See the ground ladder in
- * globals.css. Every section below states its own background even where that background is
- * the body default, because a section that sets none is not making a decision, it is
- * accepting cream — and that is how eight of these ended up on the same tan field with three
- * green slabs dropped in. Reading down the page, the grounds run:
+ * Every section after it speaks the same language, so the page reads as one design rather than
+ * a new hero on an old site. Four rules carry it:
  *
- *   paper · cream · mist · paper · green · cream · green · mist · cream · green
+ *   ONE GROUND. The whole page sits on the design's paper (#F7F5EE). Sections are told apart by
+ *   what sits on the paper (white cards, sage plates, one ink plate), not by alternating bands.
+ *   ROUNDS. Cards take --radius-card (32px), plates --radius-plate (40px), every button and tab
+ *   is a pill, and numbered markers are discs.
+ *   THE GOLD RULE. Each section opens with the design's eyebrow: a 40px gold rule and a short
+ *   uppercase line in moss, over a Fraunces heading.
+ *   ONE DARK PLATE. Advisory is the single ink panel on the page, inset on the paper with rounded
+ *   corners rather than a full-width slab, so the page stays light from top to footer.
  *
- * No two neighbours share one, green appears three times and never consecutively, and paper
- * carries the hero and the two sections that are mostly reading. Three constraints shape the
- * order and each is easy to break by accident: a section whose cards are bg-paper cannot itself
- * be paper or the cards vanish (which rules paper out for the categories and the valuation
- * purposes), the carousel is immovably green so whatever sits either side of it cannot be, and
- * the hero is paper because the green oval in it needs the brightest ground on the site to read
- * as a shape rather than as a smudge.
+ * The order is the argument: the claim, the counter (what you came to do), who we are, what we
+ * are asked to do, how a valuation runs, advice, then the agency work, then who instructs us.
  */
+
+/* The four facts under the hero, exactly as Hero.html sets them: one number, then three words. */
+const facts = [
+  { title: '16+', body: 'Years of valuations' },
+  { title: 'Market evidence', body: 'Not hunches. Every figure is built to hold up.' },
+  { title: 'Regulated', body: site.regulator },
+  { title: 'Trusted', body: 'By banks, public bodies and companies' },
+];
+
 const reasons = [
   {
-    title: 'Regulated, and answerable for the figure',
-    body: `Our valuers are regulated by the ${site.regulator}. Every report carries a name, and a person who answers for it.`,
+    title: 'Registered, and answerable for the figure',
+    body: `Our valuers are registered with the ${site.regulator}. Every report carries a name, and a person who answers for it.`,
   },
   {
     title: 'Already on the panel',
-    body: `${partnerCount} institutions already instruct us, most of them again and again, and our reports have passed their own checks for sixteen years.`,
+    body: `${clientCount} banks, public bodies and companies have put us on their valuation panels, and our reports have passed their checks for sixteen years.`,
   },
   {
     title: 'Evidence before opinion',
@@ -67,191 +74,119 @@ const reasons = [
   },
 ];
 
-export default function HomePage() {
-  const featured = featuredListings.slice(0, 5);
+export default async function HomePage() {
+  const [listings, partners, testimonials] = await Promise.all([
+    getListings(),
+    getPartners(),
+    getTestimonials(),
+  ]);
+  const featured = listings.filter((listing) => listing.featured).slice(0, 5);
+  const cityCount = citiesOf(listings).length;
 
   return (
     <>
-      {/*
-        HERO.
-
-        The fifth version of this slot, and the first that is not a split hero. The earlier four
-        all put words on the left and a picture on the right, which is how every property site
-        in this market opens, and four of them used photographs of buildings CMT has never
-        valued.
-
-        IT IS ORGANISED BY A DATUM, the way a survey drawing is. One gold ground line runs the
-        full width of the viewport, edge to edge, and everything in the hero is placed relative
-        to it. Above the line: the claim, set directly over the building it is about, which
-        rises behind the words from the ground line up. Below the line: the evidence, meaning the
-        ledger and the counter. The reader moves
-        down through it in the order someone decides in (what is claimed, what it is about, what
-        it rests on, what to do next) and the ground line is the hinge between the claim and
-        the proof.
-
-        ON WHITE, as a drawing sheet: everything above the ground line sits on a faint drafting
-        grid (HeroSheet) that is strongest around the building and dissolves toward the edges.
-        An oval sat there for one iteration and was removed; it gave the upper half presence but
-        had no reason to exist, where the grid is what a survey is actually drawn on.
-
-        THE DRAWING IS THE BACKGROUND OF THE WORDS, not a row beneath them. The first screen is
-        one layered composition, back to front: the drafting grid, the blurred city and the
-        building rising from the bottom edge, a soft white halo, then the claim. The halo is what
-        makes that legible rather than decorative: the tower is dark glass, green type over dark
-        glass is unreadable, and a paper-coloured radial wash behind the words lets the top of
-        the building dissolve into them, the way a building fades into haze. The ground line sits
-        exactly at the foot of the first screen, and the evidence starts just below it.
-
-        On a phone the same order holds, with the skyline cropping its neighbours rather than
-        shrinking its subject.
-      */}
-      <section className="relative isolate overflow-hidden bg-paper">
-        <div className="flex flex-col">
-          {/* The first screen: everything above the ground line, sized so the line lands on the
-              fold (less the 15px the datum itself takes). The grid, the street and the halo are
-              layered behind the claim in that order; the -z-10 layers stack in DOM order inside
-              this isolated block, so the halo always sits over the building and under the words. */}
-          <div className="relative isolate flex min-h-[calc(100dvh_-_var(--header-h)_-_var(--mobile-cta-h)_-_15px)] flex-col lg:min-h-[calc(100dvh_-_var(--header-h)_-_15px)]">
-            <HeroSheet />
-            {/* 260px on a phone, where it stands under the words rather than behind them (see the
-                bottom padding on the claim below); from sm up it grows to rise behind them. The
-                height is the smaller of 58vh and 44vw: on screen height alone, a tall portrait
-                tablet drew the tower 330px wide and cropped the ±0.00 mark off the left edge. */}
-            <HeroSkyline className="absolute inset-x-0 bottom-0 -z-10 h-[260px] sm:h-[clamp(300px,min(58vh,44vw),640px)]" />
-            {/* Solid paper at its core, so nothing in the drawing (the height line included) runs
-                through a line of text; the building emerges from it just below the buttons. */}
-            <span aria-hidden="true" className="hero-halo pointer-events-none absolute inset-0 -z-10" />
-          {/* Above the line: the claim, over the building. */}
-          {/* pb-[250px] on a phone: a tall, narrow column cannot carry green type over dark glass
-              and stay legible, so there the building stands just below the buttons instead of
-              behind them. From sm up the column is wide enough for the halo to clear the words. */}
-          <Container className="flex flex-1 flex-col items-center pt-14 pb-[250px] text-center sm:pb-10 lg:pt-20">
-            <div className="hero-rise flex flex-col items-center">
-              <span aria-hidden="true" className="block h-[3px] w-12 bg-gold" />
-              <h1 className="mt-6 max-w-[24ch] text-balance text-display text-green">
-                <AnimatedHeadline text="16+ years of valuations that Uganda’s banks lend against" />
-              </h1>
-              <p className="mt-6 max-w-[56ch] text-lead leading-relaxed text-muted sm:text-h4">
-                When a bank, a public body or a company needs a figure that holds up, they come
-                to us. We work from market evidence, not hunches.
+      {/* HERO, as Hero.html. Grid 1.12fr / 0.88fr with a 72px gutter; one column below 960px.
+          overflow-x-clip: on a phone the card's sage plate and gold disc reach past the 20px
+          gutter to the screen edge, as in the design, and must not make the page scroll sideways. */}
+      <section className="relative overflow-x-clip">
+        <Container>
+          <div className="grid items-center gap-14 pt-8 pb-14 min-[961px]:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] min-[961px]:gap-[72px] min-[961px]:pt-14 min-[961px]:pb-[72px]">
+            <div className="hero-rise">
+              <p className="mb-[22px] flex items-center gap-3 text-[13px] font-semibold tracking-[0.16em] text-moss uppercase">
+                <span aria-hidden="true" className="h-[3px] w-10 shrink-0 rounded-full bg-gold" />
+                Property valuation &amp; advisory · Uganda
               </p>
-              {/* Valuation leads. The masthead CTA, the nav order and the page title all say
-                  valuation first and agency second, and the hero is the surface that sets
-                  that expectation for every one of them. */}
-              {/* On a phone the pair stacks at one shared width, rather than each shrinking to
-                  its own label and leaving two ragged buttons centred on top of each other. */}
-              <div className="mt-8 grid w-full max-w-[22rem] gap-3 sm:flex sm:w-auto sm:max-w-none sm:justify-center">
-                <Button href="/contact/request-a-valuation" variant="primary" size="lg" className="w-full sm:w-auto">
+              {/* Plain wrapping, not the site-wide balance: the design breaks after "lend". */}
+              <h1 className="text-display text-green [text-wrap:wrap]">
+                16+ years of valuations that Uganda&rsquo;s banks{' '}
+                <span className="bg-[linear-gradient(transparent_64%,var(--color-gold)_64%_90%,transparent_90%)] box-decoration-clone">
+                  lend against
+                </span>
+              </h1>
+              <p className="mt-[26px] max-w-[520px] text-hero-lead leading-[1.6] text-prose">
+                When a bank, a public body or a company needs a figure that holds up, they come to
+                us. We work from market evidence, not hunches.
+              </p>
+              <div className="mt-[38px] flex flex-wrap gap-3.5">
+                <Button href="/contact/request-a-valuation" size="lg" arrow>
                   Request a valuation
                 </Button>
-                {/* Filled with paper, so it stays legible wherever the drawing sits behind it. */}
-                <Button href="/listings" variant="outline" size="lg" className="w-full bg-paper sm:w-auto">
+                <Button href="/listings" variant="outline" size="lg">
                   Browse properties
                 </Button>
               </div>
-              {/* Renders nothing until a registration is confirmed, see docs/OPEN-ITEMS.md #1. */}
-              <CredentialLine className="justify-center" />
+              <p className="mt-10 flex max-w-[520px] items-center gap-3.5 font-display text-[21px] leading-[1.35] text-moss [text-wrap:wrap]">
+                <span aria-hidden="true" className="h-2.5 w-2.5 shrink-0 rounded-full bg-gold" />
+                Every great build starts with a number you can stand on.
+              </p>
             </div>
-          </Container>
 
+            <HeroReport className="hero-fade-in max-w-none justify-self-stretch min-[961px]:max-w-[460px] min-[961px]:justify-self-end" />
           </div>
-          {/* On the line: the ground the building stands on. Full bleed. */}
-          <HeroDatum />
 
-          {/* Below the line: the evidence. */}
-          <Container className="pt-8 pb-8 lg:pt-10 lg:pb-12">
-            {/*
-              Four facts, each checkable, set as a ledger with the figure over its own caption:
-              the row the reference sites use for "3200+ properties sold", except these count
-              years, offices, institutions and the regulator, because those are the four things
-              someone deciding whether to trust a valuation actually weighs.
-            */}
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-4">
-              {stats.map((stat, index) => (
-                <div
-                  key={stat.label}
-                  className={index > 0 ? 'sm:border-l sm:border-rule sm:pl-6' : undefined}
-                >
-                  <dt className="sr-only">{stat.label}</dt>
-                  <dd>
-                    <span className="flex items-baseline gap-1.5">
-                      <span className="tnum font-display text-figure leading-none text-gold-deep">
-                        <AnimatedStatValue value={stat.value} />
-                      </span>
-                      <span className="text-micro text-muted">{stat.unit}</span>
-                    </span>
-                    <span className="mt-2 block max-w-[26ch] text-micro leading-snug text-pretty text-muted">
-                      {stat.label}
-                    </span>
-                  </dd>
-                </div>
-              ))}
-            </dl>
-
-            {/* The counter: the three jobs a visitor came to do, closing the hero. */}
-            <div className="mt-8 rounded-brand border border-rule border-t-2 border-t-gold bg-paper lg:mt-10">
-              <HeroSearchTabs />
-            </div>
-          </Container>
-        </div>
+          {/* The four facts. Four across, two across below 960px. */}
+          <FactStrip facts={facts} />
+        </Container>
       </section>
 
-      {/*
-        THE ORDER BELOW IS THE ARGUMENT. The hero says valuation first and agency second, and the
-        page used to contradict it within one scroll: straight from the hero into a carousel of
-        property for sale, then back to valuation, then property types, then valuation again. It
-        now argues one way. First the firm (identity), then what it is asked to do (purposes),
-        then how it does it (process), then the advice around it (advisory). Only then the
-        agency work, as one block (property types, then the featured stock that illustrates
-        them), and finally who instructs us.
-      */}
+      {/* THE COUNTER: the three jobs a visitor came to do, on a white card. */}
+      <section className="pb-16 lg:pb-24">
+        <Container>
+          <div className="rounded-(--radius-card) border border-green/8 bg-white shadow-[0_28px_56px_-28px_rgba(15,42,26,0.18)]">
+            <HeroSearchTabs cities={citiesOf(listings)} />
+          </div>
+        </Container>
+      </section>
 
-      {/* Identity. The thesis, directly under the claim it explains. */}
-      <section className="bg-cream py-12 lg:py-16">
-        <Container className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-          {/* 3:2 on a phone rather than 4:3: the photograph follows the text there, and at
-              full column width a squarer frame spent 60px on desk and sleeve. */}
-          <Reveal className="relative order-2 aspect-[3/2] overflow-hidden rounded-brand border border-rule sm:aspect-[4/3] lg:order-1 lg:aspect-auto lg:min-h-[380px]">
-            {/* A report being read and signed at a client meeting: the section's own argument,
-                that a figure is only worth the valuer who signs it, shown rather than decorated.
-                It replaced an abstract balcony facade that said nothing about the work. The alt
-                describes what is in the frame and does not claim the person is a CMT valuer:
-                this is licensed stock (public/images/CREDITS.md). Cropped high so the face and
-                the pen both stay in frame at 4:3 and at full column height. */}
-            <Image
-              src="/images/services/lending.jpg"
-              alt="A professional reading and signing a report at a meeting"
-              fill
-              sizes="(min-width: 1024px) 48vw, 100vw"
-              className="object-cover object-[50%_30%]"
+      {/* WHO WE ARE. The photograph on a sage plate with the gold disc: the hero card's setting. */}
+      <section className="overflow-x-clip pb-16 lg:pb-24">
+        <Container className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
+          <Reveal className="relative order-2 lg:order-1">
+            <div
+              aria-hidden="true"
+              className="absolute inset-[22px_-22px_-22px_22px] rounded-(--radius-plate) bg-sage"
             />
+            <div
+              aria-hidden="true"
+              className="absolute -bottom-5 -left-5 h-16 w-16 rounded-full bg-gold"
+            />
+            <div className="relative aspect-[4/3] overflow-hidden rounded-(--radius-card)">
+              {/* Licensed stock (public/images/CREDITS.md); the alt does not claim the person is
+                  a CMT valuer. Cropped high so the face and the pen stay in frame. */}
+              <Image
+                src="/images/services/lending.jpg"
+                alt="A professional reading and signing a report at a meeting"
+                fill
+                sizes="(min-width: 1024px) 46vw, 100vw"
+                className="object-cover object-[50%_30%]"
+              />
+            </div>
           </Reveal>
 
           <div className="order-1 lg:order-2">
             <Reveal>
               <SectionHeading
+                eyebrow="Who we are"
                 title="A valuation firm first, an agency second"
                 lead="Most people meet us through their bank. A loan depends on a figure, the figure depends on a valuer, and the valuer has to be one the lender trusts. That is the work we have spent sixteen years building."
                 leadShort="A loan depends on a figure, and the figure on a valuer the lender trusts."
               />
             </Reveal>
-            {/* Numbered as a ledger: three claims, each one checkable, in the order a lender
-                weighs them. */}
-            <dl className="mt-7">
+            <dl className="mt-8 grid gap-3">
               {reasons.map((reason, index) => (
                 <Reveal as="div" key={reason.title} delay={index * 90}>
-                  <div className="grid grid-cols-[2.5rem_1fr] gap-x-3 border-t border-rule py-4">
+                  <div className="flex gap-4 rounded-[20px] border border-green/8 bg-white p-5">
                     <span
                       aria-hidden="true"
-                      className="tnum pt-0.5 font-display text-lead leading-none text-gold-deep"
+                      className="tnum flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sage-soft font-display text-[15px] font-semibold text-green"
                     >
-                      {String(index + 1).padStart(2, '0')}
+                      {index + 1}
                     </span>
                     <div>
-                      <dt className="font-display text-lead text-green">{reason.title}</dt>
-                      {/* Title only on a phone: the three titles are the claims, and each body
-                          restates its title at length. */}
-                      <dd className="mt-1.5 max-w-[60ch] text-body leading-relaxed text-muted max-sm:hidden">
+                      <dt className="font-display text-lead font-semibold text-green">
+                        {reason.title}
+                      </dt>
+                      <dd className="mt-1 text-small leading-relaxed text-muted max-sm:hidden">
                         {reason.body}
                       </dd>
                     </div>
@@ -259,8 +194,8 @@ export default function HomePage() {
                 </Reveal>
               ))}
             </dl>
-            <div className="mt-7">
-              <Button href="/about" variant="quiet">
+            <div className="mt-8">
+              <Button href="/about" variant="outline">
                 More about CMT Realtors
               </Button>
             </div>
@@ -268,76 +203,64 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* The three reasons people instruct us most, routing into the /valuations matrix. */}
-      <section className="bg-mist py-12 lg:py-16">
+      {/* WHAT WE ARE ASKED TO DO. Three white cards, each with its mark in a sage disc. */}
+      <section className="pb-16 lg:pb-24">
         <Container>
           <Reveal>
             <SectionHeading
+              eyebrow="Valuations"
               title="What we are usually asked to do"
               lead="Most of our work starts with one of these three. Each calls for a different basis of value, which changes the figure, so we agree it with you before anyone visits the property."
               leadShort="Most of our work starts with one of these three."
               action={
-                <Button href="/valuations" variant="outline" size="md">
+                <Button href="/valuations" variant="outline">
                   All valuation services
                 </Button>
               }
             />
           </Reveal>
-          {/* A rail below sm (see "THE MOBILE SYSTEM" in globals.css): three 440px cards
-              stacked were a screen and a half; swiped, they are one card tall. */}
-          <ul className="rail mt-8 sm:grid sm:grid-cols-3 sm:gap-4">
+          {/* A rail below sm (see "THE MOBILE SYSTEM" in globals.css). */}
+          <ul className="rail mt-10 sm:grid sm:grid-cols-3 sm:gap-5">
             {featuredPurposes.map((slug, index) => {
               const purpose = purposeBySlug[slug];
-              /* The turnaround is the fact people decide on, so it leads each card as a
-                 figure. "5–8 working days" splits into the numerals and their unit; "Scoped
-                 per instruction" has no numerals and is set as a phrase, which is the honest
-                 answer for compensation work rather than an invented range. */
-              const timing = purpose.turnaround.match(/^([\d\u2013-]+)\s+(.+)$/);
+              // "5–8 working days" splits into a figure and its unit; a phrase stays a phrase.
+              const timing = purpose.turnaround.match(/^([\d–-]+)\s+(.+)$/);
               return (
                 <Reveal as="li" key={slug} delay={index * 80} className="flex">
                   <Link
                     href={`/valuations/${purpose.slug}`}
-                    className="group flex w-full flex-col border border-rule border-t-2 border-t-gold bg-paper p-6 transition-colors duration-300 hover:border-green/40 hover:border-t-gold"
+                    className="group flex w-full flex-col rounded-(--radius-card) border border-green/8 bg-white p-7 transition-shadow duration-300 hover:shadow-[0_28px_56px_-24px_rgba(15,42,26,0.25)]"
                   >
-                    {/* Fixed height, so the title below starts on the same line in every card
-                        whether the corner holds a figure and its unit or a one-line phrase. */}
                     <span className="flex min-h-[3.25rem] items-start justify-between gap-4">
-                      {/* On a tile, not floating: a bare 30px outline in a card corner reads as
-                          decoration, the same mark on a solid square reads as a sign. Turns green
-                          with a gold mark on hover, the card's one moving part. */}
-                      <span className="flex h-12 w-12 shrink-0 items-center justify-center bg-mist text-green transition-colors group-hover:bg-green group-hover:text-gold">
-                        <PurposeIcon slug={slug} width={24} height={24} />
+                      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sage-soft text-green transition-colors group-hover:bg-green group-hover:text-gold">
+                        <PurposeIcon slug={slug} width={22} height={22} />
                       </span>
                       <span className="text-right">
                         {timing ? (
                           <>
-                            <span className="tnum block font-display text-figure leading-none text-gold-deep">
+                            <span className="tnum block font-display text-figure leading-none font-semibold text-green">
                               {timing[1]}
                             </span>
-                            <span className="mt-1 block text-micro text-muted">{timing[2]}</span>
+                            <span className="mt-1 block text-[12.5px] text-muted">{timing[2]}</span>
                           </>
                         ) : (
-                          <span className="block max-w-[14ch] text-micro text-muted">
+                          <span className="block max-w-[14ch] text-[12.5px] text-muted">
                             {purpose.turnaround}
                           </span>
                         )}
                       </span>
                     </span>
-                    <h3 className="mt-6 font-display text-h4 text-green group-hover:text-gold-deep">
+                    <h3 className="mt-7 font-display text-h4 font-semibold text-green">
                       {purpose.name}
                     </h3>
-                    <p className="mt-2.5 flex-1 text-body leading-relaxed text-muted">
+                    <p className="mt-2.5 flex-1 text-small leading-relaxed text-muted">
                       {purpose.situation}
                     </p>
-                    <span className="mt-5 flex items-center gap-1 text-body font-medium text-green">
-                      <span className="underline decoration-gold decoration-2 underline-offset-4">
-                        What this involves
+                    <span className="mt-6 inline-flex items-center gap-2 text-small font-semibold text-green">
+                      What this involves
+                      <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-gold transition-transform group-hover:translate-x-0.5">
+                        <ArrowRightIcon width={14} height={14} />
                       </span>
-                      <ChevronIcon
-                        width={14}
-                        height={14}
-                        className="transition-transform group-hover:translate-x-0.5"
-                      />
                     </span>
                   </Link>
                 </Reveal>
@@ -347,103 +270,97 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* How it runs. The one question the page never answered. */}
-      <section className="bg-paper py-12 lg:py-16">
+      {/* HOW IT RUNS. Four steps on one sage plate (ProcessSteps, shared with /valuations). */}
+      <section className="pb-16 lg:pb-24">
         <Container>
-          <Reveal>
-            <SectionHeading
-              title="From instruction to signed report"
-              lead="Four steps. We tell you at the start which of them could affect your deadline."
-            />
-          </Reveal>
-          <Reveal className="mt-2">
-            <ProcessDatum />
-          </Reveal>
+          <ProcessSteps />
         </Container>
       </section>
 
-      {/* Advisory. A ruled index rather than four boxes: src/data/advisory.ts says these are
-          "scoped, priced and negotiated, not bought off a card", and the homepage was setting
-          them as cards. Each row names who it is for before what it is, as /advisory does. */}
-      <section className="bg-green py-14 text-cream lg:py-20">
+      {/* ADVICE. The page's one ink plate, inset and rounded rather than a full-width slab. */}
+      <section className="pb-16 lg:pb-24">
         <Container>
-          <Reveal>
-            <SectionHeading
-              onDark
-              title="Advice before you commit"
-              lead="Beyond the valuation: what a site can hold, what to pay for it, and how to run it once it is yours. Every job is scoped and priced in writing before it starts."
-              leadShort="What a site can hold, what to pay for it, and how to run it."
-              action={
-                <Button href="/advisory" variant="onDark" size="md">
-                  All advisory work
-                </Button>
-              }
+          <div className="relative overflow-hidden rounded-(--radius-plate) bg-green px-6 py-12 text-white min-[601px]:px-12 lg:py-16">
+            <div
+              aria-hidden="true"
+              className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-gold/90"
             />
-          </Reveal>
-          <ol className="mt-9 grid gap-x-12 lg:grid-cols-2">
-            {advisoryServices.slice(0, 4).map((service, index) => (
-              <Reveal as="li" key={service.slug} delay={index * 80}>
-                <Link
-                  href={`/advisory#${service.slug}`}
-                  className="group grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-x-3 border-t border-cream/20 py-5 transition-colors hover:border-gold/60"
-                >
-                  <span className="tnum font-display text-lead text-gold">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  <span>
-                    <span className="block font-display text-h4 text-cream transition-colors group-hover:text-gold">
-                      {service.name}
-                    </span>
-                    <span className="mt-1 block text-micro text-cream/70">{service.audience}</span>
-                  </span>
-                  <ChevronIcon
-                    width={18}
-                    height={18}
-                    className="self-center text-gold transition-transform group-hover:translate-x-1"
-                  />
-                </Link>
+            <div className="relative">
+              <Reveal>
+                <SectionHeading
+                  onDark
+                  eyebrow="Advisory"
+                  title="Advice before you commit"
+                  lead="Beyond the valuation: what a site can hold, what to pay for it, and how to run it once it is yours. Every job is scoped and priced in writing before it starts."
+                  leadShort="What a site can hold, what to pay for it, and how to run it."
+                  action={
+                    <Button href="/advisory" variant="onDark">
+                      All advisory work
+                    </Button>
+                  }
+                />
               </Reveal>
-            ))}
-          </ol>
+              <ol className="mt-10 grid gap-3 lg:grid-cols-2">
+                {advisoryServices.slice(0, 4).map((service, index) => (
+                  <Reveal as="li" key={service.slug} delay={index * 80}>
+                    <Link
+                      href={`/advisory#${service.slug}`}
+                      className="group flex items-center gap-4 rounded-[20px] border border-white/12 bg-white/[0.04] p-5 transition-colors hover:border-gold/60 hover:bg-white/[0.07]"
+                    >
+                      <span className="tnum flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/60 font-display text-[15px] font-semibold text-gold max-sm:hidden">
+                        {index + 1}
+                      </span>
+                      <span className="flex-1">
+                        <span className="block font-display text-h4 font-semibold text-white">
+                          {service.name}
+                        </span>
+                        <span className="mt-1 block text-[13px] text-white/70">
+                          {service.audience}
+                        </span>
+                      </span>
+                      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold text-green transition-transform group-hover:translate-x-0.5">
+                        <ArrowRightIcon width={16} height={16} />
+                      </span>
+                    </Link>
+                  </Reveal>
+                ))}
+              </ol>
+            </div>
+          </div>
         </Container>
       </section>
 
       {/* THE AGENCY BLOCK: property types, then the featured stock that illustrates them. */}
-
-      {/* Categories. Cream, because every card in the grid is paper and needs a ground to
-          sit forward of. */}
-      <section className="bg-cream py-12 lg:py-16">
+      <section className="pb-16 lg:pb-24">
         <Container>
           <Reveal>
             <SectionHeading
+              eyebrow="Properties"
               title="Five kinds of property, five kinds of question"
               lead="Valuing a warehouse and valuing a coffee farm are different jobs. Start with the kind of property you have."
               leadShort="Start with the kind of property you have."
             />
           </Reveal>
-          {/* auto-rows-fr: every row takes the height of the tallest card, so the two rows
-              match instead of the "not sure" card stretching only its own. */}
-          {/* A rail below sm: six stacked image cards were nearly two screens on a phone. The
-              "not sure" card rides at the end of the rail, where a reader who swiped past all
-              five types is exactly the reader it is for. */}
-          <ul className="rail mt-8 sm:grid sm:auto-rows-fr sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+          <ul className="rail mt-10 sm:grid sm:auto-rows-fr sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
             {categories.map((category, index) => (
               <Reveal as="li" key={category.slug} delay={index * 70} className="flex">
                 <CategoryCard
                   category={category}
-                  count={listingsByCategory(category.slug).length}
+                  count={listings.filter((listing) => listing.category === category.slug).length}
                   className="w-full"
                 />
               </Reveal>
             ))}
             {/* Sixth cell: the visitors who do not know which class their property is. */}
             <Reveal as="li" delay={350} className="flex">
-              <div className="flex min-h-[190px] w-full flex-col justify-between rounded-brand border border-green/25 bg-paper p-5">
+              <div className="flex min-h-[190px] w-full flex-col justify-between rounded-brand border border-green/8 bg-white p-6">
                 <div>
-                  <h3 className="text-h3 text-green">Not sure which it is?</h3>
-                  <p className="mt-2.5 max-w-[32ch] text-body leading-relaxed text-muted">
-                    Shops with flats above, a farm with a house on it, a half-built plot. The
-                    type changes the figure, so describe yours and a valuer will tell you.
+                  <h3 className="font-display text-h3 font-semibold text-green">
+                    Not sure which it is?
+                  </h3>
+                  <p className="mt-2.5 max-w-[32ch] text-small leading-relaxed text-muted">
+                    Shops with flats above, a farm with a house on it, a half-built plot. The type
+                    changes the figure, so describe yours and a valuer will tell you.
                   </p>
                 </div>
                 <div className="mt-5">
@@ -457,61 +374,57 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Featured stock, full width. The immersive moment of the page. */}
-      <FeaturedCarousel listings={featured} />
-
-      {/* The carousel's caption, and recessed so it reads as attached to the band above it
-          rather than as the start of the next section. */}
-      <section className="border-b border-rule bg-mist py-4">
-        <Container className="flex flex-wrap items-center justify-between gap-4">
-          <p className="text-body text-muted">
-            Showing {featured.length} of the{' '}
-            <span className="tnum font-medium text-ink">{listings.length}</span> properties we
-            are handling right now, across five property types and four cities.
-          </p>
-          <Button href="/listings" variant="quiet" size="sm">
-            Browse every property
-          </Button>
+      {/* Featured stock, inset in a rounded plate rather than run edge to edge. */}
+      <section className="pb-16 lg:pb-24">
+        <Container>
+          <div className="overflow-hidden rounded-(--radius-plate)">
+            <FeaturedCarousel listings={featured} />
+          </div>
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-4 px-1">
+            <p className="text-small text-muted">
+              Showing {featured.length} of the{' '}
+              <span className="tnum font-semibold text-green">{listings.length}</span> properties we
+              are handling right now, across {numberWord(categories.length)} property types and{' '}
+              {numberWord(cityCount)} cities.
+            </p>
+            <Button href="/listings" variant="outline" size="sm">
+              Browse every property
+            </Button>
+          </div>
         </Container>
       </section>
 
-      {/* Clients: one belt here, the categorised belts live on /about/clients. Cream, and it
-          has to be: the conveyor's greyscale veils are tinted to a cream ground. */}
-      <section className="bg-cream py-12 lg:py-16">
+      {/* Who instructs us: the logo belt, then CMT in brief (or real references, once given). */}
+      <section className="pb-16 lg:pb-24">
         <Container>
           <Reveal>
             <SectionHeading
+              eyebrow="Clients"
               title="Who instructs us"
               lead="Banks and institutions keep coming back to valuers whose reports hold up to their own checks. These are some of ours."
               leadShort="The banks and institutions that keep coming back."
               action={
-                <Button href="/about/clients" variant="outline" size="md">
+                <Button href="/about/clients" variant="outline">
                   Our clients in full
                 </Button>
               }
             />
           </Reveal>
         </Container>
-        <Reveal className="mt-9">
-          <PartnerConveyor partners={allPartners} label="CMT Realtors clients" />
+        <Reveal className="mt-10">
+          <PartnerConveyor partners={partners} label="CMT Realtors clients" />
         </Reveal>
-        {/*
-          What the belt's clients say, once they have said it on the record. Until then the
-          slot carries four plain statements about the firm instead: CMT speaking for itself,
-          under its own heading, never set as a quote.
-        */}
-        {/* Desktop only while it holds the four "in brief" statements: on a phone they repeat
-            what the hero and the identity section said two screens earlier. Real testimonials,
-            once they exist, show everywhere, because a named reference never repeats anything. */}
-        <Container className={cx('mt-12', testimonials.length === 0 && 'max-sm:hidden')}>
+        {/* Desktop only while it holds the four "in brief" statements, which repeat the hero on a
+            phone. Real testimonials, once they exist, show everywhere. */}
+        <Container className={cx('mt-14', testimonials.length === 0 && 'max-sm:hidden')}>
           <Reveal>
-            <h3 className="font-display text-h3 text-green">
+            <h3 className="font-display text-h3 font-semibold text-green">
               {testimonials.length > 0 ? 'In their words' : `${site.shortName} in brief`}
             </h3>
           </Reveal>
           <Reveal className="mt-6">
             {testimonials.length > 0 ? (
-              <Testimonials testimonials={testimonials.slice(0, 3)} />
+              <Testimonials testimonials={testimonials.slice(0, 3)} partners={partners} />
             ) : (
               <InBrief />
             )}
@@ -524,8 +437,6 @@ export default function HomePage() {
         lead="Book an inspection, or send us the property you want listed. Either way you speak to a valuer, not a call centre."
         primary={{ label: 'Request a valuation', href: '/contact/request-a-valuation' }}
         secondary={{ label: 'List your property', href: '/contact/list-a-property' }}
-        image="/images/cta-skyline.jpg"
-        imageAlt=""
       />
     </>
   );

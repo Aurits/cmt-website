@@ -1,17 +1,17 @@
 import type { Metadata } from 'next';
 import { CTABanner } from '@/components/CTABanner';
-import { AgentCard } from '@/components/AgentCard';
-import { ProcessDatum } from '@/components/home/ProcessDatum';
 import { PartnerConveyor } from '@/components/PartnerConveyor';
 import { ValuationMatrix } from '@/components/valuations/ValuationMatrix';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
+import { ShieldIcon } from '@/components/ui/icons';
+import { Plate, Section } from '@/components/ui/Section';
+import { ProcessSteps } from '@/components/ProcessSteps';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Reveal } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { directors } from '@/data/agents';
-import { allPartners } from '@/data/partners';
-import { LEAD, assetBySlug, purposeBySlug, valuationPurposes } from '@/data/valuations';
+import { getPartners, getTeam } from '@/lib/content';
+import { LEAD, assetBySlug, purposeBySlug } from '@/data/valuations';
 import { site } from '@/data/site';
 
 export const metadata: Metadata = {
@@ -27,7 +27,9 @@ export const metadata: Metadata = {
  * table before showing it has already lost the reader who arrived with a specific question. See
  * docs/LAYOUT-SPECS.md A-03.
  */
-export default function ValuationsPage() {
+export default async function ValuationsPage() {
+  const [{ signatories, signatoryCount }, partners] = await Promise.all([getTeam(), getPartners()]);
+
   const lead = purposeBySlug[LEAD.purpose];
   const leadAsset = assetBySlug[LEAD.asset];
 
@@ -38,126 +40,141 @@ export default function ValuationsPage() {
         breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Valuations' }]}
       />
 
-      <section className="py-12 lg:py-16">
-        <Container>
-          <ValuationMatrix />
-          {/* Desktop only: on a phone the matrix collapses to one line per purpose (see
-              ValuationMatrix), which already says what this paragraph explains. */}
-          <p className="mt-4 max-w-[68ch] text-body leading-relaxed text-muted max-sm:hidden">
-            <span className="font-medium text-ink">
-              {lead.name} on {leadAsset.short.toLowerCase()}
-            </span>{' '}
-            is the majority of what we are instructed to do, and the reason most people are on this
-            page. Every combination above leads to what the report contains, what it is based on and
-            how long it takes. Where a cell says &ldquo;Not offered&rdquo;, we would rather say so
-            than take the instruction.
-          </p>
-        </Container>
-      </section>
+      <Section>
+        <ValuationMatrix />
+        {/* Desktop only: on a phone the matrix collapses to one line per purpose (see
+            ValuationMatrix), which already says what this paragraph explains. */}
+        <p className="mt-5 max-w-[68ch] text-small leading-relaxed text-muted max-sm:hidden">
+          Most of our work is{' '}
+          <span className="font-semibold text-green">
+            valuing {leadAsset.short.toLowerCase()} {lead.name.toLowerCase()}
+          </span>
+          . Choose any cell above to see what that report contains, what it is based on and how long
+          it takes. Where a cell says &ldquo;Not offered&rdquo;, we would rather say so than take on
+          work we do not do.
+        </p>
+      </Section>
 
-      {/* How it runs */}
-      <section className="bg-mist py-12 lg:py-16">
-        <Container>
+      <Section>
+        <ProcessSteps title="How a valuation actually runs" />
+      </Section>
+
+      {/* The deliverable, set as the hero's report card: the contents of every report as rows.
+          A redacted sample report belongs beside it once CMT supplies one (CONTENT-NEEDED.md). */}
+      <Section clip>
+        <div className="grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
           <Reveal>
             <SectionHeading
-              title="How a valuation actually runs"
-              lead="Four steps. We tell you at the start which of them could affect your deadline."
-            />
-          </Reveal>
-          {/* The same timeline as the homepage, from the same data, so the two pages cannot
-              describe the method differently or draw it two ways. */}
-          <Reveal className="mt-2">
-            <ProcessDatum />
-          </Reveal>
-        </Container>
-      </section>
-
-      {/* The deliverable. A redacted sample report belongs beside this schedule once CMT supplies
-          one (docs/CONTENT-NEEDED.md, "Proof from clients"); until then the schedule stands alone
-          rather than beside a panel describing its absence, which is what used to sit here. */}
-      <section className="py-12 lg:py-16">
-        <Container>
-          <Reveal>
-            <SectionHeading
+              eyebrow="The deliverable"
               title="What you actually receive"
               lead="Every report carries the same structure, whoever instructed it and whatever it is for."
             />
-            {/* The measure is on the schedule, not the Container: the Container's own
-                max-w-[1200px] wins over a second max-width on the same element, and a label and
-                its detail 900px apart stop reading as a pair. */}
-            <dl className="mt-7 max-w-[760px]">
-              {[
-                ['Basis of value', 'Stated on the first page, with the definition, not assumed'],
-                ['The figure', 'And the forced-sale position where a lender requires it'],
-                ['Evidence', 'The comparable transactions the figure rests on, listed'],
-                ['Title and tenure', 'Verified, with the unexpired term where leasehold'],
-                ['Assumptions and limits', 'What we did not inspect, and what we took on trust'],
-                ['A name', 'The registered valuer who signs it and answers for it'],
-              ].map(([label, detail]) => (
-                <div key={label} className="schedule-row">
-                  <dt className="text-body text-ink">{label}</dt>
-                  <dd className="max-w-[34ch] text-right text-micro text-muted">{detail}</dd>
-                </div>
-              ))}
-            </dl>
           </Reveal>
+          <Reveal className="relative mr-[26px] mb-[26px]">
+            <div
+              aria-hidden="true"
+              className="absolute inset-[26px_-26px_-26px_26px] rounded-(--radius-plate) bg-sage"
+            />
+            <div className="relative rounded-(--radius-card) border border-green/8 bg-white p-6 shadow-[0_28px_56px_rgba(15,42,26,0.12)] min-[601px]:p-7">
+              <p className="flex items-center gap-2.5 pb-4 text-[12px] font-semibold tracking-[0.14em] text-green uppercase">
+                <ShieldIcon width={20} height={20} />
+                Every report contains
+              </p>
+              <dl>
+                {[
+                  ['Basis of value', 'Stated on the first page, with the definition, not assumed'],
+                  ['The figure', 'And the forced-sale position where a lender requires it'],
+                  ['Evidence', 'The comparable transactions the figure rests on, listed'],
+                  ['Title and tenure', 'Verified, with the unexpired term where leasehold'],
+                  ['Assumptions and limits', 'What we did not inspect, and what we took on trust'],
+                  ['A name', 'The registered valuer who signs it and answers for it'],
+                ].map(([label, detail]) => (
+                  <div
+                    key={label}
+                    className="flex flex-col gap-1 border-t border-hair py-[13px] text-small min-[480px]:flex-row min-[480px]:items-start min-[480px]:justify-between min-[480px]:gap-6"
+                  >
+                    <dt className="shrink-0 font-semibold text-green">{label}</dt>
+                    <dd className="max-w-[34ch] text-muted min-[480px]:text-right">{detail}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </Reveal>
+        </div>
+      </Section>
 
-        </Container>
-      </section>
-
-      {/* Who signs it */}
-      <section className="bg-green py-12 text-cream lg:py-16">
-        <Container>
+      {/* Who signs it: the page's one ink plate. */}
+      <Section>
+        <Plate tone="ink" disc>
           <Reveal>
             <SectionHeading
               onDark
+              eyebrow="Signatories"
               title="Who signs it"
-              lead={`Every report goes out under a named valuer practising under the ${site.regulator}. If the figure is challenged, that person answers for it.`}
+              lead={`Every report goes out under one of ${signatoryCount.toLowerCase()} named valuers, each registered with the ${site.regulator}. If the figure is ever challenged, that person answers for it.`}
+              leadShort={`One of ${signatoryCount.toLowerCase()} registered valuers, named on every report.`}
             />
           </Reveal>
-          {/* Directors only: they are the ones who sign. The property agents were listed here too,
-              under a heading that says who signs, and they do not. */}
-          <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:max-w-[760px]">
-            {directors.map((agent, index) => (
-              <Reveal as="li" key={agent.id} delay={index * 80} className="flex">
-                <AgentCard agent={agent} className="w-full" />
+          {/* The signatory roll: who stands behind the figure, not how to reach them (that is
+              /about/people and the contact page). */}
+          <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {signatories.map((agent, index) => (
+              <Reveal as="li" key={agent.id} delay={index * 60}>
+                <div className="flex items-center gap-4 rounded-[20px] border border-white/12 bg-white/[0.04] p-4">
+                  <span
+                    aria-hidden="true"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold font-display text-[15px] font-semibold text-green"
+                  >
+                    {agent.name
+                      .split(' ')
+                      .slice(0, 2)
+                      .map((part) => part[0])
+                      .join('')}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block font-display text-h4 leading-tight font-semibold text-white">
+                      {agent.name}
+                    </span>
+                    <span className="mt-0.5 block text-[13px] text-white/70">{agent.role}</span>
+                  </span>
+                </div>
               </Reveal>
             ))}
           </ul>
-          <div className="mt-8">
-            <Button href="/about/people" variant="onDark" size="md">
+          <div className="mt-10">
+            <Button href="/about/people" variant="onDark">
               The people who sign our reports
             </Button>
           </div>
-        </Container>
-      </section>
+        </Plate>
+      </Section>
 
       {/* Proof, at the point the doubt forms */}
-      <section className="py-12 lg:py-16">
+      <section className="pb-16 lg:pb-24">
         <Container>
           <Reveal>
             <SectionHeading
+              eyebrow="Clients"
               title="Who instructs us"
               lead="Institutions send repeat work to valuers whose reports survive their own review."
               action={
-                <Button href="/about/clients" variant="outline" size="md">
+                <Button href="/about/clients" variant="outline">
                   Our clients in full
                 </Button>
               }
             />
           </Reveal>
         </Container>
-        <Reveal className="mt-9">
-          <PartnerConveyor partners={allPartners} label="CMT Realtors clients" />
+        <Reveal className="mt-10">
+          <PartnerConveyor partners={partners} label="CMT Realtors clients" />
         </Reveal>
       </section>
 
       <CTABanner
         title="Request a valuation"
-        lead={`Tell us what needs valuing and what the figure is for. There are ${valuationPurposes.length} routes through the practice and a valuer will tell you which one you are on.`}
+        lead="Tell us what needs valuing and what the figure is for. Not sure which kind you need? A valuer will advise before anything is agreed."
         primary={{ label: 'Request a valuation', href: '/contact/request-a-valuation' }}
         secondary={{ label: 'See our advisory work', href: '/advisory' }}
-        image="/images/cta-skyline.jpg"
       />
     </>
   );

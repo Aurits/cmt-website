@@ -1,6 +1,6 @@
 import { cx } from '@/lib/cx';
 
-/** Page gutter and measure. 16px gutters on phones, never wider than 1200px. */
+/** Page gutter and measure, as Hero.html: a 1240px column with 40px gutters, 20px up to 600px wide. */
 export function Container({
   children,
   className,
@@ -10,5 +10,5 @@ export function Container({
   className?: string;
   as?: 'div' | 'section' | 'header' | 'footer' | 'nav' | 'main';
 }) {
-  return <Tag className={cx('mx-auto w-full max-w-[1200px] px-4 sm:px-6', className)}>{children}</Tag>;
+  return <Tag className={cx('mx-auto w-full max-w-[1240px] px-5 min-[601px]:px-10', className)}>{children}</Tag>;
 }

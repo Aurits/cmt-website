@@ -10,9 +10,11 @@ import type { Office } from '@/lib/types';
 export const site = {
   name: 'CMT Realtors Limited',
   shortName: 'CMT Realtors',
-  tagline: 'Your Trusted Partner in Real Estate Valuation & Consultancy',
+  // The browser-tab and search-result line. Says what the firm is and where, which the old
+  // site's "Your Trusted Partner in Real Estate Valuation & Consultancy" did not.
+  tagline: 'Property valuation and consultancy in Uganda',
   description:
-    'Kampala valuation and property consultancy firm, regulated by the Uganda Institution of Surveyors, instructed by banks, government bodies and corporate clients for more than 16 years.',
+    'Kampala valuation and property consultancy firm whose valuers are registered with the Surveyors Registration Board, instructed by banks, government bodies and corporate clients for more than 16 years.',
   url: 'https://cmtrealtors.com',
 
   phone: { display: '+256 414 346 344', href: 'tel:+256414346344' },
@@ -67,7 +69,14 @@ export const site = {
    * when CMT tells us, and the wording on /about/offices follows.
    */
   regionConfirmed: false,
-  regulator: 'Uganda Institution of Surveyors',
+  /*
+   * The body CMT's valuers are registered with, from CMT's own staff list: the Surveyors
+   * Registration Board, Uganda's statutory register of surveyors. It replaced "Uganda
+   * Institution of Surveyors", the professional membership body, which the site used before CMT
+   * told us which one its valuers are registered with. Used wherever the site says who regulates
+   * the practice, so this one line changes every mention.
+   */
+  regulator: 'Surveyors Registration Board',
   yearsInBusiness: '16+',
 } as const;
 
@@ -125,10 +134,52 @@ export const aboutPages = [
 ] as const;
 
 /** Where the WhatsApp CTA should point given what we actually know. */
-export function whatsappHref(message?: string): string {
-  if (!site.whatsapp) return '/contact#whatsapp';
+/**
+ * The site's contact facts with their types widened, so the values staff edit in the CMS
+ * (src/lib/content.ts getSite) can replace the defaults above without fighting `as const`.
+ */
+export type SiteInfo = Omit<
+  typeof site,
+  | 'name'
+  | 'shortName'
+  | 'tagline'
+  | 'description'
+  | 'phone'
+  | 'email'
+  | 'whatsapp'
+  | 'address'
+  | 'hours'
+  | 'hoursConfirmed'
+  | 'yearsInBusiness'
+> & {
+  name: string;
+  shortName: string;
+  tagline: string;
+  description: string;
+  phone: { display: string; href: string };
+  email: string;
+  whatsapp: string | null;
+  address: {
+    building: string;
+    line1: string;
+    street: string;
+    city: string;
+    country: string;
+    coords: [number, number];
+  };
+  hours: { days: string; time: string }[];
+  hoursConfirmed: boolean;
+  yearsInBusiness: string;
+};
+
+/**
+ * A WhatsApp link for the office number, or the contact page's WhatsApp note while there is no
+ * number. Takes the number rather than reading it, so the CMS value is the one used.
+ */
+export function whatsappHref(whatsapp: string | null, message?: string): string {
+  if (!whatsapp) return '/contact#whatsapp';
   const text = message ? `?text=${encodeURIComponent(message)}` : '';
-  return `https://wa.me/${site.whatsapp}${text}`;
+  return `https://wa.me/${whatsapp}${text}`;
 }
 
 /**
@@ -160,23 +211,3 @@ export const offices: Office[] = [
 export const ugandaOffices = offices.filter((office) => office.country === 'Uganda');
 export const kenyaOffices = offices.filter((office) => office.country === 'Kenya');
 
-/**
- * The ledger. `institutions` counts the logos we actually hold rather than the "20+" CMT states,
- * because the conveyor below it shows them and the two numbers would otherwise contradict each
- * other on the same screen. docs/OPEN-ITEMS.md #7 is the gap between them.
- */
-export const stats = [
-  { value: site.yearsInBusiness, unit: 'years', label: 'Valuing property in East Africa' },
-  {
-    value: String(offices.length),
-    unit: 'offices',
-    // Counted from `offices`, not written out, so it stays true when an office opens. Kenya is
-    // named as the linked practice it is until site.regionConfirmed says otherwise
-    // (docs/OPEN-ITEMS.md #2), the same wording InBrief uses.
-    label: `${offices.filter((o) => o.country === 'Uganda').length} in Uganda, ${
-      offices.filter((o) => o.country === 'Kenya').length
-    } ${site.regionConfirmed ? 'in Kenya' : 'with our linked Kenya practice'}`,
-  },
-  { value: '14', unit: 'institutions', label: 'Banks, agencies and companies that instruct us' },
-  { value: 'UIS', unit: 'regulated', label: 'By the Uganda Institution of Surveyors' },
-] as const;

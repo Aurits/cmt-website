@@ -3,11 +3,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { CTABanner } from '@/components/CTABanner';
 import { Container } from '@/components/ui/Container';
-import { agentById } from '@/data/agents';
-import { postBySlug, posts, sortedPosts } from '@/data/blog';
+import { getPost, getPosts, getTeam } from '@/lib/content';
 
-export function generateStaticParams() {
-  return posts.map((post) => ({ slug: post.slug }));
+export async function generateStaticParams() {
+  return (await getPosts()).map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({
@@ -16,7 +15,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const note = postBySlug[slug];
+  const note = await getPost(slug);
   if (!note) return {};
   return { title: note.title, description: note.finding };
 }
@@ -56,11 +55,12 @@ function PostBody({ body }: { body: string }) {
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const note = postBySlug[slug];
+  const note = await getPost(slug);
   if (!note) notFound();
 
-  const author = note.authorId ? agentById[note.authorId] : undefined;
-  const others = sortedPosts().filter((item) => item.slug !== note.slug).slice(0, 3);
+  const [team, posts] = await Promise.all([getTeam(), getPosts()]);
+  const author = note.authorId ? team.byId[note.authorId] : undefined;
+  const others = posts.filter((item) => item.slug !== note.slug).slice(0, 3);
   const date = new Date(`${note.publishedAt.slice(0, 10)}T00:00:00Z`).toLocaleDateString('en-GB', {
     day: 'numeric',
     month: 'long',
@@ -70,36 +70,36 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <>
-      <section className="bg-green text-cream">
-        <Container className="py-12 lg:py-16">
-          <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-micro text-cream/70">
+      <section>
+        <Container className="pt-8 pb-12 min-[961px]:pt-12 lg:pb-16">
+          <nav aria-label="Breadcrumb" className="mb-8">
+            <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-muted">
               <li>
-                <Link href="/" className="hover:text-gold">
+                <Link href="/" className="hover:text-green">
                   Home
                 </Link>
               </li>
-              <li aria-hidden="true" className="text-cream/40">
+              <li aria-hidden="true" className="text-rule-strong">
                 /
               </li>
               <li>
-                <Link href="/blog" className="hover:text-gold">
+                <Link href="/blog" className="hover:text-green">
                   Blog
                 </Link>
               </li>
             </ol>
           </nav>
 
-          <span aria-hidden="true" className="mb-5 block h-[3px] w-10 bg-gold" />
-          <h1 className="max-w-[24ch] text-h1 text-cream">{note.title}</h1>
-          <p className="mt-5 max-w-[46ch] font-display text-subhead leading-snug text-cream/90">
+          <span aria-hidden="true" className="mb-6 block h-[3px] w-10 rounded-full bg-gold" />
+          <h1 className="max-w-[24ch] text-h1 tracking-[-0.02em] text-balance text-green">{note.title}</h1>
+          <p className="mt-5 max-w-[46ch] font-display text-subhead leading-snug text-moss">
             {note.finding}
           </p>
-          <p className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-cream/20 pt-5 text-micro text-cream/70">
+          <p className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-green/12 pt-5 text-[13px] text-muted">
             <span className="tnum">{date}</span>
             {author && (
               <>
-                <span aria-hidden="true" className="h-3 w-px bg-cream/30" />
+                <span aria-hidden="true" className="h-3 w-px bg-rule-strong" />
                 <span>
                   {author.name}, {author.role}
                 </span>
@@ -109,18 +109,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </Container>
       </section>
 
-      <section className="py-12 lg:py-16">
+      <section className="pb-16 lg:pb-24">
         <Container className="grid gap-10 lg:grid-cols-[1.55fr_1fr] lg:gap-14">
           <div>
-            <p className="max-w-[62ch] text-lead leading-relaxed text-muted">{note.excerpt}</p>
+            <p className="max-w-[62ch] text-hero-lead leading-[1.6] text-prose">{note.excerpt}</p>
             <PostBody body={note.body} />
 
             {note.tags.length > 0 && (
-              <ul className="mt-10 flex flex-wrap gap-2 border-t border-rule pt-6">
+              <ul className="mt-10 flex flex-wrap gap-2 border-t border-green/12 pt-6">
                 {note.tags.map((tag) => (
                   <li
                     key={tag}
-                    className="border border-rule bg-paper px-3 py-1.5 text-micro text-muted"
+                    className="rounded-full border border-chip px-3 py-1 text-[12px] text-muted"
                   >
                     {tag}
                   </li>
@@ -131,8 +131,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
           <aside className="lg:sticky lg:top-[calc(var(--header-h)+16px)] lg:self-start">
             {note.pullFigure && (
-              <div className="border border-rule border-t-2 border-t-gold bg-paper p-5">
-                <p className="tnum font-display text-stat leading-none text-green">
+              <div className="rounded-[24px] border border-green/8 bg-white p-6">
+                <span aria-hidden="true" className="mb-4 block h-[3px] w-7 rounded-full bg-gold" />
+                <p className="tnum font-display text-stat leading-none font-semibold text-green">
                   {note.pullFigure}
                 </p>
                 {note.pullCaption && (
@@ -142,21 +143,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             )}
 
             {note.keyFigures.length > 0 && (
-              <div className="mt-6 border border-rule bg-paper p-5">
-                <h2 className="text-label uppercase tracking-[0.12em] text-muted">Key figures</h2>
+              <div className="mt-5 rounded-[24px] border border-green/8 bg-white p-6">
+                <h2 className="font-sans text-[12px] font-semibold tracking-[0.14em] text-moss uppercase">Key figures</h2>
                 <dl className="mt-3">
                   {note.keyFigures.map((figure) => (
                     <div key={figure.label} className="schedule-row text-body">
                       <dt className="text-muted">{figure.label}</dt>
-                      <dd className="tnum text-right font-medium text-ink">{figure.value}</dd>
+                      <dd className="tnum text-right font-semibold text-green">{figure.value}</dd>
                     </div>
                   ))}
                 </dl>
               </div>
             )}
 
-            <div className="mt-6 border border-green/25 bg-green/8 p-5">
-              <h2 className="font-display text-h4 text-green">Where this comes from</h2>
+            <div className="mt-5 rounded-[24px] bg-sage-soft p-6">
+              <h2 className="font-display text-h4 font-semibold text-green">Where this comes from</h2>
               <p className="mt-2 text-body leading-relaxed text-muted">
                 Posts here are written from instructions we actually took, not from listings data or
                 press releases. If a figure here matters to a decision you are making, ask us about
@@ -168,17 +169,17 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       </section>
 
       {others.length > 0 && (
-        <section className="bg-mist py-12 lg:py-16">
+        <section className="pb-16 lg:pb-24">
           <Container>
-            <h2 className="text-label uppercase tracking-[0.12em] text-muted">More from the blog</h2>
-            <ul className="mt-6 border-t border-rule">
+            <h2 className="font-sans text-[13px] font-semibold tracking-[0.16em] text-moss uppercase">More from the blog</h2>
+            <ul className="mt-6 grid gap-3">
               {others.map((item) => (
                 <li key={item.slug}>
                   <Link
                     href={`/blog/${item.slug}`}
-                    className="group flex flex-col gap-1 border-b border-rule py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8"
+                    className="group flex flex-col gap-1 rounded-[20px] border border-green/8 bg-white p-5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8"
                   >
-                    <span className="font-display text-h4 text-green group-hover:text-gold-deep">
+                    <span className="font-display text-h4 font-semibold text-green group-hover:text-moss">
                       {item.title}
                     </span>
                     <span className="max-w-[52ch] text-body leading-snug text-muted">

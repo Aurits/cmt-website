@@ -1,12 +1,13 @@
 'use client';
 
 import { useActionState } from 'react';
+import { useSite } from '@/components/SiteProvider';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Honeypot } from '@/components/forms/Honeypot';
 import { submitInquiry, type InquiryState } from '@/lib/inquiries/actions';
 import { SelectField, TextArea, TextField } from '@/components/forms/fields';
-import { site, whatsappHref } from '@/data/site';
+import { whatsappHref } from '@/data/site';
 
 /**
  * Property enquiry, UI only this phase. Pre-loads the reference so the person does not
@@ -19,22 +20,23 @@ export function InquiryForm({
   reference: string;
   title: string;
 }) {
+  const info = useSite();
   const pathname = usePathname();
   const [state, action, pending] = useActionState<InquiryState, FormData>(submitInquiry, {});
 
   if (state.ok) {
     return (
-      <div className="rounded-brand border border-green/25 bg-green/8 p-6">
+      <div className="rounded-[24px] bg-sage-soft p-6 sm:p-7">
         <h3 className="text-h4 text-green">Thank you, that has reached us</h3>
         <p className="mt-3 text-body leading-relaxed text-muted">
-          The agent handling this property will come back to you the same working day.
+          We will come back to you about this property the same working day.
         </p>
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
-          <Button href={site.phone.href} variant="primary" size="md">
+          <Button href={info.phone.href} variant="primary" size="md">
             Call the office
           </Button>
           <Button
-            href={whatsappHref(`Hello CMT Realtors, I am interested in ${reference} (${title}).`)}
+            href={whatsappHref(info.whatsapp, `Hello CMT Realtors, I am interested in ${reference} (${title}).`)}
             variant="outline"
             size="md"
           >

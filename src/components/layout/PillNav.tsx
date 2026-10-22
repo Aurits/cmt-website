@@ -2,8 +2,8 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { NavMenuPanel, navMenus, type NavMenuKey } from '@/components/layout/NavMenus';
-import { ChevronIcon } from '@/components/ui/icons';
+import { NavMenuPanel, type NavMenu, type NavMenuKey } from '@/components/layout/NavMenus';
+import { ChevronDownIcon } from '@/components/ui/icons';
 import { nav } from '@/data/site';
 import { cx } from '@/lib/cx';
 
@@ -20,7 +20,12 @@ type Rect = { left: number; width: number };
 type PanelBox = { left: number; width: number; bridge: number };
 
 /**
- * The desktop nav, as a pill: one rounded-full track holding every link, with a single gold
+ * STYLE, OCTOBER 2026: as the client's hero design (Hero.html). A frosted white track
+ * (white/70, an ink/12 hairline, 5px inset), 15px medium links in 18px by 10px pills, and the
+ * current page as a solid ink pill with white semibold text. The capsule below is that ink pill,
+ * sliding. Everything else in this note still describes how it behaves.
+ *
+ * The desktop nav, as a pill: one rounded-full track holding every link, with a single
  * capsule sliding beneath whichever one is the current page. Where every surface on the site
  * is square and every control takes a 4px --radius-control (globals.css), this is the one
  * element deliberately allowed to go all the way to a pill: a signature shape rather than
@@ -66,7 +71,13 @@ type PanelBox = { left: number; width: number; bridge: number };
  * beside it. `bridge` is the padding that spans the gap between the pill and the hairline, so
  * the pointer never leaves the menu on its way down.
  */
-export function PillNav({ isActive }: { isActive: (href: string) => boolean }) {
+export function PillNav({
+  isActive,
+  menus,
+}: {
+  isActive: (href: string) => boolean;
+  menus: Record<NavMenuKey, NavMenu>;
+}) {
   const trackRef = useRef<HTMLUListElement>(null);
   const itemRefs = useRef(new Map<string, HTMLElement>());
   const [rect, setRect] = useState<Rect | null>(null);
@@ -190,20 +201,22 @@ export function PillNav({ isActive }: { isActive: (href: string) => boolean }) {
    */
   const itemClass = (href: string) =>
     cx(
-      'relative z-10 block rounded-full px-3 py-2 text-body transition-colors duration-200 xl:px-4',
-      href === active ? cx('text-green', !rect && 'bg-gold') : 'text-cream/85 hover:text-cream',
+      'relative z-10 block rounded-full px-[18px] py-2.5 text-body leading-[1.2] transition-colors duration-200',
+      href === active
+        ? cx('font-semibold text-white', !rect && 'bg-green')
+        : 'font-medium text-green/88 hover:bg-green/7',
     );
 
   return (
-    <nav aria-label="Main" className="hidden lg:block">
+    <nav aria-label="Main" className="hidden nav:block">
       <ul
         ref={trackRef}
-        className="relative flex items-center gap-1 rounded-full border border-cream/15 bg-cream/[0.06] p-1"
+        className="relative flex items-center gap-1 rounded-full border border-green/12 bg-white/70 p-[5px]"
       >
         {rect && (
           <span
             aria-hidden="true"
-            className="absolute inset-y-1 left-0 rounded-full bg-gold transition-transform duration-[420ms]"
+            className="absolute inset-y-[5px] left-0 rounded-full bg-green transition-transform duration-[420ms]"
             style={{
               width: rect.width,
               transform: `translateX(${rect.left}px)`,
@@ -240,16 +253,13 @@ export function PillNav({ isActive }: { isActive: (href: string) => boolean }) {
                 onClick={(event) =>
                   event.detail === 0 && openMenu === item.menu ? close() : show(item.menu)
                 }
-                className={cx(itemClass(item.href), 'flex items-center gap-1')}
+                className={cx(itemClass(item.href), 'inline-flex items-center gap-1.5')}
               >
                 {item.label}
-                <ChevronIcon
-                  width={14}
-                  height={14}
-                  className={cx(
-                    'transition-transform duration-200',
-                    openMenu === item.menu ? '-rotate-90' : 'rotate-90',
-                  )}
+                <ChevronDownIcon
+                  width={16}
+                  height={16}
+                  className={cx('transition-transform duration-200', openMenu === item.menu && 'rotate-180')}
                 />
               </button>
               <div
@@ -266,7 +276,7 @@ export function PillNav({ isActive }: { isActive: (href: string) => boolean }) {
                     : undefined
                 }
               >
-                <NavMenuPanel menu={navMenus[item.menu]} id={`${item.menu}-menu`} onNavigate={close} />
+                <NavMenuPanel menu={menus[item.menu]} id={`${item.menu}-menu`} onNavigate={close} />
               </div>
             </li>
           ) : (

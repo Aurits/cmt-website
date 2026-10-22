@@ -57,8 +57,8 @@ export function PropertyCard({
   return (
     <article
       className={cx(
-        'group relative flex flex-col overflow-hidden rounded-brand border border-rule bg-paper max-sm:flex-row',
-        'transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-20px_rgba(17,52,27,0.5)]',
+        'group relative flex flex-col overflow-hidden rounded-(--radius-card) border border-green/8 bg-white max-sm:flex-row max-sm:rounded-[24px]',
+        'transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_56px_-28px_rgba(15,42,26,0.35)]',
         className,
       )}
     >
@@ -83,40 +83,40 @@ export function PropertyCard({
       </Link>
 
       <div className="flex min-w-0 flex-1 flex-col p-5 max-sm:p-3.5">
-        <p className="tnum font-display text-h3 leading-none text-green max-sm:text-h4">
+        <p className="tnum font-display text-h3 leading-none font-semibold text-green max-sm:text-h4">
           {priceWithPeriod(listing, true)}
         </p>
 
         {/* Provenance. Only where CMT actually valued it — see Listing.valuedOn. */}
         {listing.valuedOn && (
-          <p className="mt-2 inline-flex items-center gap-2 self-start border-l-2 border-gold pl-2 text-label text-muted">
-            <span className="font-medium text-green">Valued by CMT</span>
+          <p className="mt-2 inline-flex items-center gap-2 self-start rounded-full bg-tag px-2.5 py-1 text-[11px] text-tag-ink">
+            <span className="font-semibold">Valued by CMT</span>
             <span className="tnum">{listing.valuedOn}</span>
           </p>
         )}
 
-        <h3 className="mt-3 text-lead leading-snug max-sm:mt-2 max-sm:line-clamp-2 max-sm:text-body">
+        <h3 className="mt-3 text-lead leading-snug font-semibold max-sm:mt-2 max-sm:line-clamp-2 max-sm:text-body">
           {/* On a phone the title's link stretches over the whole card (its ::after), so the row
               is one tap target rather than a small link inside it. */}
           <Link
             href={`/properties/${listing.slug}`}
-            className="text-ink hover:text-green max-sm:after:absolute max-sm:after:inset-0"
+            className="text-green hover:text-moss max-sm:after:absolute max-sm:after:inset-0"
           >
             {listing.title}
           </Link>
         </h3>
 
         <p className="mt-2 flex items-center gap-1.5 text-body text-muted max-sm:mt-1 max-sm:text-micro">
-          <PinIcon width={15} height={15} className="shrink-0 text-gold-deep" />
+          <PinIcon width={15} height={15} className="shrink-0 text-moss" />
           {listing.area}, {listing.city}
         </p>
 
         <p className="tnum mt-auto pt-2 text-micro text-ink sm:hidden">{facts.join(' · ')}</p>
-        <dl className="mt-4 grid grid-cols-2 gap-x-4 border-t border-rule pt-3 text-body max-sm:hidden">
+        <dl className="mt-4 grid grid-cols-2 gap-x-4 border-t border-hair pt-3 text-small max-sm:hidden">
           {specs.map((spec) => (
             <div key={spec.label} className="py-1">
-              <dt className="text-label text-muted">{spec.label}</dt>
-              <dd className="tnum flex items-center gap-1.5 text-ink">
+              <dt className="text-[12px] text-muted">{spec.label}</dt>
+              <dd className="tnum flex items-center gap-1.5 text-green">
                 {spec.icon && <span className="text-green/70">{spec.icon}</span>}
                 {spec.value}
               </dd>
@@ -124,10 +124,10 @@ export function PropertyCard({
           ))}
         </dl>
 
-        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-rule pt-4 text-body max-sm:hidden">
+        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-hair pt-4 text-small max-sm:hidden">
           <Link
             href={`/properties/${listing.slug}`}
-            className="font-medium text-green underline decoration-gold decoration-2 underline-offset-4 hover:text-gold-deep"
+            className="font-semibold text-green underline decoration-gold decoration-2 underline-offset-4 hover:text-moss"
           >
             View details
           </Link>
@@ -135,9 +135,9 @@ export function PropertyCard({
             href={`/properties/${listing.slug}#enquire`}
             className="text-muted hover:text-green"
           >
-            Contact agent
+            Enquire
           </Link>
-          <span className="tnum ml-auto text-label text-muted">{listing.reference}</span>
+          <span className="tnum ml-auto text-[12px] text-muted">{listing.reference}</span>
         </div>
       </div>
     </article>

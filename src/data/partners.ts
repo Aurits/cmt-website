@@ -47,7 +47,7 @@ export const partnerGroups: PartnerGroup[] = [
   },
   {
     id: 'government',
-    title: 'Government and regulatory bodies',
+    title: 'Government and public bodies',
     description:
       'Compensation assessments, asset registers and statutory valuation work for public bodies.',
     partners: [

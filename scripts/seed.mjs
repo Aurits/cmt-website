@@ -80,20 +80,23 @@ async function main() {
   for (const [index, agent] of agents.entries()) {
     const { rows } = await db.query(
       `insert into agents (slug, name, role_title, rank, based, bio, phone, email,
-                           qualifications, credentials_confirmed, sourced_from, sort_order)
-       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+                           qualifications, credentials_confirmed, sourced_from, sort_order,
+                           listed, signs_reports)
+       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
        on conflict (slug) do update set
          name = excluded.name, role_title = excluded.role_title, rank = excluded.rank,
          based = excluded.based, bio = excluded.bio, phone = excluded.phone,
          email = excluded.email, qualifications = excluded.qualifications,
          credentials_confirmed = excluded.credentials_confirmed,
          sourced_from = excluded.sourced_from, sort_order = excluded.sort_order,
+         listed = excluded.listed, signs_reports = excluded.signs_reports,
          updated_at = now()
        returning id`,
       [
         agent.id, agent.name, agent.role, agent.rank, agent.based ?? null, agent.bio ?? null,
         agent.phone ?? null, agent.email ?? null, agent.qualifications ?? [],
         agent.credentialsConfirmed, agent.sourcedFrom, index,
+        agent.listed !== false, Boolean(agent.signsReports),
       ],
     );
     agentIds.set(agent.id, rows[0].id);

@@ -45,7 +45,7 @@ export default function AdminListingsPage() {
       sortValue: (row) => row.title,
       render: (row) => (
         <Link href={`/admin/listings/${row.slug}`} className="flex items-center gap-3">
-          <span className="relative h-12 w-16 shrink-0 overflow-hidden rounded-brand border border-rule bg-mist">
+          <span className="relative h-12 w-16 shrink-0 overflow-hidden rounded-brand border border-rule bg-stone">
             {row.images[0] && (
               <Image src={row.images[0].src} alt="" fill unoptimized className="object-cover" />
             )}

@@ -1,12 +1,15 @@
 import Image from 'next/image';
+import { useSite } from '@/components/SiteProvider';
 import Link from 'next/link';
 import { Container } from '@/components/ui/Container';
 import { ChevronIcon } from '@/components/ui/icons';
 import { advisoryServices } from '@/data/advisory';
 import { categories } from '@/data/categories';
-import { listings, listingsByCategory } from '@/data/listings';
-import { offices, site, stats } from '@/data/site';
+import { offices, site } from '@/data/site';
+import type { Stat } from '@/data/stats';
 import { assetBySlug, valuationPurposes } from '@/data/valuations';
+import type { NavFacts } from '@/lib/content';
+import { numberWord } from '@/lib/format';
 
 export type NavMenuKey = 'about' | 'valuations' | 'advisory' | 'properties';
 
@@ -21,7 +24,7 @@ type ScheduleRow = MenuLink & {
 
 type Feature =
   | { kind: 'photo'; image: string; eyebrow: string; lead: string; cta: MenuLink }
-  | { kind: 'ledger'; eyebrow: string; cta: MenuLink };
+  | { kind: 'ledger'; eyebrow: string; cta: MenuLink; stats: Stat[] };
 
 export type NavMenu = {
   intro: { eyebrow: string; title: string; lead: string; actions?: MenuLink[]; more: MenuLink };
@@ -40,116 +43,123 @@ export type NavMenu = {
  * The figure column only appears where there is a real figure: listing counts for Properties,
  * turnaround for Valuations. Advisory is scoped per engagement and About is a set of pages, so
  * neither is given a number to fill the column.
+ *
+ * A function of `facts` because the counts come from the repository: the site layout reads them
+ * on the server (getNavFacts) and passes them down, so the browser gets five numbers rather than
+ * the whole listing file it used to import here.
  */
-export const navMenus: Record<NavMenuKey, NavMenu> = {
-  about: {
-    intro: {
-      eyebrow: 'About',
-      title: 'A figure is only worth the name on it',
-      lead: `Valuation and property consultancy in Uganda and Kenya, regulated by the ${site.regulator}.`,
-      more: { label: 'About CMT', href: '/about' },
+export function buildNavMenus(facts: NavFacts): Record<NavMenuKey, NavMenu> {
+  return {
+    about: {
+      intro: {
+        eyebrow: 'About',
+        title: 'A figure is only worth the name on it',
+        lead: `Valuation and property consultancy in Uganda and Kenya. Our valuers are registered with the ${site.regulator}.`,
+        more: { label: 'About CMT', href: '/about' },
+      },
+      schedule: {
+        caption: 'Contents',
+        rows: [
+          { label: 'Our people', href: '/about/people', note: 'The people who sign the reports' },
+          { label: 'Credentials', href: '/about/credentials', note: 'A named valuer on every report' },
+          { label: 'Offices', href: '/about/offices', note: `${offices.length} offices, two countries` },
+          { label: 'Our clients', href: '/about/clients', note: 'The institutions that instruct us' },
+        ],
+      },
+      feature: {
+        kind: 'ledger',
+        eyebrow: 'The ledger',
+        stats: facts.stats,
+        cta: { label: 'See our credentials', href: '/about/credentials' },
+      },
     },
-    schedule: {
-      caption: 'Contents',
-      rows: [
-        { label: 'Our people', href: '/about/people', note: 'The people who sign the reports' },
-        { label: 'Credentials', href: '/about/credentials', note: 'A named valuer on every report' },
-        { label: 'Offices', href: '/about/offices', note: `${offices.length} offices, two countries` },
-        { label: 'Our clients', href: '/about/clients', note: 'The institutions that instruct us' },
-      ],
-    },
-    feature: {
-      kind: 'ledger',
-      eyebrow: 'The ledger',
-      cta: { label: 'See our credentials', href: '/about/credentials' },
-    },
-  },
 
-  valuations: {
-    intro: {
-      eyebrow: 'Valuations',
-      title: 'What do you need valued, and what for?',
-      lead: 'Property, plant and machinery, and business valuations, across Uganda and Kenya.',
-      more: { label: 'See the valuation matrix', href: '/valuations' },
+    valuations: {
+      intro: {
+        eyebrow: 'Valuations',
+        title: 'What do you need valued, and what for?',
+        lead: 'Property, plant and machinery, and business valuations, across Uganda and Kenya.',
+        more: { label: 'See the valuation matrix', href: '/valuations' },
+      },
+      schedule: {
+        caption: 'Purpose',
+        figureCaption: 'Working days',
+        rows: valuationPurposes.map((purpose) => {
+          const days = purpose.turnaround.replace(/\s*working days$/, '');
+          return {
+            label: purpose.name,
+            href: `/valuations/${purpose.slug}`,
+            note: purpose.assets.map((asset) => assetBySlug[asset].short).join(' · '),
+            // "Scoped per instruction" is the honest figure for compensation work.
+            figure: /\d/.test(days) ? days : 'Scoped',
+          };
+        }),
+      },
+      feature: {
+        kind: 'photo',
+        image: '/images/services/valuation.jpg',
+        eyebrow: 'Need one now?',
+        lead: 'Tell us the asset and the purpose. We reply the same working day.',
+        cta: { label: 'Request a valuation', href: '/contact/request-a-valuation' },
+      },
     },
-    schedule: {
-      caption: 'Purpose',
-      figureCaption: 'Working days',
-      rows: valuationPurposes.map((purpose) => {
-        const days = purpose.turnaround.replace(/\s*working days$/, '');
-        return {
-          label: purpose.name,
-          href: `/valuations/${purpose.slug}`,
-          note: purpose.assets.map((asset) => assetBySlug[asset].short).join(' · '),
-          // "Scoped per instruction" is the honest figure for compensation work.
-          figure: /\d/.test(days) ? days : 'Scoped',
-        };
-      }),
-    },
-    feature: {
-      kind: 'photo',
-      image: '/images/services/valuation.jpg',
-      eyebrow: 'Need one now?',
-      lead: 'Tell us the asset and the purpose. We reply the same working day.',
-      cta: { label: 'Request a valuation', href: '/contact/request-a-valuation' },
-    },
-  },
 
-  advisory: {
-    intro: {
-      eyebrow: 'Advisory',
-      title: 'Advice before you commit',
-      lead: 'Everything that is not a valuation report, scoped in writing before it starts.',
-      more: { label: 'All advisory services', href: '/advisory' },
+    advisory: {
+      intro: {
+        eyebrow: 'Advisory',
+        title: 'Advice before you commit',
+        lead: 'Everything that is not a valuation report, scoped in writing before it starts.',
+        more: { label: 'All advisory services', href: '/advisory' },
+      },
+      schedule: {
+        caption: 'Service',
+        rows: advisoryServices.map((service) => ({
+          label: service.name,
+          href: `/advisory#${service.slug}`,
+          note: `For ${service.audience.charAt(0).toLowerCase()}${service.audience.slice(1)}`,
+        })),
+      },
+      feature: {
+        kind: 'photo',
+        image: '/images/services/consultancy.jpg',
+        eyebrow: 'Weighing a decision?',
+        lead: 'The fee and the deliverable are agreed up front, not discovered later.',
+        cta: { label: 'Talk to an adviser', href: '/contact' },
+      },
     },
-    schedule: {
-      caption: 'Service',
-      rows: advisoryServices.map((service) => ({
-        label: service.name,
-        href: `/advisory#${service.slug}`,
-        note: `For ${service.audience.charAt(0).toLowerCase()}${service.audience.slice(1)}`,
-      })),
-    },
-    feature: {
-      kind: 'photo',
-      image: '/images/services/consultancy.jpg',
-      eyebrow: 'Weighing a decision?',
-      lead: 'The fee and the deliverable are agreed up front, not discovered later.',
-      cta: { label: 'Talk to an adviser', href: '/contact' },
-    },
-  },
 
-  properties: {
-    intro: {
-      eyebrow: 'Properties',
-      title: 'Property on our books',
-      lead: `${listings.length} properties across five property types and four cities.`,
-      actions: [
-        { label: 'For sale', href: '/listings?type=sale' },
-        { label: 'To let', href: '/listings?type=rent' },
-      ],
-      more: { label: 'View all properties', href: '/listings' },
+    properties: {
+      intro: {
+        eyebrow: 'Properties',
+        title: 'Property on our books',
+        lead: `${facts.listingTotal} properties across ${numberWord(categories.length)} property types and ${numberWord(facts.cityTotal)} cities.`,
+        actions: [
+          { label: 'For sale', href: '/listings?type=sale' },
+          { label: 'To let', href: '/listings?type=rent' },
+        ],
+        more: { label: 'View all properties', href: '/listings' },
+      },
+      schedule: {
+        caption: 'Schedule of property',
+        figureCaption: 'Listed',
+        rows: categories.map((category) => ({
+          label: category.name,
+          href: `/listings/${category.slug}`,
+          note: category.label,
+          figure: String(facts.byCategory[category.slug] ?? 0),
+        })),
+      },
+      feature: {
+        kind: 'photo',
+        image: '/images/listings/res-villa-pool.jpg',
+        eyebrow: 'Own a property?',
+        // The listings page's own CTA line, so the promise is made once, in the same words.
+        lead: 'We value it first, then price it from evidence.',
+        cta: { label: 'List with us', href: '/contact/list-a-property' },
+      },
     },
-    schedule: {
-      caption: 'Schedule of property',
-      figureCaption: 'Listed',
-      rows: categories.map((category) => ({
-        label: category.name,
-        href: `/listings/${category.slug}`,
-        note: category.label,
-        figure: String(listingsByCategory(category.slug).length),
-      })),
-    },
-    feature: {
-      kind: 'photo',
-      image: '/images/listings/res-villa-pool.jpg',
-      eyebrow: 'Own a property?',
-      // The listings page's own CTA line, so the promise is made once, in the same words.
-      lead: 'We value it first, then price it from evidence.',
-      cta: { label: 'List with us', href: '/contact/list-a-property' },
-    },
-  },
-};
+  };
+}
 
 const labelClass = 'font-sans text-label font-semibold uppercase tracking-[0.12em]';
 
@@ -185,12 +195,13 @@ export function NavMenuPanel({
   id: string;
   onNavigate: () => void;
 }) {
+  const info = useSite();
   const { intro, schedule, feature } = menu;
 
   return (
     <div
       id={id}
-      className="border-b border-rule bg-paper text-ink shadow-[0_28px_56px_-24px_rgba(10,30,15,0.5)] [--focus-ring:var(--color-green)]"
+      className="border-b border-hair bg-white text-ink shadow-[0_28px_56px_-24px_rgba(10,30,15,0.5)] [--focus-ring:var(--color-green)]"
     >
       <Container className="grid grid-cols-12 gap-8 py-8 xl:gap-10">
         <div className="col-span-3 flex flex-col">
@@ -204,7 +215,7 @@ export function NavMenuPanel({
                   key={action.href}
                   href={action.href}
                   onClick={onNavigate}
-                  className="rounded-control border border-rule-strong px-3.5 py-1.5 text-body text-green transition-colors hover:border-green hover:bg-green hover:text-cream"
+                  className="rounded-full border border-rule-strong px-3.5 py-1.5 text-body text-green transition-colors hover:border-green hover:bg-green hover:text-cream"
                 >
                   {action.label}
                 </Link>
@@ -220,7 +231,7 @@ export function NavMenuPanel({
               <p className={`${labelClass} text-muted`}>{schedule.figureCaption}</p>
             )}
           </div>
-          <ol className="border-b border-rule">
+          <ol className="border-b border-hair">
             {schedule.rows.map((row, index) => (
               <li key={row.href}>
                 <Link href={row.href} onClick={onNavigate} className="group schedule-row items-center">
@@ -229,7 +240,7 @@ export function NavMenuPanel({
                       {String(index + 1).padStart(2, '0')}
                     </span>
                     <span>
-                      <span className="block font-display text-body text-green transition-colors group-hover:text-gold-deep">
+                      <span className="block font-display text-body text-green transition-colors group-hover:text-moss">
                         {row.label}
                       </span>
                       <span className="block text-micro text-muted">{row.note}</span>
@@ -242,7 +253,7 @@ export function NavMenuPanel({
                     <ChevronIcon
                       width={14}
                       height={14}
-                      className="-translate-x-1 text-gold-deep opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100"
+                      className="-translate-x-1 text-moss opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100"
                     />
                   </span>
                 </Link>
@@ -254,7 +265,7 @@ export function NavMenuPanel({
         <FeatureTile feature={feature} onNavigate={onNavigate} />
       </Container>
 
-      <div className="border-t border-rule bg-mist">
+      <div className="border-t border-hair bg-sage-soft">
         <Container className="flex flex-wrap items-center justify-between gap-x-8 gap-y-2 py-3">
           <Link
             href={intro.more.href}
@@ -272,8 +283,8 @@ export function NavMenuPanel({
           </Link>
           <p className="text-micro text-muted">
             Not sure where to start?{' '}
-            <a href={site.phone.href} className="tnum font-medium text-green hover:text-gold-deep">
-              {site.phone.display}
+            <a href={info.phone.href} className="tnum font-medium text-green hover:text-moss">
+              {info.phone.display}
             </a>
           </p>
         </Container>
@@ -314,7 +325,7 @@ function FeatureTile({ feature, onNavigate }: { feature: Feature; onNavigate: ()
         className={`${featureClass} justify-between gap-8 bg-green`}
       >
         <dl className="grid grid-cols-2 gap-x-6 gap-y-5">
-          {stats.map((stat) => (
+          {feature.stats.map((stat) => (
             <div key={stat.unit} className="border-t border-cream/20 pt-3">
               <dt className="sr-only">{stat.label}</dt>
               <dd className="flex items-baseline gap-1.5">

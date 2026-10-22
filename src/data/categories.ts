@@ -17,7 +17,8 @@ export const categories: Category[] = [
     label: 'Offices, retail and mixed use',
     description:
       'Office suites, retail space and mixed-use buildings. Commercial instructions usually turn on income rather than finish, so our reports lead with lettable area, rent roll and comparable evidence.',
-    image: '/images/categories/commercial.jpg',
+    // An office interior, not a skyline: the previous image showed identifiable Kampala towers.
+    image: '/images/listings/com-office-interior.jpg',
     imageAlt: "Kampala's commercial towers rising above the trees",
     cta: { label: 'Discuss a commercial instruction', href: '/contact?subject=valuation' },
   },

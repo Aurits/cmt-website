@@ -43,3 +43,15 @@ export function priceWithPeriod(listing: Listing, compact = false): string {
 export function listingTypeLabel(listing: Listing): string {
   return listing.listingType === 'rent' ? 'To let' : 'For sale';
 }
+
+/** "Kampala, Gulu, Mbale and Mbarara": a plain comma join reads as a list missing its last word. */
+export const listJoin = (items: readonly string[]) =>
+  items.length < 2 ? items.join('') : `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`;
+
+/** "four", for counts inside a sentence: words up to ten, digits beyond. */
+export function numberWord(count: number): string {
+  return (
+    ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'][count] ??
+    String(count)
+  );
+}

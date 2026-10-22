@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { IntentTabs } from '@/components/forms/IntentTabs';
 import { ListPropertyForm } from '@/components/forms/ListPropertyForm';
+import { citiesOf } from '@/data/listings';
+import { getListings } from '@/lib/content';
 import { Button } from '@/components/ui/Button';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { categoryBySlug } from '@/data/categories';
@@ -20,6 +22,7 @@ export default async function ListPropertyPage({
   const params = await searchParams;
   const raw = typeof params.category === 'string' ? (params.category as CategorySlug) : undefined;
   const category = raw && categoryBySlug[raw] ? raw : undefined;
+  const cities = citiesOf(await getListings());
 
   return (
     <>
@@ -27,12 +30,12 @@ export default async function ListPropertyPage({
       <div className="mt-8">
         <SectionHeading
           title="List a property with us"
-          lead="Owners go through a shorter route: we value the property, agree an asking price from the evidence, and list it once you are happy with the figure."
+          lead="Here is how it works: we value the property, agree an asking price with you from the evidence, and list it once you are happy with the figure."
         />
         <div className="mt-8">
-          <ListPropertyForm defaultCategory={category} />
+          <ListPropertyForm cities={cities} defaultCategory={category} />
         </div>
-        <div className="mt-8 border-t border-rule pt-6">
+        <div className="mt-8 border-t border-hair pt-6">
           <p className="max-w-[56ch] text-body leading-relaxed text-muted">
             Selling is only half of what we do with an owner&rsquo;s property. If you want the figure
             before you decide whether to sell at all, that is a valuation rather than a listing.

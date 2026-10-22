@@ -1,6 +1,7 @@
 import { OfficePanel } from '@/components/contact/OfficePanel';
+import { getSite } from '@/lib/content';
 import { PropertyMap } from '@/components/property/PropertyMap';
-import { Container } from '@/components/ui/Container';
+import { Section } from '@/components/ui/Section';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { site } from '@/data/site';
@@ -13,38 +14,40 @@ import { site } from '@/data/site';
  * the page (rather than here) lets each one mark itself current without the layout having to know
  * the route.
  */
-export default function ContactLayout({ children }: { children: React.ReactNode }) {
+export default async function ContactLayout({ children }: { children: React.ReactNode }) {
+  const info = await getSite();
   return (
     <>
       <PageHeader
         title="Talk to a valuer"
         lead="Tell us what you need valued, listed or advised on. Enquiries reach a valuer the same working day."
+        eyebrow="Contact"
         breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Contact' }]}
       />
 
-      <section className="py-12 lg:py-16">
-        <Container className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
-          <div>{children}</div>
-          <OfficePanel />
-        </Container>
-      </section>
+      <Section containerClassName="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
+        {/* The form sits on a white card, as the hero's report card sits on the paper. */}
+        <div className="rounded-(--radius-card) border border-green/8 bg-white p-5 shadow-[0_28px_56px_-28px_rgba(15,42,26,0.25)] sm:p-8">
+          {children}
+        </div>
+        <OfficePanel />
+      </Section>
 
-      <section className="pb-12 lg:pb-16">
-        <Container>
-          <SectionHeading
-            title="Finding us"
-            lead={`${site.address.building} sits on ${site.address.street} in the city centre, a short walk from the main taxi park.`}
-          />
-          <PropertyMap
-            className="mt-8"
-            center={site.address.coords}
-            label={`${site.name}, ${site.address.building}, ${site.address.street}`}
-            zoom={16}
-            height="h-[380px]"
-            caption={`${site.address.building}, ${site.address.line1}. Pin is placed at street level from the published address and is not a surveyed position.`}
-          />
-        </Container>
-      </section>
+      <Section>
+        <SectionHeading
+          eyebrow="Visit us"
+          title="Finding us"
+          lead={`${info.address.building} sits on ${info.address.street} in the city centre, a short walk from the main taxi park.`}
+        />
+        <PropertyMap
+          className="mt-8"
+          center={info.address.coords}
+          label={`${site.name}, ${info.address.building}, ${info.address.street}`}
+          zoom={16}
+          height="h-[380px]"
+          caption={`${info.address.building}, ${info.address.line1}. Pin is placed at street level from the published address and is not a surveyed position.`}
+        />
+      </Section>
     </>
   );
 }

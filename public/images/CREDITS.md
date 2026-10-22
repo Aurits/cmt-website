@@ -3,26 +3,27 @@
 Photography: [Unsplash](https://unsplash.com/license) or, for two of the four service
 photographs, [Pexels](https://www.pexels.com/license/) — both free for commercial use,
 no attribution required. Credited here for traceability, including the photographer of
-each Kampala/Uganda shot. Listings imagery (`listings/*`) is generic and
-representative on purpose — none of it is a real CMT property yet, and it is replaced
-with client-supplied photography at the same paths when that exists. Everywhere else —
-hero, identity photo, CTA banner and four of the five property-class cards — is
-genuine, identifiable Kampala or Uganda photography, with one exception now corrected:
-`hero-home.jpg` was listed here as Kampala and is not. It is an abstract balcony facade. It
-no longer sits on the homepage hero, where the claim mattered most.
+each shot where known. Listings imagery (`listings/*`) is generic and representative on
+purpose: none of it is a real CMT property, and it is replaced with client-supplied
+photography at the same paths when that exists.
+
+October 2026: photographs of identifiable Kampala buildings and skylines were taken off
+every page, because PLAN.md rules them out without confirmed rights. The files stay here,
+marked "Not used on any page", so they can return if CMT secures those rights.
 
 | File | Source | Description |
 | --- | --- | --- |
-| `hero-home.jpg` | https://unsplash.com/photos/1752654605009-3b12790fe738 | Ribbon-like apartment balconies. NOT Kampala: an abstract facade, with a European street lamp in one corner. Currently unused; it was the homepage hero, then the identity section's image |
-| `identity-office.jpg` | https://unsplash.com/photos/1675756261486-09bd1e0f6c8a | Keith Kasaija: an office building in Kampala's business district by day. Homepage hero (clipped to its own massing, see ValuationElevation.tsx) and the /about identity section |
-| `cta-skyline.jpg` | https://unsplash.com/photos/1763220207281-c4d0febb61a8 | Kampala skyline at sunset, from Nsambya — CTA banner background |
+| `hero-home.jpg` | https://unsplash.com/photos/1752654605009-3b12790fe738 | Ribbon-like apartment balconies. Not Kampala: an abstract facade. Not used on any page |
+| `identity-office.jpg` | https://unsplash.com/photos/1675756261486-09bd1e0f6c8a | Keith Kasaija: an identifiable Kampala office building. Not used on any page (PLAN.md rules out identifiable Kampala buildings without confirmed rights) |
+| `survey-field.jpg` | https://unsplash.com/photos/OIZPlqDEbPM | Nazmul ahsan Meraz: a surveyor at a total station in open grass. About page |
+| `cta-skyline.jpg` | https://unsplash.com/photos/1763220207281-c4d0febb61a8 | Robin Kutesa: identifiable Kampala skyline at sunset. Not used on any page (the closing banners are now plain green) |
 | `valuation-keys.jpg` | https://unsplash.com/photos/1560518883-ce09059eeffa | House model and keys — Services / valuation |
 | `services/valuation.jpg` | https://unsplash.com/photos/1716698286313-9a2349d41110 | A tape measure, held up — property valuation |
-| `services/lending.jpg` | https://www.pexels.com/photo/8730964/ | Mikhail Nilov: a professional reading and signing a report at a meeting. Homepage identity section ("A valuation firm first, an agency second") |
+| `services/lending.jpg` | https://www.pexels.com/photo/8730964/ | Mikhail Nilov: a professional reading and signing a report. Homepage, "A valuation firm first" |
 | `services/consultancy.jpg` | https://www.pexels.com/photo/6282116/ | Hands over a blueprint — real estate consultancy |
 | `services/listing.jpg` | https://unsplash.com/photos/1741156386380-0236c72eb6f9 | House keys at the door — listing and sales management |
 | `categories/residential.jpg` | https://unsplash.com/photos/1578325872347-6cc1795a5fea | Kampala rooftops, Lake Victoria and a rainbow |
-| `categories/commercial.jpg` | https://unsplash.com/photos/1777887544354-74a7248c8a74 | Kampala's commercial towers above the trees |
+| `categories/commercial.jpg` | https://unsplash.com/photos/1777887544354-74a7248c8a74 | Michael Starkie: identifiable Kampala towers. Not used on any page (the Commercial card now uses listings/com-office-interior.jpg) |
 | `categories/industrial.jpg` | https://unsplash.com/photos/1553413077-190dd305871c | Generic warehouse interior |
 | `categories/land.jpg` | https://unsplash.com/photos/1696963609168-5c3d93857ea4 | Terraced plots on a Ugandan hillside |
 | `categories/agricultural.jpg` | https://unsplash.com/photos/1741012253817-67aacc8e25c6 | Coffee cherries ripening, Kampala |

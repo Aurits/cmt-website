@@ -12,6 +12,36 @@ notes carried is still here.
 the people who will answer it. This file is the technical record behind it: where each item lives in
 the code and what it switches on.
 
+**Revised 22 October 2026** after CMT sent its staff and client lists (`docs/CMT Valuers.docx`, kept
+out of git because it holds personal phone numbers). Now on the site: the six valuers registered with
+the Surveyors Registration Board (`src/data/agents.ts`, `signsReports`), the regulator changed from the
+Uganda Institution of Surveyors to the Board (`site.regulator`), and the full client list of 51 named
+institutions (`src/data/clients.ts`; three unexplained abbreviations held back). The two property
+agents not on CMT's staff list are hidden with `listed: false`, not deleted, and their listings show the
+office contact (`contactFor`). Items 1, 5 and 7 below are partly superseded by this; the open questions
+that remain are in `CONTENT-NEEDED.md` sections 2, 3 and 5.
+
+**Public site on the repository (22 October 2026).** Every public page reads listings, the team,
+client logos, testimonials, posts and the office's contact facts (phone, email, WhatsApp, address,
+hours) through `src/lib/content.ts`, so CMS edits reach the site; the admin actions revalidate the
+affected paths (the whole layout for listings, team and settings, since the masthead menus print
+their counts). Client components get the contact facts from `SiteProvider`. With no `DATABASE_URL`
+the same pages read `src/data`, which is how CI and a fresh clone build.
+
+To switch the live site over: run `npm run db:migrate` (adds `listed` and `signs_reports`,
+migration 0003), then `npm run db:seed` once to bring in the six valuers from CMT's staff list and
+clear the placeholder "Valued by CMT" dates. Seeding overwrites rows with the same slug, so do it
+before staff start editing in the CMS, not after. A build with `DATABASE_URL` set reads the database
+at build time and fails if it cannot reach it; on 22 October the Supabase project did not respond
+("tenant not found"), which usually means it is paused. Restore it from the Supabase dashboard.
+
+**Design (22 October 2026).** The client's `Hero.html` is now the design system for the whole public
+site: Fraunces and Inter, ink `#0F2A1A`, gold `#E3AE12`, paper `#F7F5EE`, pill buttons and nav, 32px
+cards on sage plates, one ground for every page. The masthead sets the wordmark in type
+(`Wordmark.tsx`) because the supplied logo PNG is a solid green tile with no transparency. **Still
+needed from CMT: a transparent PNG or SVG of the logo**, after which `Wordmark.tsx` is the one file
+to change.
+
 **Revised 26 September 2026** after a full review of every public page. The remaining on-page notes
 addressed to CMT were removed in that pass (on About, Our people, Credentials, Offices and Contact),
 completing the instruction above; each fact they carried is in both documents.

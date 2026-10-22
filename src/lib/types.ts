@@ -109,6 +109,18 @@ export interface Agent {
   sourcedFrom: SourcedFrom;
   /** Which practice they sit in. */
   based?: string;
+  /**
+   * One of the registered valuers who sign CMT's reports: CMT's "technical team". Drives the
+   * "who signs it" sections and the registered-valuer count in the ledger, so the number on the
+   * homepage is always a count of these entries rather than a figure typed in somewhere else.
+   */
+  signsReports?: boolean;
+  /**
+   * False to keep someone off the public pages without deleting their record: for a colleague who
+   * has left, or whose role is not yet confirmed. Defaults to shown. Listings still pointing at a
+   * hidden agent fall back to the office contact (see `contactFor` in src/data/agents.ts).
+   */
+  listed?: boolean;
 }
 
 export interface Office {

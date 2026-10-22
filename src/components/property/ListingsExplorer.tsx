@@ -4,7 +4,6 @@ import { useMemo, useState } from 'react';
 import { PropertyCard } from '@/components/property/PropertyCard';
 import { Select } from '@/components/ui/Select';
 import { categories } from '@/data/categories';
-import { cities } from '@/data/listings';
 import { formatPriceShort } from '@/lib/format';
 import type { CategorySlug, Listing, ListingType } from '@/lib/types';
 import { cx } from '@/lib/cx';
@@ -27,11 +26,14 @@ export interface ExplorerDefaults {
  */
 export function ListingsExplorer({
   listings,
+  cities,
   lockedCategory,
   defaults,
   perPage = 9,
 }: {
   listings: Listing[];
+  /** Every town with stock, not only those in `listings`, so a category page offers the same list. */
+  cities: string[];
   lockedCategory?: CategorySlug;
   defaults?: ExplorerDefaults;
   perPage?: number;
@@ -109,7 +111,7 @@ export function ListingsExplorer({
         bedrooms sit behind a disclosure that carries a count, so nothing is hidden silently.
         Five dropdowns in a row was a wall in front of the stock.
       */}
-      <div className="border border-rule bg-paper p-4 sm:p-5">
+      <div className="rounded-(--radius-card) border border-green/8 bg-white p-5 sm:p-6">
         <div
           className={cx(
             'grid gap-4 sm:grid-cols-2',
@@ -168,11 +170,11 @@ export function ListingsExplorer({
               onClick={() => setMoreOpen((open) => !open)}
               aria-expanded={moreOpen}
               aria-controls="more-filters"
-              className="flex min-h-[46px] w-full items-center justify-between gap-3 rounded-control border border-rule bg-cream px-3.5 py-2.5 text-body text-ink transition-colors hover:border-green/45 lg:w-auto"
+              className="flex min-h-[46px] w-full items-center justify-between gap-3 rounded-full border border-green/25 px-5 py-2.5 text-body font-medium text-green transition-colors hover:bg-green/6 lg:w-auto"
             >
               More filters
               {extraCount > 0 && (
-                <span className="tnum bg-green px-1.5 py-0.5 text-label text-cream">
+                <span className="tnum rounded-full bg-green px-2 py-0.5 text-[12px] text-white">
                   {extraCount}
                 </span>
               )}
@@ -183,7 +185,7 @@ export function ListingsExplorer({
         <div
           id="more-filters"
           hidden={!moreOpen}
-          className="mt-4 grid gap-4 border-t border-rule pt-4 sm:grid-cols-2 lg:grid-cols-4"
+          className="mt-5 grid gap-4 border-t border-hair pt-5 sm:grid-cols-2 lg:grid-cols-4"
         >
           <Field label="Price up to" id="filter-price">
             <Select
@@ -217,9 +219,9 @@ export function ListingsExplorer({
         </div>
       </div>
 
-      <div className="mt-6 flex flex-col gap-4 border-b border-rule pb-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-8 flex flex-col gap-4 border-b border-green/12 pb-5 sm:flex-row sm:items-center sm:justify-between">
         <p aria-live="polite" className="text-body text-muted">
-          <span className="tnum font-medium text-ink">{filtered.length}</span>{' '}
+          <span className="tnum font-semibold text-green">{filtered.length}</span>{' '}
           {filtered.length === 1 ? 'property' : 'properties'}
           {filtersApplied && (
             <>
@@ -256,8 +258,12 @@ export function ListingsExplorer({
         </div>
       </div>
 
+      {/* The results heading. Hidden, because the count and the filters above already say what
+          this is; present, because the cards are h3s and a screen reader jumping by heading
+          should land on a section, not go straight from the page title to the first card. */}
+      <h2 className="sr-only">Properties</h2>
       {visible.length > 0 ? (
-        <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((listing, index) => (
             <li key={listing.slug} className="flex">
               <PropertyCard listing={listing} priority={index < 3} className="w-full" />
@@ -265,8 +271,8 @@ export function ListingsExplorer({
           ))}
         </ul>
       ) : (
-        <div className="mt-8 border border-dashed border-green/30 bg-mist/50 p-8 text-center">
-          <p className="font-display text-h3 text-green">
+        <div className="mt-8 rounded-(--radius-card) bg-sage-soft p-10 text-center">
+          <p className="font-display text-h3 font-semibold text-green">
             Nothing on our books matches that yet
           </p>
           <p className="mx-auto mt-3 max-w-[46ch] text-body leading-relaxed text-muted">
@@ -277,13 +283,13 @@ export function ListingsExplorer({
             <button
               type="button"
               onClick={resetAll}
-              className="rounded-control bg-green px-5 py-3 text-body text-cream hover:bg-green"
+              className="min-h-12 rounded-full bg-green px-6 text-body font-semibold text-white hover:brightness-125"
             >
               Clear filters
             </button>
             <a
               href="/contact"
-              className="rounded-control border border-green/35 px-5 py-3 text-body text-green hover:bg-green/8"
+              className="inline-flex min-h-12 items-center rounded-full border border-green/30 px-6 text-body font-semibold text-green hover:bg-green/6"
             >
               Register a requirement
             </a>
@@ -309,10 +315,10 @@ export function ListingsExplorer({
                   onClick={() => setPage(number)}
                   aria-current={number === currentPage ? 'page' : undefined}
                   className={cx(
-                    'tnum h-10 w-10 rounded-control border text-body',
+                    'tnum h-11 w-11 rounded-full border text-body font-medium',
                     number === currentPage
-                      ? 'border-green bg-green text-cream'
-                      : 'border-rule bg-paper text-ink hover:border-green/50',
+                      ? 'border-green bg-green text-white'
+                      : 'border-green/20 bg-white text-green hover:bg-green/6',
                   )}
                 >
                   {number}
@@ -335,7 +341,7 @@ export function ListingsExplorer({
 }
 
 const pagerClass =
-  'rounded-control border border-rule bg-paper px-4 py-2.5 text-body text-ink hover:border-green/50 disabled:cursor-not-allowed disabled:opacity-45';
+  'min-h-11 rounded-full border border-green/20 bg-white px-5 text-body font-medium text-green hover:bg-green/6 disabled:cursor-not-allowed disabled:opacity-45';
 
 function Field({
   label,

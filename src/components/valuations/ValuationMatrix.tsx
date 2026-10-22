@@ -84,22 +84,22 @@ export function ValuationMatrix() {
   return (
     <>
     {/* Phone: one row per purpose. */}
-    <ul className="border-t border-rule md:hidden">
+    <ul className="rounded-(--radius-card) border border-green/8 bg-white px-5 md:hidden">
       {valuationPurposes.map((purpose) => {
         const covered = valuationAssets.filter((asset) => purposeCovers(purpose, asset.slug));
         const isLeadRow = LEAD.purpose === purpose.slug;
         return (
-          <li key={purpose.slug} className="border-b border-rule">
+          <li key={purpose.slug} className="border-b border-hair last:border-b-0">
             <Link
               href={`/valuations/${purpose.slug}`}
               className="group flex items-start justify-between gap-4 py-4"
             >
               <span className="min-w-0">
-                <span className="flex items-center gap-2 font-display text-lead text-green">
+                <span className="flex flex-wrap items-center gap-2 font-display text-lead font-semibold text-green">
                   {purpose.name}
                   {isLeadRow && (
-                    <span className="bg-gold px-1.5 py-0.5 font-sans text-label font-semibold text-green">
-                      Most asked
+                    <span className="rounded-full bg-gold px-2 py-0.5 font-sans text-[11px] font-semibold text-green">
+                      Most requested
                     </span>
                   )}
                 </span>
@@ -124,7 +124,8 @@ export function ValuationMatrix() {
       aria-label="Valuation services by purpose and asset class"
       onMouseLeave={() => setCursor(null)}
       className={cx(
-        'grid gap-px bg-rule max-md:hidden',
+        // A white card whose 1px gaps show the hairline through, rounded at the card radius.
+        'grid gap-px overflow-hidden rounded-(--radius-card) border border-green/8 bg-hair max-md:hidden',
         // One column on a phone; the corner cell plus three asset columns from md.
         'grid-cols-1 md:grid-cols-[minmax(11rem,1fr)_repeat(3,1fr)]',
       )}
@@ -134,7 +135,7 @@ export function ValuationMatrix() {
         <div
           role="columnheader"
           aria-hidden="true"
-          className="hidden bg-mist px-4 py-3 font-sans text-label uppercase tracking-[0.12em] text-muted md:block"
+          className="hidden bg-sage-soft px-5 py-4 font-sans text-[12px] font-semibold tracking-[0.14em] text-moss uppercase md:block"
         >
           Purpose / asset
         </div>
@@ -143,8 +144,8 @@ export function ValuationMatrix() {
             key={asset.slug}
             role="columnheader"
             className={cx(
-              'hidden px-4 py-3 text-micro leading-snug transition-colors duration-150 md:block',
-              colLit(asset.slug) ? 'bg-gold/20 text-green' : 'bg-green text-cream',
+              'hidden px-5 py-4 text-small leading-snug font-semibold transition-colors duration-150 md:block',
+              colLit(asset.slug) ? 'bg-gold text-green' : 'bg-green text-white',
             )}
           >
             {asset.short}
@@ -157,11 +158,11 @@ export function ValuationMatrix() {
           <div
             role="rowheader"
             className={cx(
-              'px-4 py-3 transition-colors duration-150',
-              rowLit(purpose.slug) ? 'bg-gold/20' : 'bg-mist',
+              'px-5 py-4 transition-colors duration-150',
+              rowLit(purpose.slug) ? 'bg-tag' : 'bg-sage-soft',
             )}
           >
-            <span className="font-display text-lead text-green">{purpose.name}</span>
+            <span className="font-display text-lead font-semibold text-green">{purpose.name}</span>
             <span className="mt-0.5 block text-micro text-muted md:hidden">
               {purpose.turnaround}
             </span>
@@ -176,7 +177,7 @@ export function ValuationMatrix() {
                 <div
                   key={asset.slug}
                   role="gridcell"
-                  className="flex min-h-[3.5rem] items-center gap-3 bg-mist/50 px-4 py-3 text-muted md:min-h-[4.5rem] md:justify-center"
+                  className="flex min-h-[3.5rem] items-center gap-3 bg-cream px-5 py-4 text-muted md:min-h-[4.5rem] md:justify-center"
                 >
                   <span className="text-micro md:hidden">{asset.short}</span>
                   {/* Said in words rather than as a dash: a dash in a table asks the reader to
@@ -203,15 +204,15 @@ export function ValuationMatrix() {
                 onFocus={() => setCursor({ purpose: purpose.slug, asset: asset.slug })}
                 onKeyDown={(event) => onKeyDown(event, purposeIndex, assetIndex)}
                 className={cx(
-                  'flex min-h-[3.5rem] flex-col justify-center gap-1 px-4 py-3 transition-colors duration-150 md:min-h-[4.5rem]',
-                  isLead ? 'bg-green text-cream' : 'bg-paper text-ink hover:bg-green/8',
+                  'flex min-h-[3.5rem] flex-col justify-center gap-1 px-5 py-4 transition-colors duration-150 md:min-h-[4.5rem]',
+                  isLead ? 'bg-green text-white' : 'bg-white text-green hover:bg-sage-soft',
                 )}
               >
                 <span className={cx('text-micro md:hidden', isLead ? 'text-cream/75' : 'text-muted')}>
                   {asset.short}
                 </span>
-                <span className="text-body font-medium">
-                  {isLead ? 'Our largest line' : 'We value this'}
+                <span className="text-body font-semibold">
+                  {isLead ? 'Most requested' : 'We value this'}
                 </span>
                 <span
                   className={cx(

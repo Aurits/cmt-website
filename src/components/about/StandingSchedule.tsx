@@ -1,4 +1,4 @@
-import { firmRegistrations } from '@/data/agents';
+import type { Registration } from '@/lib/types';
 import { cx } from '@/lib/cx';
 
 /**
@@ -12,31 +12,37 @@ import { cx } from '@/lib/cx';
  * same posture as the empty testimonials state and the WhatsApp number: where CMT has not
  * supplied something, the UI says so instead of filling the gap. See docs/OPEN-ITEMS.md #1.
  */
-export function StandingSchedule({ className }: { className?: string }) {
-  if (firmRegistrations.length === 0) return null;
+export function StandingSchedule({
+  registrations,
+  className,
+}: {
+  /** The firm's registrations, one per body: `team.firmRegistrations` (src/lib/content.ts). */
+  registrations: Registration[];
+  className?: string;
+}) {
+  if (registrations.length === 0) return null;
 
   return (
-    <dl className={cx('max-w-[560px]', className)}>
-      {firmRegistrations.map((registration) => (
+    <dl className={className}>
+      {registrations.map((registration) => (
         <div
           key={registration.authority}
-          className="flex items-baseline justify-between gap-5 border-t border-cream/20 py-3"
+          className="flex flex-col items-start gap-2 border-t border-hair py-[13px] min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between min-[420px]:gap-4"
         >
-          <dt className="text-body text-cream/85">
+          <dt className="text-small text-green">
             {registration.authorityFull}
-            <span className="mt-0.5 block text-micro text-cream/70">
-              {registration.jurisdiction}
-            </span>
+            <span className="mt-0.5 block text-[12.5px] text-muted">{registration.jurisdiction}</span>
           </dt>
+          {/* Three states: the number once we have it; "Registered" when CMT has confirmed the
+              registration but not sent the number; otherwise still awaiting confirmation. Set as
+              the report card's tag: a filled pill when confirmed, an outlined one when not. */}
           <dd
             className={cx(
-              'tnum shrink-0 text-right text-body',
-              registration.confirmed ? 'text-cream' : 'text-cream/70',
+              'tnum shrink-0 rounded-full px-2.5 py-1 text-right text-[11px] font-semibold',
+              registration.confirmed ? 'bg-tag text-tag-ink' : 'border border-chip text-muted',
             )}
           >
-            {registration.confirmed && registration.number
-              ? registration.number
-              : 'Awaiting confirmation'}
+            {registration.confirmed ? (registration.number ?? 'Registered') : 'Awaiting confirmation'}
           </dd>
         </div>
       ))}
@@ -51,14 +57,20 @@ export function StandingSchedule({ className }: { className?: string }) {
  * status the firm has not verified would be the one unverified claim on a site whose entire
  * argument is that its figures can be checked.
  */
-export function CredentialLine({ className }: { className?: string }) {
-  const confirmed = firmRegistrations.filter((registration) => registration.confirmed);
+export function CredentialLine({
+  registrations,
+  className,
+}: {
+  registrations: Registration[];
+  className?: string;
+}) {
+  const confirmed = registrations.filter((registration) => registration.confirmed);
   if (confirmed.length === 0) return null;
 
   return (
     <p
       className={cx(
-        'mt-7 flex flex-col gap-1 border-t border-rule pt-5 text-micro tracking-[0.06em] text-muted sm:flex-row sm:items-center sm:gap-0',
+        'mt-7 flex flex-col gap-1 border-t border-hair pt-5 text-micro tracking-[0.06em] text-muted sm:flex-row sm:items-center sm:gap-0',
         className,
       )}
     >
@@ -67,9 +79,11 @@ export function CredentialLine({ className }: { className?: string }) {
           {index > 0 && (
             <span aria-hidden="true" className="mx-4 hidden h-3 w-px bg-gold sm:block" />
           )}
+          {/* A bare body name under the hero buttons read like a caption with its sentence
+              missing; "Registered with the Surveyors Registration Board" says what it means. */}
           {registration.postNominals
             ? `${registration.authority} ${registration.postNominals}`
-            : registration.authorityFull}
+            : `Registered with the ${registration.authorityFull}`}
         </span>
       ))}
     </p>

@@ -1,16 +1,16 @@
 import type { Metadata } from 'next';
 import { AgentCard } from '@/components/AgentCard';
 import { CTABanner } from '@/components/CTABanner';
-import { Container } from '@/components/ui/Container';
+import { Plate, Section } from '@/components/ui/Section';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Reveal } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { directors, practitioners } from '@/data/agents';
+import { getTeam } from '@/lib/content';
 import { site } from '@/data/site';
 
 export const metadata: Metadata = {
   title: 'Our people',
-  description: `The valuers and agents at ${site.name}, and the professional standing behind the reports they sign.`,
+  description: `The registered valuers who sign every ${site.name} report, led by its two Technical Directors.`,
 };
 
 /**
@@ -18,13 +18,15 @@ export const metadata: Metadata = {
  * property agents, which put the least load-bearing people on the page and left the signatories
  * off it entirely.
  */
-export default function PeoplePage() {
+export default async function PeoplePage() {
+  const { directors, practitioners, signatoryCount } = await getTeam();
 
   return (
     <>
       <PageHeader
         title="The people who sign the reports"
-        lead="A valuation is a judgement made under professional liability. It is worth knowing whose judgement it is."
+        lead={`${signatoryCount} registered valuers sign every ${site.shortName} report. A valuation is a professional judgement, and you should know whose it is.`}
+        leadShort={`${signatoryCount} registered valuers sign every report.`}
         breadcrumbs={[
           { label: 'Home', href: '/' },
           { label: 'About', href: '/about' },
@@ -32,41 +34,43 @@ export default function PeoplePage() {
         ]}
       />
 
-      <section className="py-12 lg:py-16">
-        <Container>
-          <Reveal>
-            <SectionHeading
-              title="Directors"
-              lead="Between them, more than forty years of valuation practice across Kenya and Uganda."
-            />
-          </Reveal>
-          <ul className="mt-8 grid gap-6 sm:grid-cols-2">
-            {directors.map((agent, index) => (
-              <Reveal as="li" key={agent.id} delay={index * 80} className="flex">
-                <AgentCard agent={agent} variant="feature" className="w-full" />
-              </Reveal>
-            ))}
-          </ul>
-        </Container>
-      </section>
+      <Section>
+        <Reveal>
+          <SectionHeading
+            eyebrow="Technical Directors"
+            title="The two who lead the technical team"
+            lead="Between them, more than forty years of valuation practice across Uganda and Kenya. They lead the technical team and answer for its work."
+            leadShort="More than forty years of practice between them."
+          />
+        </Reveal>
+        <ul className="mt-10 grid gap-5 sm:grid-cols-2">
+          {directors.map((agent, index) => (
+            <Reveal as="li" key={agent.id} delay={index * 80} className="flex">
+              <AgentCard agent={agent} variant="feature" className="w-full" />
+            </Reveal>
+          ))}
+        </ul>
+      </Section>
 
-      <section className="bg-mist py-12 lg:py-16">
-        <Container>
+      <Section>
+        <Plate>
           <Reveal>
             <SectionHeading
-              title="Valuers and agents"
-              lead="Who you will deal with day to day: on an inspection, a viewing or a title check."
+              eyebrow="Registered valuers"
+              title="Who you will meet on an inspection"
+              lead={`Each is registered with the ${site.regulator}, and each signs the reports they prepare.`}
+              leadShort={`Each registered with the ${site.regulator}.`}
             />
           </Reveal>
-          <ul className="mt-8 grid gap-6 sm:grid-cols-2">
+          <ul className="mt-10 grid gap-4 sm:grid-cols-2">
             {practitioners.map((agent, index) => (
               <Reveal as="li" key={agent.id} delay={index * 70} className="flex">
                 <AgentCard agent={agent} className="w-full" />
               </Reveal>
             ))}
           </ul>
-        </Container>
-      </section>
+        </Plate>
+      </Section>
 
       <CTABanner
         title="Talk to a valuer"

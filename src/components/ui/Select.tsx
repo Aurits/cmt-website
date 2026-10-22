@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useId, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ChevronIcon } from '@/components/ui/icons';
 import { cx } from '@/lib/cx';
 
@@ -58,8 +59,8 @@ export function Select({
 }) {
   const listboxId = `${useId()}-listbox`;
   const [open, setOpen] = useState(false);
-  // Which way the list opens. Measured each time it opens, from the space actually left.
-  const [upward, setUpward] = useState(false);
+  // Where the list draws: measured from the trigger each time it opens (see openList).
+  const [place, setPlace] = useState<{ left: number; width: number; top?: number; bottom?: number; upward: boolean } | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -80,11 +81,16 @@ export function Select({
    */
   const openList = (startAt = selectedIndex) => {
     const rect = triggerRef.current?.getBoundingClientRect();
-    if (rect) {
-      const wanted = Math.min(options.length * 45, 272) + 8;
-      const below = window.innerHeight - rect.bottom;
-      setUpward(below < wanted && rect.top > below);
-    }
+    if (!rect) return;
+    const wanted = Math.min(options.length * 45, 272) + 8;
+    const below = window.innerHeight - rect.bottom;
+    const upward = below < wanted && rect.top > below;
+    setPlace({
+      left: rect.left,
+      width: rect.width,
+      upward,
+      ...(upward ? { bottom: window.innerHeight - rect.top + 4 } : { top: rect.bottom + 4 }),
+    });
     setActiveIndex(startAt);
     setOpen(true);
   };
@@ -125,14 +131,32 @@ export function Select({
       list.scrollTop = row.offsetTop + row.offsetHeight - list.clientHeight;
   }, [open, activeIndex]);
 
-  // A click anywhere else closes it, without stealing focus back.
+  /*
+   * A click anywhere else closes it, without stealing focus back. The list lives in <body> now,
+   * not inside the wrapper, so a click on the list itself has to be excluded separately.
+   *
+   * Scrolling the page or resizing the window closes it too, which is what a native select does:
+   * the list is positioned against the trigger at the moment it opened, and following the trigger
+   * through a scroll would mean redrawing it every frame. Scrolling inside the list is ignored.
+   */
   useEffect(() => {
     if (!open) return;
     const onPointerDown = (event: PointerEvent) => {
-      if (!wrapperRef.current?.contains(event.target as Node)) setOpen(false);
+      const target = event.target as Node;
+      if (!wrapperRef.current?.contains(target) && !listRef.current?.contains(target)) setOpen(false);
+    };
+    const onMove = (event: Event) => {
+      if (event.type === 'scroll' && listRef.current?.contains(event.target as Node)) return;
+      setOpen(false);
     };
     document.addEventListener('pointerdown', onPointerDown);
-    return () => document.removeEventListener('pointerdown', onPointerDown);
+    window.addEventListener('scroll', onMove, true);
+    window.addEventListener('resize', onMove);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('scroll', onMove, true);
+      window.removeEventListener('resize', onMove);
+    };
   }, [open]);
 
   /**
@@ -192,8 +216,10 @@ export function Select({
         close();
         break;
       case 'Tab':
-        // Let focus move on naturally, but do not leave the list hanging open.
-        setOpen(false);
+        // Let focus move on naturally, but do not leave the list hanging open. Focus goes back
+        // to the trigger first: the list sits at the end of <body>, so tabbing straight out of
+        // it would land after the footer instead of on the next field.
+        close();
         break;
       default:
         if (event.key.length === 1 && /\S/.test(event.key)) {
@@ -220,19 +246,19 @@ export function Select({
         onClick={() => (open ? close(false) : openList())}
         onKeyDown={onTriggerKeyDown}
         className={cx(
-          'flex w-full items-center justify-between gap-3 rounded-control border text-left transition-colors duration-150',
+          'flex w-full items-center justify-between gap-3 rounded-[14px] border text-left transition-colors duration-150',
           heights,
-          tone === 'cream' ? 'bg-cream' : 'bg-paper',
+          tone === 'cream' ? 'bg-cream' : 'bg-white',
           // One indicator, not two: the border turns green with a soft halo tight against it,
           // for keyboard focus and for the open state alike. The site-wide focus outline sits
           // 2px outside an element, which around a bordered control read as a second outline.
-          'focus-visible:border-green focus-visible:shadow-[0_0_0_3px_rgb(17_52_27/0.16)] focus-visible:outline-none',
+          'focus-visible:border-green focus-visible:shadow-[0_0_0_3px_rgb(15_42_26/0.14)] focus-visible:outline-none',
           open
-            ? 'border-green shadow-[0_0_0_3px_rgb(17_52_27/0.16)]'
+            ? 'border-green shadow-[0_0_0_3px_rgb(15_42_26/0.14)]'
             : 'border-rule-strong hover:border-green/60',
         )}
       >
-        <span className={cx('truncate', selected ? 'text-ink' : 'text-muted')}>
+        <span className={cx('truncate', selected ? 'text-green' : 'text-muted')}>
           {selected ? selected.label : placeholder}
         </span>
         <ChevronIcon
@@ -246,7 +272,14 @@ export function Select({
         />
       </button>
 
-      {open && (
+      {/*
+        The open list is portalled into <body> and fixed to the viewport, at --z-popover. Drawn
+        inside the control, it inherited every ancestor's clipping and stacking: the homepage hero
+        is overflow:hidden and isolated, so the search counter's lists were cut off at the hero's
+        edge, and on other pages a later section (or a Leaflet map) could paint over an open list.
+        Out here nothing on the page can clip or cover it.
+      */}
+      {open && place && createPortal(
         <ul
           ref={listRef}
           id={listboxId}
@@ -254,16 +287,11 @@ export function Select({
           tabIndex={-1}
           aria-activedescendant={`${listboxId}-${activeIndex}`}
           onKeyDown={onListKeyDown}
-          /*
-           * z-[35] sits above the sticky mobile CTA bar (z-30) and below the masthead
-           * (z-40), which is the order you want if a list opens near either edge.
-           */
+          style={{ left: place.left, width: place.width, top: place.top, bottom: place.bottom }}
           className={cx(
-            'absolute right-0 left-0 z-[35] max-h-[17rem] overflow-y-auto rounded-brand border border-rule bg-paper shadow-[0_18px_40px_-18px_rgba(17,52,27,0.45)] outline-none',
+            'fixed z-(--z-popover) max-h-[17rem] overflow-y-auto rounded-[18px] border border-green/10 bg-white p-1.5 font-sans shadow-[0_28px_56px_-20px_rgba(15,42,26,0.35)] outline-none',
             // The gold rule marks the edge that meets the trigger, whichever way it opened.
-            upward
-              ? 'bottom-[calc(100%+4px)] border-b-2 border-b-gold'
-              : 'top-[calc(100%+4px)] border-t-2 border-t-gold',
+            place.upward ? 'origin-bottom' : 'origin-top',
           )}
         >
           {options.map((option, index) => {
@@ -279,10 +307,9 @@ export function Select({
                 onClick={() => commit(index)}
                 onMouseEnter={() => setActiveIndex(index)}
                 className={cx(
-                  'flex cursor-pointer items-center justify-between gap-3 border-l-[3px] px-3.5 py-2.5 text-body transition-colors duration-100',
-                  'border-b border-b-rule/60 last:border-b-0',
-                  isSelected ? 'border-l-gold text-green' : 'border-l-transparent text-ink',
-                  isActive && 'bg-green/8',
+                  'flex cursor-pointer items-center justify-between gap-3 rounded-[12px] px-3.5 py-2.5 text-body transition-colors duration-100',
+                  isSelected ? 'font-semibold text-green' : 'text-green/85',
+                  isActive && 'bg-sage-soft',
                 )}
               >
                 <span className="truncate">{option.label}</span>
@@ -292,7 +319,8 @@ export function Select({
               </li>
             );
           })}
-        </ul>
+        </ul>,
+        document.body,
       )}
     </div>
   );

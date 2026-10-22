@@ -171,16 +171,16 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
                   <Link
                     href={`/properties/${listing.slug}`}
                     tabIndex={active ? 0 : -1}
-                    className="inline-flex items-center justify-center whitespace-nowrap rounded-control bg-gold px-6 py-3.5 text-base font-medium text-green transition-colors hover:bg-gold-deep hover:text-cream"
+                    className="inline-flex items-center justify-center whitespace-nowrap min-h-[52px] rounded-full bg-gold px-[26px] text-body font-semibold text-green transition-[filter] hover:brightness-[1.06]"
                   >
                     View this property
                   </Link>
                   <Link
                     href={`/properties/${listing.slug}#enquire`}
                     tabIndex={active ? 0 : -1}
-                    className="inline-flex items-center justify-center whitespace-nowrap rounded-control border border-cream/45 px-6 py-3.5 text-base text-cream transition-colors hover:border-gold hover:text-gold"
+                    className="inline-flex items-center justify-center whitespace-nowrap min-h-[52px] rounded-full border border-white/35 px-[26px] text-body font-semibold text-white transition-colors hover:bg-white/10"
                   >
-                    Contact the agent
+                    Enquire about it
                   </Link>
                 </div>
               </div>
@@ -217,7 +217,7 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
             <button
               type="button"
               onClick={() => go(index - 1, true)}
-              className="flex h-11 w-11 items-center justify-center rounded-control border border-cream/35 text-cream transition-colors hover:border-gold hover:text-gold"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-cream/35 text-cream transition-colors hover:border-gold hover:text-gold"
             >
               <ChevronIcon className="rotate-180" />
               <span className="sr-only">Previous property</span>
@@ -225,7 +225,7 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
             <button
               type="button"
               onClick={() => go(index + 1, true)}
-              className="flex h-11 w-11 items-center justify-center rounded-control border border-cream/35 text-cream transition-colors hover:border-gold hover:text-gold"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-cream/35 text-cream transition-colors hover:border-gold hover:text-gold"
             >
               <ChevronIcon />
               <span className="sr-only">Next property</span>

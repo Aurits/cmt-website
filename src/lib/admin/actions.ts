@@ -73,18 +73,16 @@ export async function loadAdminState(): Promise<AdminState> {
 export async function saveListing(listing: AdminListing): Promise<void> {
   const data = await repo();
   await data.listings.upsert(listing);
-  revalidatePath('/listings');
-  revalidatePath(`/listings/${listing.category}`);
-  revalidatePath(`/properties/${listing.slug}`);
-  revalidatePath('/');
+  // Every page: the masthead's Properties menu prints the listing counts.
+  revalidatePath('/', 'layout');
 }
 
 export async function removeListing(slug: string, category: string): Promise<void> {
   const data = await repo();
   await data.listings.remove(slug);
-  revalidatePath('/listings');
-  revalidatePath(`/listings/${category}`);
-  revalidatePath('/');
+  // Every page, as above. `category` is kept in the signature for the callers.
+  void category;
+  revalidatePath('/', 'layout');
 }
 
 /* ── team ───────────────────────────────────────────────────────────────────────────────── */
@@ -94,16 +92,15 @@ export async function saveAgent(agent: Parameters<
 >[0]): Promise<void> {
   const data = await repo();
   await data.agents.upsert(agent);
-  revalidatePath('/about/people');
-  revalidatePath('/about');
-  revalidatePath('/about/credentials');
+  // Every page: the team sets the "registered valuers" figure in the masthead's About menu, as
+  // well as /about, /about/people, /about/credentials, /valuations and the property contacts.
+  revalidatePath('/', 'layout');
 }
 
 export async function removeAgent(id: string): Promise<void> {
   const data = await repo();
   await data.agents.remove(id);
-  revalidatePath('/about/people');
-  revalidatePath('/about');
+  revalidatePath('/', 'layout');
 }
 
 /* ── clients ────────────────────────────────────────────────────────────────────────────── */
@@ -128,12 +125,14 @@ export async function saveTestimonial(testimonial: AdminTestimonial): Promise<vo
   const data = await repo();
   await data.testimonials.upsert(testimonial);
   revalidatePath('/about/clients');
+  revalidatePath('/');
 }
 
 export async function removeTestimonial(id: string): Promise<void> {
   const data = await repo();
   await data.testimonials.remove(id);
   revalidatePath('/about/clients');
+  revalidatePath('/');
 }
 
 /* ── blog ───────────────────────────────────────────────────────────────────────────────── */

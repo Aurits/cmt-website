@@ -7,6 +7,7 @@ import { cx } from '@/lib/cx';
  */
 export function SectionHeading({
   title,
+  eyebrow,
   lead,
   leadShort,
   action,
@@ -16,6 +17,8 @@ export function SectionHeading({
   id,
 }: {
   title: string;
+  /** The small uppercase line over the title, with the gold rule, as the hero design sets it. */
+  eyebrow?: string;
   lead?: string;
   /**
    * The lead as it should read on a phone, where it replaces `lead` below 640px. One sentence,
@@ -49,14 +52,27 @@ export function SectionHeading({
         its lines, and the lead keeps a reading measure of its own.
       */}
       <div className={cx('min-w-0', align === 'center' && 'mx-auto')}>
-        <span
-          aria-hidden="true"
-          className={cx('mb-5 block h-[3px] w-10 bg-gold', align === 'center' && 'mx-auto')}
-        />
+        {eyebrow ? (
+          <p
+            className={cx(
+              'mb-5 flex items-center gap-3 text-[13px] font-semibold tracking-[0.16em] uppercase',
+              align === 'center' && 'justify-center',
+              onDark ? 'text-gold' : 'text-moss',
+            )}
+          >
+            <span aria-hidden="true" className="h-[3px] w-10 shrink-0 rounded-full bg-gold" />
+            {eyebrow}
+          </p>
+        ) : (
+          <span
+            aria-hidden="true"
+            className={cx('mb-5 block h-[3px] w-10 rounded-full bg-gold', align === 'center' && 'mx-auto')}
+          />
+        )}
         <h2
           id={id}
           className={cx(
-            'max-w-[24ch] text-h2 text-balance',
+            'max-w-[24ch] text-h2 tracking-[-0.02em] text-balance',
             align === 'center' && 'mx-auto',
             onDark ? 'text-cream' : 'text-green',
           )}
@@ -68,7 +84,7 @@ export function SectionHeading({
             className={cx(
               'mt-4 max-w-[60ch] text-lead leading-relaxed text-pretty',
               align === 'center' && 'mx-auto',
-              onDark ? 'text-cream/80' : 'text-muted',
+              onDark ? 'text-white/75' : 'text-prose',
             )}
           >
             {/* Two spans rather than two paragraphs, so the spacing is identical and a screen

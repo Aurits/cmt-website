@@ -5,9 +5,11 @@ A short checklist of the information and photographs we need to finish the websi
 > This checklist is also available as a Word document: `docs/CMT-Website-Content-Needed.docx`.
 > Both use the same numbers, so "item 6.1" means the same thing in each.
 
-Thank you for your help so far. The new website is built and works well on phones and computers. To
-finish it, we need a few things that only CMT can give us: some facts, some photographs and a couple
-of decisions.
+Thank you for the staff list and the client list. Both are now on the website: your six registered
+valuers on the Our People page, and all your clients on the Our Clients page.
+
+To finish the website, we need a few more things that only CMT can give us: some facts, some
+photographs and a couple of decisions.
 
 We never make anything up on the site. Where something is still missing, the site simply leaves it
 out for now. As each item arrives, we add it straight away.
@@ -39,7 +41,7 @@ These five items make the biggest difference to the website.
 
 | | What we need | Where |
 |---|---|---|
-| **1** | Registration numbers for CMT and its valuers | Section 2 |
+| **1** | Registration numbers for the six registered valuers | Section 2 |
 | **2** | Are the Uganda and Kenya offices one firm, or two linked firms? | Section 1 |
 | **3** | A mobile number for WhatsApp | Section 4 |
 | **4** | Photographs of the team | Section 6 |
@@ -59,27 +61,30 @@ A few basic facts that the rest of the website is built on.
 
 ## 2. Credentials
 
-This section shows clients why CMT can be trusted, so it needs to be exactly right. Until we hear
-from you, the site shows these as "Awaiting confirmation" and does not show any numbers.
+Thank you for confirming that six of your valuers are registered with the Surveyors Registration
+Board. The website now says so. What it still needs is the registration numbers, so a bank or a
+court can check them.
 
 | No. | What we need | Notes or example | Done |
 |---|---|---|:---:|
-| **2.1** | Godfrey Omondi: please send his registration numbers and how he would like his qualifications written | Public records list him as MRICS, licensed by the Surveyors Registration Board (Uganda) and the Institution of Surveyors of Kenya. | ☐ |
-| **2.2** | Michael Oballim: please confirm he is FISU, and send his registration number | FISU means Fellow of the Institution of Surveyors of Uganda. | ☐ |
-| **2.3** | Does CMT have its own registration as a firm? | If so, please send the details. This is separate from the valuers' own registrations. | ☐ |
-| **2.4** | Does CMT, or any of its valuers, belong to any other professional bodies? | We would be glad to add them. | ☐ |
-| **2.5** | Optional: what level of professional indemnity insurance does CMT hold? | Banks often ask about this before adding a valuer to their panel. | ☐ |
+| **2.1** | Registration numbers for the six registered valuers | Godfrey Omondi, Michael Oballim, Rachel Nanyunja, Stella Namujumbi, Joan Nakalanda and Ronald Kidega. Until we have them, the site says "Registered" with no number. | ☐ |
+| **2.2** | Godfrey Omondi: please confirm MRICS and his Kenya licence | Public records show him as a Member of the Royal Institution of Chartered Surveyors (MRICS) and licensed by the Institution of Surveyors of Kenya. Please also tell us how he would like his qualifications written. | ☐ |
+| **2.3** | Michael Oballim: please confirm he is FISU | FISU means Fellow of the Institution of Surveyors of Uganda. We found this in public records, not from CMT. | ☐ |
+| **2.4** | Is CMT a member of the Uganda Institution of Surveyors? | The website used to say CMT is regulated by it. It now names the Surveyors Registration Board instead. If CMT is also a member of the Institution, we will mention both. | ☐ |
+| **2.5** | Does CMT have its own registration as a firm? | If so, please send the details. This is separate from the valuers' own registrations. | ☐ |
+| **2.6** | Optional: what level of professional indemnity insurance does CMT hold? | Banks often ask about this before adding a valuer to their panel. | ☐ |
 
 ## 3. People
 
-The people shown on the Our People page. Their photographs are covered in Section 6.
+The Our People page now shows your two Technical Directors and four registered valuers. Their
+photographs are covered in Section 6.
 
 | No. | What we need | Notes or example | Done |
 |---|---|---|:---:|
-| **3.1** | Please confirm everyone's exact job title | In particular Michael Oballim's, which we found in a business directory rather than from CMT. | ☐ |
-| **3.2** | Please read each person's short description and tell us about any changes | You can see them on the Our People page. | ☐ |
-| **3.3** | Should Namujjumbi Stella and Kingsley Adams appear on the site? | CMT's own material mentions them as valuers. If yes, please send their job titles, a line about their work and a photo. | ☐ |
-| **3.4** | Should anyone be contacted directly? | If so, please send their direct phone number or email. Otherwise, all enquiries go through the office, as they do now. | ☐ |
+| **3.1** | How is Stella's surname spelled: Namujumbi or Namujjumbi? | Your staff list writes "Namujumbi", but her email address and earlier CMT material use "Namujjumbi". | ☐ |
+| **3.2** | A line about each valuer's experience (optional) | For example, the kinds of property they value most, or their years in practice. At the moment the site says only that they are registered valuers. | ☐ |
+| **3.3** | Are Kanshabe Lindah and Waniala Andrew still with CMT? | They were listed as property agents on the old website but are not on your staff list, so we have taken them off the site for now. We can add them back in minutes. | ☐ |
+| **3.4** | Who works in the Kenya practice? | Your staff list covers the Uganda team only. If the Kenya team should appear, please send their names and titles. | ☐ |
 
 ## 4. Contact details
 
@@ -92,13 +97,14 @@ The people shown on the Our People page. Their photographs are covered in Sectio
 
 ## 5. Proof from clients
 
-New clients trust CMT more when they can see who already works with you.
+Thank you for the full client list. All of them now appear on the Our Clients page, grouped by
+sector.
 
 | No. | What we need | Notes or example | Done |
 |---|---|---|:---:|
 | **5.1** | Short references (testimonials) from clients, with their permission to publish | For each one: the quote, the person's name, job title and organisation. If possible, also the type of job and the year, for example "Mortgage valuation, 2025". | ☐ |
-| **5.2** | Which other clients may we name? | CMT mentions more than 20 institutions; the site shows the 14 whose logos are already public. Please send any others you are happy for us to show. | ☐ |
-| **5.3** | Are EXIM Bank and Uganda Development Bank current clients? | Also, should UN Federal Credit Union be listed with the banks, or with the corporate partners? | ☐ |
+| **5.2** | What do "PLC", "HCH" and "EFC – MDI" stand for? | They are on your client list, but we could not tell which organisations they are, so we have left them off the site until we know. | ☐ |
+| **5.3** | Please check the client names as we have written them | We used each organisation's own spelling, for example "Ecobank" for "Eco Bank", "TotalEnergies" for "Total Energies", and "National Water and Sewerage Corporation". You can see the full list on the Our Clients page. | ☐ |
 | **5.4** | Could you share one sample report, with private details blacked out? | Even a single page helps a new client see what they will receive. No other firm in the market shows one. | ☐ |
 
 ## 6. Photographs
@@ -109,7 +115,7 @@ photo is sharp and taken in good light.
 
 | No. | Photo | What it should show | How many | Done |
 |---|---|---|---|:---:|
-| **6.1** | Team headshots | One photo of each person on the site: head and shoulders, a plain light background, looking at the camera. The same style for everyone. | Everyone | ☐ |
+| **6.1** | Headshots of the six registered valuers | Head and shoulders, a plain light background, looking at the camera. The same style for everyone, so the team page looks like one team. | 6 | ☐ |
 | **6.2** | The team together | A group photo in the office, or outside Ambassador House. | 1 or 2 | ☐ |
 | **6.3** | Inside the office | The reception and working areas, tidy and well lit. | 3 to 5 | ☐ |
 | **6.4** | Valuers at work | During an inspection: measuring, checking documents, taking notes on site. Faces do not need to show. | 5 to 10 | ☐ |

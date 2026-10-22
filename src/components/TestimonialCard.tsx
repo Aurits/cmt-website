@@ -1,13 +1,12 @@
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
-import { allPartners } from '@/data/partners';
-import type { Testimonial } from '@/lib/types';
+import type { Partner, Testimonial } from '@/lib/types';
 import { cx } from '@/lib/cx';
 
 /** The client's own mark, when the organisation is one we already hold a logo for. */
-function partnerLogo(organisation: string) {
+function partnerLogo(partners: Partner[], organisation: string) {
   const name = organisation.trim().toLowerCase();
-  return allPartners.find(
+  return partners.find(
     (partner) =>
       partner.name.toLowerCase() === name || partner.shortName?.toLowerCase() === name,
   )?.logo;
@@ -24,25 +23,28 @@ function partnerLogo(organisation: string) {
  */
 export function TestimonialCard({
   testimonial,
+  partners,
   featured = false,
 }: {
   testimonial: Testimonial;
+  /** The client roster from the repository, to find this organisation's logo in. */
+  partners: Partner[];
   featured?: boolean;
 }) {
-  const logo = partnerLogo(testimonial.organisation);
+  const logo = partnerLogo(partners, testimonial.organisation);
 
   return (
     <figure
       className={cx(
         'flex h-full flex-col rounded-brand border p-6 sm:p-8',
-        featured ? 'border-green bg-green text-cream' : 'border-rule bg-paper',
+        featured ? 'border-green bg-green text-cream' : 'border-hair bg-white',
       )}
     >
       <span
         aria-hidden="true"
         className={cx(
           'font-display text-[3.5rem] leading-[0.6]',
-          featured ? 'text-gold' : 'text-gold-deep',
+          featured ? 'text-gold' : 'text-moss',
         )}
       >
         &ldquo;
@@ -60,17 +62,17 @@ export function TestimonialCard({
         <div
           className={cx(
             'flex items-center gap-4 border-t pt-5',
-            featured ? 'border-cream/20' : 'border-rule',
+            featured ? 'border-cream/20' : 'border-hair',
           )}
         >
           {logo && (
             // White plate: these are other organisations' marks, drawn for a white ground.
             // Same reasoning as the client conveyor.
-            <span className="flex h-12 w-20 shrink-0 items-center justify-center rounded-brand border border-rule bg-white px-2">
+            <span className="flex h-12 w-20 shrink-0 items-center justify-center rounded-brand border border-hair bg-white px-2">
               <Image src={logo} alt="" width={120} height={48} className="max-h-8 w-auto object-contain" />
             </span>
           )}
-          <span className="text-sm">
+          <span className="text-body">
             <span className={cx('block font-medium', featured ? 'text-cream' : 'text-ink')}>
               {testimonial.name}
             </span>
@@ -83,8 +85,8 @@ export function TestimonialCard({
         {testimonial.instruction && (
           <p
             className={cx(
-              'schedule-row mt-5 text-sm',
-              featured ? 'border-cream/20' : 'border-rule',
+              'schedule-row mt-5 text-body',
+              featured ? 'border-cream/20' : 'border-hair',
             )}
           >
             <span className={featured ? 'text-cream/60' : 'text-muted'}>Instruction</span>
@@ -103,19 +105,29 @@ export function TestimonialCard({
  * The references, lead first. One reads full width; with more, the lead takes the wider
  * column and the rest stack beside it, so the section is never a row of equal boxes.
  */
-export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) {
+export function Testimonials({
+  testimonials,
+  partners,
+}: {
+  testimonials: Testimonial[];
+  partners: Partner[];
+}) {
   const [lead, ...rest] = testimonials;
   if (!lead) return null;
 
   return (
     <div className={cx('grid gap-6', rest.length > 0 && 'lg:grid-cols-12')}>
       <div className={cx(rest.length > 0 && 'lg:col-span-7')}>
-        <TestimonialCard testimonial={lead} featured />
+        <TestimonialCard testimonial={lead} partners={partners} featured />
       </div>
       {rest.length > 0 && (
         <div className="grid gap-6 lg:col-span-5">
           {rest.map((testimonial) => (
-            <TestimonialCard key={`${testimonial.name}-${testimonial.organisation}`} testimonial={testimonial} />
+            <TestimonialCard
+              key={`${testimonial.name}-${testimonial.organisation}`}
+              testimonial={testimonial}
+              partners={partners}
+            />
           ))}
         </div>
       )}
@@ -129,7 +141,7 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
  */
 export function TestimonialsPending() {
   return (
-    <div className="rounded-brand border border-dashed border-green/30 bg-mist/50 p-6 sm:p-7">
+    <div className="rounded-brand border border-dashed border-green/30 bg-sage-soft/60 p-6 sm:p-7">
       <p className="max-w-[52ch] font-display text-h3 leading-snug text-green">
         References from the banks, agencies and corporate clients CMT already works for
         will sit here.

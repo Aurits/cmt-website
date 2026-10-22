@@ -2,10 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CTABanner } from '@/components/CTABanner';
 import { ListingsExplorer } from '@/components/property/ListingsExplorer';
-import { Container } from '@/components/ui/Container';
+import { Section } from '@/components/ui/Section';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { categories } from '@/data/categories';
-import { cities, listings, listingsByCategory } from '@/data/listings';
+import { citiesOf } from '@/data/listings';
+import { getListings } from '@/lib/content';
+import { numberWord } from '@/lib/format';
 import type { CategorySlug, ListingType } from '@/lib/types';
 
 export const metadata: Metadata = {
@@ -21,6 +23,8 @@ export default async function ListingsPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const params = await searchParams;
+  const listings = await getListings();
+  const cities = citiesOf(listings);
   const read = (key: string) => (typeof params[key] === 'string' ? (params[key] as string) : undefined);
 
   const type = (['sale', 'rent'] as const).find((value) => value === read('type')) as
@@ -35,20 +39,21 @@ export default async function ListingsPage({
     <>
       <PageHeader
         title="Property on our books"
-        lead={`${listings.length} properties across five property types and four cities. Filter to what you are after, or start from a property type.`}
-        leadShort={`${listings.length} properties across five types and four cities.`}
-        breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Property Listings' }]}
+        lead={`${listings.length} properties across ${numberWord(categories.length)} property types and ${numberWord(cities.length)} cities. Filter to what you are after, or start from a property type.`}
+        leadShort={`${listings.length} properties across ${numberWord(categories.length)} types and ${numberWord(cities.length)} cities.`}
+        eyebrow="Properties"
+        breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Properties' }]}
       >
         <ul className="flex flex-wrap gap-2">
           {categories.map((item) => (
             <li key={item.slug}>
               <Link
                 href={`/listings/${item.slug}`}
-                className="inline-flex items-baseline gap-2 rounded-control border border-cream/30 px-3.5 py-2 text-body text-cream transition-colors hover:border-gold hover:text-gold"
+                className="inline-flex items-center gap-2 rounded-full border border-green/12 bg-white/70 py-2 pr-2 pl-4 text-small font-medium text-green transition-colors hover:bg-white"
               >
                 {item.name}
-                <span className="tnum text-label text-cream/60">
-                  {listingsByCategory(item.slug).length}
+                <span className="tnum flex h-6 min-w-6 items-center justify-center rounded-full bg-sage-soft px-1.5 text-[12px] font-semibold">
+                  {listings.filter((listing) => listing.category === item.slug).length}
                 </span>
               </Link>
             </li>
@@ -56,14 +61,13 @@ export default async function ListingsPage({
         </ul>
       </PageHeader>
 
-      <section className="py-12 lg:py-16">
-        <Container>
-          <ListingsExplorer
-            listings={listings}
-            defaults={{ type: type ?? 'any', category: category ?? 'any', city: city ?? 'any' }}
-          />
-        </Container>
-      </section>
+      <Section>
+        <ListingsExplorer
+          listings={listings}
+          cities={cities}
+          defaults={{ type: type ?? 'any', category: category ?? 'any', city: city ?? 'any' }}
+        />
+      </Section>
 
       <CTABanner
         title="Have a property to sell or let?"

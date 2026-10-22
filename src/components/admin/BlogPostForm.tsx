@@ -8,7 +8,6 @@ import { FormSection } from '@/components/admin/FormSection';
 import { SaveBar } from '@/components/admin/SaveBar';
 import { ArrowDownIcon, ArrowUpIcon, PlusIcon, TrashIcon } from '@/components/admin/icons';
 import { inputClass } from '@/components/forms/fields';
-import { agents } from '@/data/agents';
 import { useAdmin } from '@/lib/admin/store';
 import type { AdminBlogPost, PostStatus } from '@/lib/admin/types';
 import { cx } from '@/lib/cx';
@@ -50,7 +49,8 @@ function Field({
 
 export function BlogPostForm({ initial, isNew }: { initial: AdminBlogPost; isNew: boolean }) {
   const router = useRouter();
-  const { upsertPost, deletePost } = useAdmin();
+  // Authors come from the CMS team, so someone added there can sign a post straight away.
+  const { state, upsertPost, deletePost } = useAdmin();
   const [draft, setDraft] = useState<AdminBlogPost>(initial);
   const [justSaved, setJustSaved] = useState(false);
 
@@ -152,7 +152,7 @@ export function BlogPostForm({ initial, isNew }: { initial: AdminBlogPost; isNew
         </div>
 
         {draft.pullFigure && (
-          <div className="border-l-[3px] border-gold bg-mist/50 px-4 py-3">
+          <div className="border-l-[3px] border-gold bg-stone/50 px-4 py-3">
             <p className="text-micro text-muted">How it will read</p>
             <p className="tnum mt-1 font-display text-figure leading-none text-green">
               {draft.pullFigure}
@@ -254,7 +254,7 @@ export function BlogPostForm({ initial, isNew }: { initial: AdminBlogPost; isNew
             onChange={(value) => set('authorId', value || undefined)}
             options={[
               { value: '', label: 'Unattributed' },
-              ...agents.map((agent) => ({ value: agent.id, label: agent.name })),
+              ...state.agents.map((agent) => ({ value: agent.id, label: agent.name })),
             ]}
           />
           <AdminSelectField

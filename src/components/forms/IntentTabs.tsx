@@ -19,8 +19,9 @@ export type IntentId = (typeof intents)[number]['id'];
 
 export function IntentTabs({ active }: { active: IntentId }) {
   return (
-    <nav aria-label="What would you like to do" className="border border-rule bg-paper">
-      <ul className="flex flex-col sm:flex-row">
+    <nav aria-label="What would you like to do">
+      {/* A segmented pill control, the masthead nav's shape at a smaller size. */}
+      <ul className="flex flex-col gap-1 rounded-[28px] border border-green/12 bg-cream p-[5px] sm:flex-row sm:rounded-full">
         {intents.map((intent) => {
           const isActive = intent.id === active;
           return (
@@ -29,11 +30,10 @@ export function IntentTabs({ active }: { active: IntentId }) {
                 href={intent.href}
                 aria-current={isActive ? 'page' : undefined}
                 className={cx(
-                  'flex min-h-[52px] items-center justify-center px-4 py-3 text-center text-body leading-tight transition-colors',
-                  'border-b border-rule last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0',
+                  'flex min-h-11 items-center justify-center rounded-full px-4 py-2 text-center text-body leading-tight transition-colors',
                   isActive
-                    ? 'bg-green text-cream'
-                    : 'text-ink/75 hover:bg-mist hover:text-green',
+                    ? 'bg-green font-semibold text-white'
+                    : 'font-medium text-green/80 hover:bg-green/7',
                 )}
               >
                 {intent.label}

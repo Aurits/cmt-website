@@ -29,7 +29,7 @@ function ConveyorItem({ partner, clone }: { partner: Partner; clone: boolean }) 
         trademarks, and several are supplied as logos drawn for a white ground. Tinting them to
         cream would alter marks we do not own. The plate is white; everything around it is not.
       */}
-      <div className="flex h-[92px] w-[190px] items-center justify-center rounded-brand border border-rule bg-white px-5 sm:h-[104px] sm:w-[220px]">
+      <div className="flex h-[92px] w-[190px] items-center justify-center rounded-[20px] border border-green/8 bg-white px-5 sm:h-[104px] sm:w-[220px]">
         {partner.logo ? (
           <Image
             src={partner.logo}
@@ -122,8 +122,8 @@ export function PartnerConveyorGroups({
     <div className="space-y-10 lg:space-y-12">
       {groups.map((group, index) => (
         <section key={group.id} aria-labelledby={`clients-${group.id}`}>
-          <div className="flex flex-col gap-2 border-b border-rule pb-3">
-            <Heading id={`clients-${group.id}`} className="font-display text-h4 text-green">
+          <div className="flex flex-col gap-2 border-b border-green/12 pb-3">
+            <Heading id={`clients-${group.id}`} className="font-display text-h4 font-semibold text-green">
               {group.title}
             </Heading>
             {showDescriptions && (

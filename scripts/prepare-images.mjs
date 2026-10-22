@@ -59,22 +59,29 @@ const SOURCES = {
   'ug-residential': '1578325872347-6cc1795a5fea', // aerial: Kampala rooftops, Lake Victoria, a rainbow
   'ug-land': '1696963609168-5c3d93857ea4', // terraced plots on a Ugandan hillside
   'ug-agri': '1741012253817-67aacc8e25c6', // coffee cherries ripening, Kampala
+
+  // Survey work, replacing a photograph of an identifiable Kampala building (October 2026). PLAN.md
+  // rules out any identifiable Kampala building without confirmed rights; this shows the work
+  // instead, with no building, logo or recognisable face. Unsplash License; page slug noted for
+  // CREDITS.md.
+  'survey-field': '1766830110938-0ea8a6d78ecb', // Nazmul ahsan Meraz (OIZPlqDEbPM): a surveyor at a total station
 };
 
 /** [source, output path, width, height, human description] */
 const JOBS = [
-  ['ug-hero', 'hero-home.jpg', 2200, 1760, 'Wavy, ribbon-like apartment balconies — homepage hero'],
-  ['ug-office', 'identity-office.jpg', 1400, 1000, "Kampala's business district by day — About / identity section"],
-  ['ug-cta', 'cta-skyline.jpg', 2000, 1000, 'Kampala skyline at sunset, from Nsambya — CTA banner background'],
+  ['ug-hero', 'hero-home.jpg', 2200, 1760, 'Ribbon-like apartment balconies. Not Kampala: an abstract facade. Not used on any page'],
+  ['ug-office', 'identity-office.jpg', 1400, 1000, "Keith Kasaija: an identifiable Kampala office building. Not used on any page (PLAN.md rules out identifiable Kampala buildings without confirmed rights)"],
+  ['survey-field', 'survey-field.jpg', 1400, 1000, 'Nazmul ahsan Meraz: a surveyor at a total station in open grass. About page'],
+  ['ug-cta', 'cta-skyline.jpg', 2000, 1000, 'Robin Kutesa: identifiable Kampala skyline at sunset. Not used on any page (the closing banners are now plain green)'],
   ['01', 'valuation-keys.jpg', 1200, 800, 'House model and keys — Services / valuation'],
 
   ['svc-valuation', 'services/valuation.jpg', 1200, 900, 'A tape measure, held up — property valuation'],
-  ['svc-lending', 'services/lending.jpg', 1200, 900, 'A report being signed — valuation for lending'],
+  ['svc-lending', 'services/lending.jpg', 1200, 900, 'Mikhail Nilov: a professional reading and signing a report. Homepage, "A valuation firm first"'],
   ['svc-consultancy', 'services/consultancy.jpg', 1200, 900, 'Hands over a blueprint — real estate consultancy'],
   ['svc-listing', 'services/listing.jpg', 1200, 900, 'House keys at the door — listing and sales management'],
 
   ['ug-residential', 'categories/residential.jpg', 1600, 1000, 'Kampala rooftops, Lake Victoria and a rainbow'],
-  ['ug-commercial', 'categories/commercial.jpg', 1600, 1000, "Kampala's commercial towers above the trees"],
+  ['ug-commercial', 'categories/commercial.jpg', 1600, 1000, "Michael Starkie: identifiable Kampala towers. Not used on any page (the Commercial card now uses listings/com-office-interior.jpg)"],
   ['09', 'categories/industrial.jpg', 1600, 1000, 'Generic warehouse interior'],
   ['ug-land', 'categories/land.jpg', 1600, 1000, 'Terraced plots on a Ugandan hillside'],
   ['ug-agri', 'categories/agricultural.jpg', 1600, 1000, 'Coffee cherries ripening, Kampala'],
@@ -133,7 +140,12 @@ const TOP_TRIM = {
   'identity-office.jpg': 0.42,
 };
 
+// `--only survey-field.jpg,survey-tripod.jpg` builds just those outputs, so adding one photo does
+// not re-download and re-encode every other image on the site.
+const only = process.argv.find((arg) => arg.startsWith('--only='))?.slice(7).split(',');
+
 for (const [src, out, w, h] of JOBS) {
+  if (only && !only.includes(out)) continue;
   const dest = path.join(OUT, out);
   fs.mkdirSync(path.dirname(dest), { recursive: true });
   let pipeline = sharp(await source(src));
@@ -214,7 +226,12 @@ await sharp(normalized).resize(900).png({ compressionLevel: 9, palette: true })
 // Favicons and app icons are built from this mark by scripts/prepare-icons.mjs, which
 // steps the artwork down with size (the whole wordmark is unreadable at 16px).
 
+/** Photo pages by slug, for sources whose numeric id does not resolve as an unsplash.com URL. */
+const CREDIT_PAGE = {
+  'survey-field': 'https://unsplash.com/photos/OIZPlqDEbPM',
+};
 const creditLink = (src) => {
+  if (CREDIT_PAGE[src]) return CREDIT_PAGE[src];
   const ref = SOURCES[src];
   return ref.startsWith('pexels:')
     ? `https://www.pexels.com/photo/${ref.slice(7)}/`
@@ -227,11 +244,13 @@ const credits = [
   'Photography: [Unsplash](https://unsplash.com/license) or, for two of the four service',
   'photographs, [Pexels](https://www.pexels.com/license/) — both free for commercial use,',
   'no attribution required. Credited here for traceability, including the photographer of',
-  'each Kampala/Uganda shot. Listings imagery (`listings/*`) is generic and',
-  'representative on purpose — none of it is a real CMT property yet, and it is replaced',
-  'with client-supplied photography at the same paths when that exists. Everywhere else —',
-  'hero, identity photo, CTA banner and four of the five property-class cards — is',
-  'genuine, identifiable Kampala or Uganda photography.',
+  'each shot where known. Listings imagery (`listings/*`) is generic and representative on',
+  'purpose: none of it is a real CMT property, and it is replaced with client-supplied',
+  'photography at the same paths when that exists.',
+  '',
+  'October 2026: photographs of identifiable Kampala buildings and skylines were taken off',
+  'every page, because PLAN.md rules them out without confirmed rights. The files stay here,',
+  'marked "Not used on any page", so they can return if CMT secures those rights.',
   '',
   '| File | Source | Description |',
   '| --- | --- | --- |',

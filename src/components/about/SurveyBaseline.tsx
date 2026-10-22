@@ -1,3 +1,4 @@
+import { Container } from '@/components/ui/Container';
 import { kenyaOffices, ugandaOffices } from '@/data/site';
 import type { Office } from '@/lib/types';
 import { cx } from '@/lib/cx';
@@ -61,7 +62,7 @@ function Station({ office, vertical }: { office: Office; vertical?: boolean }) {
   return (
     <li className="flex flex-col items-center gap-2.5">
       {/* A fixed-height row, so every marker sits at the same height and the line meets all of them. */}
-      <span className="h-4 text-label font-semibold uppercase tracking-[0.1em] text-gold-deep">
+      <span className="h-4 text-label font-semibold uppercase tracking-[0.1em] text-moss">
         {isHead ? 'Head office' : ''}
       </span>
       <Marker head={isHead} />
@@ -72,64 +73,79 @@ function Station({ office, vertical }: { office: Office; vertical?: boolean }) {
 
 export function SurveyBaseline() {
   return (
-    <section aria-label="CMT Realtors offices" className="border-y border-rule bg-cream py-10">
-      {/* Horizontal baseline, md and up. */}
-      <div className="mx-auto hidden w-full max-w-[1200px] px-6 md:block">
-        <div className="relative">
-          {/* The line, running the full width behind the stations and through every marker's
+    // A white card on the paper, as every set-apart group is in the hero design's language.
+    <section aria-label="CMT Realtors offices" className="pb-16 lg:pb-24">
+      <Container>
+        <div className="rounded-(--radius-card) border border-green/8 bg-white px-6 py-10 min-[601px]:px-10">
+          {/* Horizontal baseline, md and up. */}
+          <div className="hidden md:block">
+            <div className="relative">
+              {/* The line, running the full width behind the stations and through every marker's
               centre: the 16px label row, the 10px gap, then half of the 14px marker. */}
-          <span aria-hidden="true" className="absolute top-[32px] right-0 left-0 h-[2px] bg-gold/60" />
-          <div className="relative grid grid-cols-[1fr_auto_1fr] items-start gap-8">
-            <ul className="flex items-center justify-between">
-              {ugandaOffices.map((office) => (
-                <Station key={office.city} office={office} />
-              ))}
-            </ul>
+              <span
+                aria-hidden="true"
+                className="absolute top-[32px] right-0 left-0 h-[2px] bg-gold/60"
+              />
+              <div className="relative grid grid-cols-[1fr_auto_1fr] items-start gap-8">
+                <ul className="flex items-center justify-between">
+                  {ugandaOffices.map((office) => (
+                    <Station key={office.city} office={office} />
+                  ))}
+                </ul>
 
-            {/* The border. */}
-            <div className="flex flex-col items-center gap-1.5">
-              <span className="text-label font-semibold tracking-[0.12em] text-green">Uganda</span>
-              <span aria-hidden="true" className="h-9 w-[3px] bg-gold" />
-              <span className="text-label font-semibold tracking-[0.12em] text-green">Kenya</span>
+                {/* The border. */}
+                <div className="flex flex-col items-center gap-1.5">
+                  <span className="text-label font-semibold tracking-[0.12em] text-green">
+                    Uganda
+                  </span>
+                  <span aria-hidden="true" className="h-9 w-[3px] bg-gold" />
+                  <span className="text-label font-semibold tracking-[0.12em] text-green">
+                    Kenya
+                  </span>
+                </div>
+
+                <ul className="flex items-center justify-between">
+                  {kenyaOffices.map((office) => (
+                    <Station key={office.city} office={office} />
+                  ))}
+                </ul>
+              </div>
             </div>
-
-            <ul className="flex items-center justify-between">
-              {kenyaOffices.map((office) => (
-                <Station key={office.city} office={office} />
-              ))}
-            </ul>
           </div>
-        </div>
-      </div>
 
-      {/*
+          {/*
         Below md: the two countries side by side, each its own short vertical line. Stacked, the
         nine stations ran to 550px; paired, about 230. The border between them is the gap, and
         the key underneath says what the filled marker means.
       */}
-      <div className="mx-auto w-full max-w-[1200px] px-4 md:hidden">
-        <div className="grid grid-cols-2 gap-6">
-          {[
-            { name: 'Uganda', list: ugandaOffices },
-            { name: 'Kenya', list: kenyaOffices },
-          ].map((country) => (
-            <div key={country.name} className="relative">
-              <p className="mb-1 border-b-2 border-gold pb-1.5 text-label font-semibold tracking-[0.12em] text-green">
-                {country.name}
-              </p>
-              <span aria-hidden="true" className="absolute top-10 bottom-4 left-[6px] w-[2px] bg-gold/60" />
-              <ul>
-                {country.list.map((office) => (
-                  <Station key={office.city} office={office} vertical />
-                ))}
-              </ul>
+          <div className="md:hidden">
+            <div className="grid grid-cols-2 gap-6">
+              {[
+                { name: 'Uganda', list: ugandaOffices },
+                { name: 'Kenya', list: kenyaOffices },
+              ].map((country) => (
+                <div key={country.name} className="relative">
+                  <p className="mb-1 border-b-2 border-gold pb-1.5 text-label font-semibold tracking-[0.12em] text-green">
+                    {country.name}
+                  </p>
+                  <span
+                    aria-hidden="true"
+                    className="absolute top-10 bottom-4 left-[6px] w-[2px] bg-gold/60"
+                  />
+                  <ul>
+                    {country.list.map((office) => (
+                      <Station key={office.city} office={office} vertical />
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
-          ))}
+            <p className="mt-4 flex items-center gap-2 text-micro text-muted">
+              <Marker head /> Head office
+            </p>
+          </div>
         </div>
-        <p className="mt-4 flex items-center gap-2 text-micro text-muted">
-          <Marker head /> Head office
-        </p>
-      </div>
+      </Container>
     </section>
   );
 }

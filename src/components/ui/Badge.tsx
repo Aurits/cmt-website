@@ -7,7 +7,7 @@ const tones: Record<Tone, string> = {
   type: 'bg-gold font-medium text-green',
   // Property class ("Residential", "Commercial"...) on paper or on a photograph without a
   // scrim behind it — solid green reads clearly against either.
-  category: 'bg-green text-cream',
+  category: 'bg-green text-white',
   // The same category tag, but over a photograph that already carries a dark scrim
   // (FeaturedCarousel): a second solid green box there reads as a stacked block rather
   // than a tag, so this is outlined instead.
@@ -32,7 +32,7 @@ export function Badge({
   return (
     <span
       className={cx(
-        'inline-flex items-center rounded-brand px-3 py-1.5 text-label',
+        'inline-flex items-center rounded-full px-3 py-1 text-[12px] font-semibold',
         tones[tone],
         className,
       )}
