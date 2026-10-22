@@ -26,7 +26,7 @@ export const metadata: Metadata = {
  * property and the standing schedule on /about. A valuation firm publishing research should look
  * like a valuation firm.
  *
- * See docs/LAYOUT-SPECS.md A-07.
+ * See docs/layout-specs.md A-07.
  */
 function formatDate(iso: string): string {
   const date = new Date(`${iso.slice(0, 10)}T00:00:00Z`);

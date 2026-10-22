@@ -8,13 +8,13 @@ purpose: none of it is a real CMT property, and it is replaced with client-suppl
 photography at the same paths when that exists.
 
 October 2026: photographs of identifiable Kampala buildings and skylines were taken off
-every page, because PLAN.md rules them out without confirmed rights. The files stay here,
+every page, because plan.md rules them out without confirmed rights. The files stay here,
 marked "Not used on any page", so they can return if CMT secures those rights.
 
 | File | Source | Description |
 | --- | --- | --- |
 | `hero-home.jpg` | https://unsplash.com/photos/1752654605009-3b12790fe738 | Ribbon-like apartment balconies. Not Kampala: an abstract facade. Not used on any page |
-| `identity-office.jpg` | https://unsplash.com/photos/1675756261486-09bd1e0f6c8a | Keith Kasaija: an identifiable Kampala office building. Not used on any page (PLAN.md rules out identifiable Kampala buildings without confirmed rights) |
+| `identity-office.jpg` | https://unsplash.com/photos/1675756261486-09bd1e0f6c8a | Keith Kasaija: an identifiable Kampala office building. Not used on any page (plan.md rules out identifiable Kampala buildings without confirmed rights) |
 | `survey-field.jpg` | https://unsplash.com/photos/OIZPlqDEbPM | Nazmul ahsan Meraz: a surveyor at a total station in open grass. About page |
 | `cta-skyline.jpg` | https://unsplash.com/photos/1763220207281-c4d0febb61a8 | Robin Kutesa: identifiable Kampala skyline at sunset. Not used on any page (the closing banners are now plain green) |
 | `valuation-keys.jpg` | https://unsplash.com/photos/1560518883-ce09059eeffa | House model and keys — Services / valuation |

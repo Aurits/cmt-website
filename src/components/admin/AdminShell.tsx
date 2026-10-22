@@ -58,8 +58,8 @@ export function AdminShell({
   };
 
   return (
-    // .admin-sharp squares every radius token for the whole CMS (globals.css): the admin design
-    // is sharp-cornered where the public site is rounded.
+    // .admin-sharp squares the major cards and panels for the whole CMS (globals.css), as the
+    // admin design does; buttons, search, tabs and tags stay rounded.
     <div className="admin-sharp min-h-screen bg-cream lg:flex">
       <AdminSidebar
         mobileOpen={mobileOpen}

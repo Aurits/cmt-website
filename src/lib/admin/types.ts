@@ -47,7 +47,7 @@ export interface Inquiry {
    * ValuationRequestForm puts two questions to the visitor, what is being valued, and what the
    * figure is for, and the matrix on /valuations exists to answer both before they arrive. The
    * type had nowhere to put either, so the answers were collected and then dropped between the
-   * form and the record. See the consistency audit in docs/SCHEMA.md.
+   * form and the record. See the consistency audit in docs/schema.md.
    */
   valuationAsset?: string;
   valuationPurpose?: string;

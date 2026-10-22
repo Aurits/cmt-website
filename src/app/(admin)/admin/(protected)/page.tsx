@@ -106,12 +106,12 @@ export default function AdminOverviewPage() {
           icon={<InboxIcon width={17} height={17} />}
           badge={
             pendingInquiries.length === 0 ? (
-              <span className="inline-flex items-center gap-1 bg-sage-soft px-2 py-0.5 text-[12px] font-semibold text-moss">
+              <span className="inline-flex items-center gap-1 rounded-full bg-sage-soft px-2 py-0.5 text-[12px] font-semibold text-moss">
                 <CheckIcon width={12} height={12} />
                 All clear
               </span>
             ) : (
-              <span className="inline-flex items-center bg-tag px-2 py-0.5 text-[12px] font-semibold text-tag-ink">
+              <span className="inline-flex items-center rounded-full bg-tag px-2 py-0.5 text-[12px] font-semibold text-tag-ink">
                 {pendingInquiries.length} new
               </span>
             )
@@ -162,7 +162,7 @@ export default function AdminOverviewPage() {
                         {entry.title}
                       </span>
                       <span className="mt-0.5 flex items-center gap-2 text-[12.5px] text-muted">
-                        <span className="bg-tag px-1.5 py-px text-[11px] font-semibold text-tag-ink">
+                        <span className="rounded-[4px] bg-tag px-1.5 py-px text-[11px] font-semibold text-tag-ink">
                           {entry.tag}
                         </span>
                         <span className="capitalize">{entry.kind}</span>
@@ -197,7 +197,7 @@ export default function AdminOverviewPage() {
                   key={action.href}
                   href={action.href}
                   className={cx(
-                    'flex min-h-[46px] items-center gap-3 border py-1.5 pr-1.5 pl-4 text-small font-semibold transition-colors',
+                    'flex min-h-[46px] items-center gap-3 rounded-full border py-1.5 pr-1.5 pl-4 text-small font-semibold transition-colors',
                     primary
                       ? 'border-green bg-green text-white hover:brightness-125'
                       : 'border-green/15 text-green hover:bg-cream',

@@ -5,7 +5,9 @@ import { FormSection } from '@/components/admin/FormSection';
 import { SaveBar } from '@/components/admin/SaveBar';
 import { Label, TextArea, TextField, inputClass } from '@/components/forms/fields';
 import { useAdmin } from '@/lib/admin/store';
-import type { AdminSiteSettings } from '@/lib/admin/types';
+import type { AdminAgent, AdminSiteSettings } from '@/lib/admin/types';
+import { clientCount } from '@/data/clients';
+import { offices } from '@/data/site';
 import { cx } from '@/lib/cx';
 
 export default function AdminSettingsPage() {
@@ -13,14 +15,16 @@ export default function AdminSettingsPage() {
 
   if (!ready) return <p className="text-body text-muted">Loading settings…</p>;
 
-  return <SettingsForm initial={state.settings} onSave={updateSettings} />;
+  return <SettingsForm initial={state.settings} agents={state.agents} onSave={updateSettings} />;
 }
 
 function SettingsForm({
   initial,
+  agents,
   onSave,
 }: {
   initial: AdminSiteSettings;
+  agents: AdminAgent[];
   onSave: (settings: AdminSiteSettings) => void;
 }) {
   const [draft, setDraft] = useState<AdminSiteSettings>(initial);
@@ -31,13 +35,6 @@ function SettingsForm({
     setDraft((prev) => ({ ...prev, [key]: value }));
     setDirty(true);
     setJustSaved(false);
-  };
-
-  const setStat = (index: number, patch: Partial<AdminSiteSettings['stats'][number]>) => {
-    set(
-      'stats',
-      draft.stats.map((stat, i) => (i === index ? { ...stat, ...patch } : stat)),
-    );
   };
 
   const setHour = (index: number, patch: Partial<AdminSiteSettings['hours'][number]>) => {
@@ -51,7 +48,12 @@ function SettingsForm({
     <div className="grid gap-6">
       <FormSection title="Identity">
         <div className="grid gap-5 sm:grid-cols-2">
-          <TextField id="name" label="Full legal name" value={draft.name} onChange={(e) => set('name', e.target.value)} />
+          <TextField
+            id="name"
+            label="Full legal name"
+            value={draft.name}
+            onChange={(e) => set('name', e.target.value)}
+          />
           <TextField
             id="shortName"
             label="Short name"
@@ -59,7 +61,12 @@ function SettingsForm({
             onChange={(e) => set('shortName', e.target.value)}
           />
         </div>
-        <TextField id="tagline" label="Tagline" value={draft.tagline} onChange={(e) => set('tagline', e.target.value)} />
+        <TextField
+          id="tagline"
+          label="Tagline"
+          value={draft.tagline}
+          onChange={(e) => set('tagline', e.target.value)}
+        />
         <TextArea
           id="description"
           label="Meta description"
@@ -69,7 +76,10 @@ function SettingsForm({
         />
       </FormSection>
 
-      <FormSection title="Contact" lead="WhatsApp needs the office mobile in international digits, e.g. 256700123456.">
+      <FormSection
+        title="Contact"
+        lead="WhatsApp needs the office mobile in international digits, e.g. 256700123456."
+      >
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField
             id="phoneDisplay"
@@ -87,7 +97,13 @@ function SettingsForm({
           />
         </div>
         <div className="grid gap-5 sm:grid-cols-2">
-          <TextField id="email" label="Email" type="email" value={draft.email} onChange={(e) => set('email', e.target.value)} />
+          <TextField
+            id="email"
+            label="Email"
+            type="email"
+            value={draft.email}
+            onChange={(e) => set('email', e.target.value)}
+          />
           <div>
             <Label htmlFor="whatsapp" optional>
               WhatsApp number (international digits)
@@ -140,7 +156,10 @@ function SettingsForm({
         </div>
       </FormSection>
 
-      <FormSection title="Nairobi office" lead="Street address, once confirmed by the Kenya practice.">
+      <FormSection
+        title="Nairobi office"
+        lead="Kept on file for the Kenya practice. Not shown on the site until the Uganda and Kenya relationship is confirmed."
+      >
         <TextArea
           id="nairobiAddress"
           label="Address"
@@ -171,7 +190,7 @@ function SettingsForm({
             </div>
           ))}
         </div>
-        <label className="flex items-center gap-2.5 text-body text-ink">
+        <label className="flex items-center gap-2.5 text-body text-green">
           <input
             type="checkbox"
             checked={draft.hoursConfirmed}
@@ -182,46 +201,46 @@ function SettingsForm({
         </label>
       </FormSection>
 
-      <FormSection title="Homepage stats" lead="The four figures in the green ledger strip.">
-        <div className="grid gap-4">
-          {draft.stats.map((stat, index) => (
-            <div key={index} className="grid gap-3 rounded-brand border border-rule bg-cream p-4 sm:grid-cols-3">
-              <div>
-                <Label htmlFor={`stat-value-${index}`}>Value</Label>
-                <input
-                  id={`stat-value-${index}`}
-                  value={stat.value}
-                  onChange={(e) => setStat(index, { value: e.target.value })}
-                  className={cx(inputClass, 'tnum')}
-                />
-              </div>
-              <div>
-                <Label htmlFor={`stat-unit-${index}`}>Unit</Label>
-                <input
-                  id={`stat-unit-${index}`}
-                  value={stat.unit}
-                  onChange={(e) => setStat(index, { unit: e.target.value })}
-                  className={inputClass}
-                />
-              </div>
-              <div>
-                <Label htmlFor={`stat-label-${index}`}>Caption</Label>
-                <input
-                  id={`stat-label-${index}`}
-                  value={stat.label}
-                  onChange={(e) => setStat(index, { label: e.target.value })}
-                  className={inputClass}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
+      {/*
+        The figures on the site. Three of the four are counted from the data (offices from the
+        office list, institutions from the client list, registered valuers from the team), so
+        they cannot drift from the truth and are shown here read-only. Only the years figure is
+        typed. The "Homepage stats" fields that used to sit here edited values the site no longer
+        read, which made every change look saved and do nothing.
+      */}
+      <FormSection
+        title="Figures on the site"
+        lead="Shown under the homepage headline, on /about and in the About menu. Only the years are typed; the rest are counted."
+      >
         <TextField
           id="yearsInBusiness"
-          label="Years in business (shorthand used elsewhere on the site)"
+          label="Years in business"
           value={draft.yearsInBusiness}
           onChange={(e) => set('yearsInBusiness', e.target.value)}
+          placeholder="16+"
         />
+        <dl className="grid gap-px border border-hair bg-hair sm:grid-cols-3">
+          {[
+            [String(offices.length), 'offices', 'From the office list in src/data/site.ts'],
+            [String(clientCount), 'institutions', 'From the client list in src/data/clients.ts'],
+            [
+              String(agents.filter((agent) => agent.signsReports && agent.listed !== false).length),
+              'registered valuers',
+              'Team members marked "Registered valuer who signs reports"',
+            ],
+          ].map(([value, unit, source]) => (
+            <div key={unit} className="bg-cream/60 p-4">
+              <dt className="sr-only">{unit}</dt>
+              <dd>
+                <span className="tnum font-display text-[26px] leading-none font-semibold text-green">
+                  {value}
+                </span>{' '}
+                <span className="text-small text-green">{unit}</span>
+                <span className="mt-1 block text-[12px] text-muted">{source}</span>
+              </dd>
+            </div>
+          ))}
+        </dl>
       </FormSection>
 
       <SaveBar

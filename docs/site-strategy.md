@@ -1,7 +1,7 @@
 # Site strategy — positioning, naming and information architecture
 
 Recommendation for the CMT Realtors redesign, prepared 15 September 2026 from published material.
-Companion to `LAYOUT-SPECS.md`, which specifies how each page in the sitemap below is built.
+Companion to `layout-specs.md`, which specifies how each page in the sitemap below is built.
 
 The prototype is well built and the wrong size. CMT is a two-country chartered practice whose lead
 director is RICS-qualified — and the site currently presents them as a Kampala estate agent with four
@@ -44,7 +44,7 @@ Neither appears anywhere on the site. **This is the single most valuable asset C
 
 ### Correction to the project record
 
-`OPEN-ITEMS.md` item 4 lists "full services list" as an open item awaiting the client. It is not open —
+`open-items.md` item 4 lists "full services list" as an open item awaiting the client. It is not open —
 CMT publishes it in full on their own services page. The same is true of the company story (item 5):
 founding dates, mission, vision, values and director biographies are all published.
 
@@ -101,7 +101,7 @@ the site should be arranged to answer one question: *will this number hold?*
 
 **About · Valuations · Advisory · Properties · Blog · Contact**
 
-Six items, as the brief allows. Identity leads — as `PLAN.md` requires — then the professional work,
+Six items, as the brief allows. Identity leads — as `plan.md` requires — then the professional work,
 with the agency arm demoted from first to third. A persistent **Request a valuation** button sits in the
 masthead.
 
@@ -139,9 +139,9 @@ warmer and less junior. It stays in the nav because it earns organic traffic —
 **The label changes; the routes do not.** Merging `/listings` into `/properties` is not possible without
 restructuring: `/properties/[slug]` already serves property detail, and a second dynamic segment
 (`/properties/[category]`) at the same level is a Next.js route collision. The existing split is a
-deliberate, documented decision in `OPEN-ITEMS.md`. Renaming would cost a migration across ~15 files plus
+deliberate, documented decision in `open-items.md`. Renaming would cost a migration across ~15 files plus
 redirects, to fix a cosmetic mismatch between a nav label and a URL that no visitor reads — and SEO
-migration is explicitly out of scope this phase (`PLAN.md` §13). Revisit it there, where the redirects
+migration is explicitly out of scope this phase (`plan.md` §13). Revisit it there, where the redirects
 have to be written anyway.
 
 ### Blog — *new*

@@ -1,6 +1,6 @@
 # Build plan: putting a real backend under the CMS
 
-Internal companion to `WORKPLAN.md`, which is the version CMT has. That one says what is being
+Internal companion to `workplan.md`, which is the version CMT has. That one says what is being
 delivered. This one says how, and records the decisions so they do not get re-argued halfway
 through.
 
@@ -109,7 +109,7 @@ The admin dashboard now reads and writes Postgres, with no screen changing.
 Storage bucket wired into `ImageGalleryManager` through the S3 client, so the bucket vendor stays a
 config value. `remotePatterns` configured and verified against a real uploaded file. Our own auth
 replaces the `localStorage` gate, the bypass button goes, and the proxy gate lands with it.
-See `PORTABILITY.md` section 3.
+See `portability.md` section 3.
 
 **Thu 24 — the public site reads the database.**
 Listings, property detail, agents, partners and testimonials switch from static imports to

@@ -57,16 +57,16 @@ export function DataTable<T>({
   };
 
   return (
-    <div className={cx('overflow-x-auto rounded-brand border border-rule bg-paper', className)}>
+    <div className={cx('overflow-x-auto border border-green/10 bg-white', className)}>
       <table className="w-full min-w-[720px] border-collapse text-body">
         <thead>
-          <tr className="border-b border-rule bg-stone">
+          <tr className="border-b border-hair bg-cream">
             {columns.map((column) => (
               <th
                 key={column.key}
                 scope="col"
                 className={cx(
-                  'px-4 py-3 text-label uppercase tracking-[0.08em] text-muted',
+                  'px-4 py-3 text-[11.5px] font-semibold tracking-[0.12em] text-green/70 uppercase',
                   column.align === 'right' ? 'text-right' : 'text-left',
                 )}
               >
@@ -100,7 +100,7 @@ export function DataTable<T>({
             sorted.map((row) => (
               <tr
                 key={getRowKey(row)}
-                className="border-b border-rule/70 last:border-b-0 transition-colors hover:bg-green/5"
+                className="border-b border-hair transition-colors last:border-b-0 hover:bg-cream/60"
               >
                 {columns.map((column) => (
                   <td

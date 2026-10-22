@@ -11,7 +11,7 @@ import type { BlogPost } from '@/lib/types';
  * figures can be checked. It is the single worst thing this site could carry.
  *
  * So /blog renders an honest empty state, the nav item stays out until the first real note
- * exists (see docs/OPEN-ITEMS.md), and the admin at /admin/blog is where CMT writes it. Drop
+ * exists (see docs/open-items.md), and the admin at /admin/blog is where CMT writes it. Drop
  * an entry in here and the index, the latest-note band and the note page all light up with no
  * other change.
  */

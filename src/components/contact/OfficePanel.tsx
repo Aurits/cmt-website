@@ -76,7 +76,7 @@ export async function OfficePanel() {
             <p className="mt-3 text-micro leading-relaxed text-muted">
               {/* Addressed to the visitor. It used to read "Hours shown are a placeholder and
                   need confirming by CMT", a note to the client printed on the public page. The
-                  open item itself lives in docs/CONTENT-NEEDED.md. */}
+                  open item itself lives in docs/content-needed.md. */}
               Please call ahead to confirm opening hours before you visit.
             </p>
           )}

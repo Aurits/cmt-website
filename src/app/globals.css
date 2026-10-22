@@ -11,7 +11,7 @@
 
   This supersedes the brief's #143d1e, at the client's direction: the mark cannot be
   recoloured, so matching the site to the mark was the only way to get a continuous
-  masthead. Recorded in docs/OPEN-ITEMS.md. Re-measured from cmt-logo-gold.png when that export
+  masthead. Recorded in docs/open-items.md. Re-measured from cmt-logo-gold.png when that export
   replaced the original white-on-tile mark — see scripts/prepare-images.mjs — since the two
   exports' tiles turned out to be a few RGB steps apart; this is the second value, not the
   first.
@@ -475,7 +475,7 @@
    3. Supporting copy that repeats something the page already said is hidden on
       a phone (`max-sm:hidden`), never shortened mid-sentence.
 
-   Next iteration: see docs/MOBILE.md for what these were measured against and
+   Next iteration: see docs/mobile.md for what these were measured against and
    what is still left to do.
    --------------------------------------------------------------------------- */
 
@@ -765,15 +765,12 @@
 }
 
 /*
- * THE ADMIN IS SHARP. The CMS (AdminShell.tsx) carries this class, which sets every radius token to
- * 0, so cards, panels, buttons, fields and tags inside it are square while the public site keeps
- * its rounds. Shapes that are circles by nature (avatars, icon discs, rounded-full) stay round.
+ * THE ADMIN'S CARDS ARE SHARP. The CMS (AdminShell.tsx) carries this class. As in the admin
+ * design, only the major surfaces go square (cards, panels, tables, form sections); buttons, the
+ * search, tabs, tags and fields keep their rounds, exactly as they are on the public site.
  */
 .admin-sharp {
   --radius-brand: 0;
-  --radius-control: 0;
   --radius-card: 0;
   --radius-plate: 0;
-  --radius-button: 0;
-  --radius-field: 0;
 }

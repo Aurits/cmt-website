@@ -3,7 +3,7 @@ import type { Agent, Registration } from '@/lib/types';
 /**
  * The people who sign the reports.
  *
- * SOURCE. The team below comes from CMT's own staff list (docs/CMT Valuers.docx, received
+ * SOURCE. The team below comes from CMT's own staff list (docs/cmt-valuers.docx, received
  * October 2026; kept out of git because it holds personal phone numbers). That list names six
  * valuers registered with the Surveyors Registration Board, who form CMT's technical team and
  * sign every report: the two Technical Directors and four valuers. Only what belongs on a public
@@ -15,7 +15,7 @@ import type { Agent, Registration } from '@/lib/types';
  * numbers, so `number` is unset and the site says "Registered" rather than printing one. Degrees
  * and other memberships (MRICS, FISU and so on) come from public sources CMT has not yet
  * confirmed: they stay `confirmed: false`, and `credentialsConfirmed: false` keeps the
- * qualifications list off the page. See docs/OPEN-ITEMS.md #1.
+ * qualifications list off the page. See docs/open-items.md #1.
  *
  * NOTHING IS INVENTED. The four valuers' descriptions say what their role is and nothing more,
  * because we have not been told their specialisms. Add a line about each one's work when CMT
@@ -106,7 +106,7 @@ export const agents: Agent[] = [
   },
   valuer('rachel-nanyunja', 'Rachel Nanyunja'),
   // Spelled as in CMT's staff list. Her email there reads "snamujjumbi" and earlier CMT material
-  // spelled it "Namujjumbi": one of the two is a typo. Asked in docs/CONTENT-NEEDED.md.
+  // spelled it "Namujjumbi": one of the two is a typo. Asked in docs/content-needed.md.
   valuer('stella-namujumbi', 'Stella Namujumbi'),
   valuer('joan-nakalanda', 'Joan Nakalanda'),
   valuer('ronald-kidega', 'Ronald Kidega'),

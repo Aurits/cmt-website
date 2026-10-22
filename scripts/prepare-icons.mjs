@@ -11,7 +11,7 @@
  *
  * Nothing is redrawn. Every icon is a crop of the client's own artwork on the brand green,
  * so the letterforms are theirs. A purpose-drawn monogram would be better still, and is
- * noted in OPEN-ITEMS.md.
+ * noted in open-items.md.
  *
  * Usage: node scripts/prepare-icons.mjs
  */

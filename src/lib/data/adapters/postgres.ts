@@ -16,10 +16,10 @@ import { UnsupportedOperation } from '@/lib/data/repository';
 /**
  * Postgres, through Kysely.
  *
- * The tables here mirror docs/SCHEMA.md exactly, and that document stays the source of truth: the
+ * The tables here mirror docs/schema.md exactly, and that document stays the source of truth: the
  * schema is created by SQL migrations, not generated from this file. Types describe what is
  * already there rather than defining it, which is why the CHECK constraints, partial indexes and
- * the view in SCHEMA.md survive intact instead of being flattened into whatever a schema DSL can
+ * the view in schema.md survive intact instead of being flattened into whatever a schema DSL can
  * express.
  *
  * Only reached when DATABASE_URL is set (see ../index.ts), so `pg` never loads on a machine
@@ -130,6 +130,8 @@ interface TestimonialRow {
   name: string;
   organisation: string;
   role_title: string | null;
+  instruction: string | null;
+  year: string | null;
   published: boolean;
   sort_order: number;
 }
@@ -656,6 +658,8 @@ export function postgresRepository(): Repository {
           name: row.name,
           organisation: row.organisation,
           ...(row.role_title ? { role: row.role_title } : {}),
+          ...(row.instruction ? { instruction: row.instruction } : {}),
+          ...(row.year ? { year: row.year } : {}),
         }));
       },
       async upsert(testimonial) {
@@ -664,6 +668,8 @@ export function postgresRepository(): Repository {
           name: testimonial.name,
           organisation: testimonial.organisation,
           role_title: testimonial.role ?? null,
+          instruction: testimonial.instruction ?? null,
+          year: testimonial.year ?? null,
           published: true,
         };
         const existing = isUuid(testimonial.id)
@@ -699,6 +705,8 @@ export function postgresRepository(): Repository {
           name: row.name,
           organisation: row.organisation,
           ...(row.role_title ? { role: row.role_title } : {}),
+          ...(row.instruction ? { instruction: row.instruction } : {}),
+          ...(row.year ? { year: row.year } : {}),
         }));
       },
     },

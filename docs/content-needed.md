@@ -2,7 +2,7 @@
 
 A short checklist of the information and photographs we need to finish the website.
 
-> This checklist is also available as a Word document: `docs/CMT-Website-Content-Needed.docx`.
+> This checklist is also available as a Word document: `docs/cmt-website-content-needed.docx`.
 > Both use the same numbers, so "item 6.1" means the same thing in each.
 
 Thank you for the staff list and the client list. Both are now on the website: your six registered

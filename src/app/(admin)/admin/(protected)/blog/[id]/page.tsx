@@ -14,7 +14,7 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
   const post = state.posts.find((i) => i.slug === id);
   if (!post) {
     return (
-      <div className="rounded-brand border border-dashed border-rule-strong bg-paper p-8 text-center">
+      <div className="border border-green/10 bg-white p-8 text-center">
         <p className="text-body text-muted">
           No post with that address.{' '}
           <Link href="/admin/blog" className="text-green underline decoration-gold decoration-2 underline-offset-4">

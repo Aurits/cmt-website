@@ -31,7 +31,7 @@ function initials(name: string) {
  *
  * Qualifications render only once `credentialsConfirmed` is true. Name and role are public record;
  * a professional qualification is a claim about a person's standing and is theirs to confirm.
- * See docs/OPEN-ITEMS.md #1.
+ * See docs/open-items.md #1.
  */
 export async function AgentCard({
   agent,
@@ -121,7 +121,7 @@ export async function AgentCard({
 
       {/* Credentials, gated: the whole block appears once they are confirmed, and not before.
           The unconfirmed branch used to print "awaiting confirmation from Godfrey", an internal
-          status in a visitor's space; the open item lives in docs/CONTENT-NEEDED.md. */}
+          status in a visitor's space; the open item lives in docs/content-needed.md. */}
       {agent.credentialsConfirmed &&
         agent.qualifications &&
         agent.qualifications.length > 0 &&

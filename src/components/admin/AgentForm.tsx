@@ -133,7 +133,7 @@ export function AgentForm({ initial, isNew }: { initial: AdminAgent; isNew: bool
             onChange={(v) => set('sourcedFrom', v as AdminAgent['sourcedFrom'])}
             options={sourceOptions}
           />
-          <label className="flex items-center gap-2.5 self-end pb-3 text-body text-ink">
+          <label className="flex items-center gap-2.5 self-end pb-3 text-body text-green">
             <input
               type="checkbox"
               checked={draft.credentialsConfirmed}
@@ -146,7 +146,7 @@ export function AgentForm({ initial, isNew }: { initial: AdminAgent; isNew: bool
         {/* Both drive public pages: `listed` decides whether the person appears at all, and
             `signsReports` puts them on the signatory roll and in the "registered valuers" count. */}
         <div className="grid gap-5 sm:grid-cols-2">
-          <label className="flex items-center gap-2.5 text-body text-ink">
+          <label className="flex items-center gap-2.5 text-body text-green">
             <input
               type="checkbox"
               checked={draft.listed !== false}
@@ -155,7 +155,7 @@ export function AgentForm({ initial, isNew }: { initial: AdminAgent; isNew: bool
             />
             Show on the public site
           </label>
-          <label className="flex items-center gap-2.5 text-body text-ink">
+          <label className="flex items-center gap-2.5 text-body text-green">
             <input
               type="checkbox"
               checked={Boolean(draft.signsReports)}
@@ -174,7 +174,7 @@ export function AgentForm({ initial, isNew }: { initial: AdminAgent; isNew: bool
           <ul className="grid gap-2 sm:grid-cols-2">
             {state.listings.map((listing) => (
               <li key={listing.slug}>
-                <label className="flex items-center gap-2.5 text-body text-ink">
+                <label className="flex items-center gap-2.5 text-body text-green">
                   <input
                     type="checkbox"
                     checked={draft.assignedListings.includes(listing.slug)}

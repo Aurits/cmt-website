@@ -87,7 +87,7 @@ export function ImageGalleryManager({
   return (
     <div className="grid gap-4">
       {images.length === 0 ? (
-        <p className="rounded-brand border border-dashed border-rule-strong bg-cream px-4 py-8 text-center text-body text-muted">
+        <p className="border border-green/10 bg-white px-4 py-8 text-center text-body text-muted">
           No photographs yet. Add one below.
         </p>
       ) : (
@@ -103,11 +103,11 @@ export function ImageGalleryManager({
                 setDragIndex(null);
               }}
               className={cx(
-                'rounded-brand border border-rule bg-cream p-2.5 transition-opacity',
+                'rounded-brand border border-hair bg-cream p-2.5 transition-opacity',
                 dragIndex === index && 'opacity-40',
               )}
             >
-              <div className="relative aspect-[4/3] overflow-hidden rounded-brand border border-rule bg-stone">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-brand border border-hair bg-sage-soft">
                 <Image src={image.src} alt={image.alt || 'Listing photograph'} fill unoptimized className="object-cover" />
                 {index === 0 && (
                   <span className="absolute left-2 top-2 rounded-control bg-green px-2 py-0.5 text-label font-medium text-cream">
@@ -137,7 +137,7 @@ export function ImageGalleryManager({
                     onClick={() => move(index, index - 1)}
                     disabled={index === 0}
                     aria-label="Move earlier"
-                    className="flex h-8 w-8 items-center justify-center rounded-control border border-rule-strong text-muted transition-colors hover:border-green/50 hover:text-green disabled:opacity-30"
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-green/15 text-green/70 transition-colors hover:bg-cream hover:text-green disabled:opacity-30"
                   >
                     <ArrowUpIcon width={14} height={14} />
                   </button>
@@ -146,7 +146,7 @@ export function ImageGalleryManager({
                     onClick={() => move(index, index + 1)}
                     disabled={index === images.length - 1}
                     aria-label="Move later"
-                    className="flex h-8 w-8 items-center justify-center rounded-control border border-rule-strong text-muted transition-colors hover:border-green/50 hover:text-green disabled:opacity-30"
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-green/15 text-green/70 transition-colors hover:bg-cream hover:text-green disabled:opacity-30"
                   >
                     <ArrowDownIcon width={14} height={14} />
                   </button>
@@ -154,7 +154,7 @@ export function ImageGalleryManager({
                 <button
                   type="button"
                   onClick={() => removeAt(index)}
-                  className="flex h-8 w-8 items-center justify-center rounded-control border border-rule-strong text-muted transition-colors hover:border-flag hover:text-flag"
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-green/15 text-green/70 transition-colors hover:border-flag/50 hover:text-flag"
                   aria-label="Remove image"
                 >
                   <TrashIcon width={14} height={14} />
@@ -165,7 +165,7 @@ export function ImageGalleryManager({
         </ul>
       )}
 
-      <div className="grid gap-3 rounded-brand border border-rule bg-cream p-4 sm:grid-cols-[1fr_auto_auto]">
+      <div className="grid gap-3 rounded-brand border border-hair bg-cream p-4 sm:grid-cols-[1fr_auto_auto]">
         <AdminSelectField
           id="stock-image"
           label="Add from licensed stock"

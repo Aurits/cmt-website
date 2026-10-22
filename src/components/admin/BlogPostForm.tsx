@@ -40,7 +40,7 @@ function Field({
 }) {
   return (
     <label className="grid gap-1.5">
-      <span className="text-micro font-medium text-ink">{label}</span>
+      <span className="text-micro font-medium text-green">{label}</span>
       {children}
       {hint && <span className="text-micro text-muted">{hint}</span>}
     </label>
@@ -152,7 +152,7 @@ export function BlogPostForm({ initial, isNew }: { initial: AdminBlogPost; isNew
         </div>
 
         {draft.pullFigure && (
-          <div className="border-l-[3px] border-gold bg-stone/50 px-4 py-3">
+          <div className="border-l-[3px] border-gold bg-sage-soft/50 px-4 py-3">
             <p className="text-micro text-muted">How it will read</p>
             <p className="tnum mt-1 font-display text-figure leading-none text-green">
               {draft.pullFigure}
@@ -194,7 +194,7 @@ export function BlogPostForm({ initial, isNew }: { initial: AdminBlogPost; isNew
                     onClick={() => moveFigure(index, -1)}
                     disabled={index === 0}
                     aria-label={`Move ${figure.label || 'row'} up`}
-                    className="flex h-9 w-9 items-center justify-center rounded-control border border-rule text-muted transition-colors hover:border-green/50 hover:text-green disabled:opacity-40"
+                    className="flex h-9 w-9 items-center justify-center rounded-control border border-hair text-muted transition-colors hover:border-green/50 hover:text-green disabled:opacity-40"
                   >
                     <ArrowUpIcon width={14} height={14} />
                   </button>
@@ -203,7 +203,7 @@ export function BlogPostForm({ initial, isNew }: { initial: AdminBlogPost; isNew
                     onClick={() => moveFigure(index, 1)}
                     disabled={index === draft.keyFigures.length - 1}
                     aria-label={`Move ${figure.label || 'row'} down`}
-                    className="flex h-9 w-9 items-center justify-center rounded-control border border-rule text-muted transition-colors hover:border-green/50 hover:text-green disabled:opacity-40"
+                    className="flex h-9 w-9 items-center justify-center rounded-control border border-hair text-muted transition-colors hover:border-green/50 hover:text-green disabled:opacity-40"
                   >
                     <ArrowDownIcon width={14} height={14} />
                   </button>
@@ -213,7 +213,7 @@ export function BlogPostForm({ initial, isNew }: { initial: AdminBlogPost; isNew
                       set('keyFigures', draft.keyFigures.filter((_, i) => i !== index))
                     }
                     aria-label={`Remove ${figure.label || 'row'}`}
-                    className="flex h-9 w-9 items-center justify-center rounded-control border border-rule text-muted transition-colors hover:border-flag/60 hover:text-flag"
+                    className="flex h-9 w-9 items-center justify-center rounded-control border border-hair text-muted transition-colors hover:border-flag/60 hover:text-flag"
                   >
                     <TrashIcon width={14} height={14} />
                   </button>
@@ -226,7 +226,7 @@ export function BlogPostForm({ initial, isNew }: { initial: AdminBlogPost; isNew
         <button
           type="button"
           onClick={() => set('keyFigures', [...draft.keyFigures, { label: '', value: '' }])}
-          className="flex w-fit items-center gap-1.5 rounded-control border border-green/35 px-3.5 py-2 text-micro font-medium text-green transition-colors hover:border-green hover:bg-green/8"
+          className="flex w-fit items-center gap-1.5 rounded-full border border-green/20 px-4 py-2 text-small font-medium text-green transition-colors hover:bg-cream"
         >
           <PlusIcon width={14} height={14} /> Add a figure
         </button>

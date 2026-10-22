@@ -1,6 +1,6 @@
 # Layout specs — how each page is built, and what it asks the visitor to do
 
-Nine sheets, A-00 to A-08. Companion to `SITE-STRATEGY.md`, which establishes the positioning and the
+Nine sheets, A-00 to A-08. Companion to `site-strategy.md`, which establishes the positioning and the
 sitemap these pages implement.
 
 Every dimension below resolves against tokens already in `src/app/globals.css` — the 1200px measure, the
@@ -368,4 +368,4 @@ note exists. **A-01**'s credential line ships the day the registration numbers a
 
 A-02's standing schedule and A-01's credential line both render `— pending` or return `null` until CMT
 confirms registration numbers. The layouts hold either way — but they are designed around a claim that is
-not verified yet, so the build should not get ahead of that. See `SITE-STRATEGY.md` §7, ask 1.
+not verified yet, so the build should not get ahead of that. See `site-strategy.md` §7, ask 1.

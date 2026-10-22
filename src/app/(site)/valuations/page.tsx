@@ -25,7 +25,7 @@ export const metadata: Metadata = {
  *
  * The matrix is the lead, so there is no lead paragraph above it — a page that explains its own
  * table before showing it has already lost the reader who arrived with a specific question. See
- * docs/LAYOUT-SPECS.md A-03.
+ * docs/layout-specs.md A-03.
  */
 export default async function ValuationsPage() {
   const [{ signatories, signatoryCount }, partners] = await Promise.all([getTeam(), getPartners()]);
@@ -60,7 +60,7 @@ export default async function ValuationsPage() {
       </Section>
 
       {/* The deliverable, set as the hero's report card: the contents of every report as rows.
-          A redacted sample report belongs beside it once CMT supplies one (CONTENT-NEEDED.md). */}
+          A redacted sample report belongs beside it once CMT supplies one (content-needed.md). */}
       <Section clip>
         <div className="grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
           <Reveal>

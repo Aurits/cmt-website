@@ -38,10 +38,10 @@ export function ConfirmButton({
         onConfirm();
       }}
       className={cx(
-        'inline-flex items-center gap-1.5 rounded-control border px-3 py-2 text-micro font-medium transition-colors',
+        'inline-flex min-h-8 min-w-8 items-center justify-center gap-1.5 rounded-full border px-2.5 text-[12.5px] font-medium transition-colors',
         armed
           ? 'border-flag bg-flag/10 text-flag'
-          : 'border-rule-strong text-muted hover:border-green/50 hover:text-green',
+          : 'border-green/15 text-green/70 hover:border-flag/50 hover:text-flag',
         className,
       )}
     >

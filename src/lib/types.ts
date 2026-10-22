@@ -177,7 +177,7 @@ export interface Service {
    being valued, and what the figure is for. The matrix on /valuations is the
    cross-product, and a purpose lists the assets it actually applies to — an
    absent combination is rendered as inert rather than hidden, so the page
-   states the scope honestly. See docs/SITE-STRATEGY.md and docs/LAYOUT-SPECS.md A-03.
+   states the scope honestly. See docs/site-strategy.md and docs/layout-specs.md A-03.
    --------------------------------------------------------------------------- */
 
 export type ValuationAssetSlug = 'property' | 'plant-and-machinery' | 'business-and-shares';
@@ -214,7 +214,7 @@ export interface ValuationPurpose {
 /**
  * A blog post.
  *
- * Shaped by what the Blog pages actually render (docs/LAYOUT-SPECS.md A-07) rather than by
+ * Shaped by what the Blog pages actually render (docs/layout-specs.md A-07) rather than by
  * what a generic blog post looks like. The index is a ruled list of date, title and a one-line
  * finding; each note carries a single pull figure, which is the number that gets quoted and is
  * most of the reason to publish at all; the note page runs a schedule of key figures down a

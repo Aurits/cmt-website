@@ -1,6 +1,6 @@
 # Staying portable
 
-How to use hosted infrastructure without being married to it. Amends `SCHEMA.md` sections 5 and 6,
+How to use hosted infrastructure without being married to it. Amends `schema.md` sections 5 and 6,
 which assumed the Supabase SDK throughout.
 
 ---
@@ -104,7 +104,7 @@ does not touch authentication, which is the property being bought here.
 
 This is the real consequence and it should not be waved past.
 
-`SCHEMA.md` section 3 leans on `auth.uid()`, which exists because Supabase Auth issues a JWT that
+`schema.md` section 3 leans on `auth.uid()`, which exists because Supabase Auth issues a JWT that
 PostgREST hands to Postgres. **With our own auth and a direct Postgres connection, that function
 does not exist**, and the policies as written would evaluate against nobody.
 
@@ -177,9 +177,9 @@ on whose dashboard you would rather hand to CMT.
 
 ## 7. What changes in the other documents
 
-- `SCHEMA.md` section 3 keeps every policy, with `auth.uid()` becoming
+- `schema.md` section 3 keeps every policy, with `auth.uid()` becoming
   `current_setting('app.user_id')` if and when RLS is turned on
-- `SCHEMA.md` section 5 is superseded by section 3 above
-- `SCHEMA.md` section 6 is superseded by section 2 above
-- `BUILD-PLAN.md` day three gains the auth wiring and loses "Supabase Auth replaces the
+- `schema.md` section 5 is superseded by section 3 above
+- `schema.md` section 6 is superseded by section 2 above
+- `build-plan.md` day three gains the auth wiring and loses "Supabase Auth replaces the
   localStorage gate"

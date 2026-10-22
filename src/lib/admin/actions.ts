@@ -17,7 +17,7 @@ import type {
  * Everything the CMS can change.
  *
  * Two rules, and they are the whole security model now that row level security is not the primary
- * control (docs/PORTABILITY.md section 4):
+ * control (docs/portability.md section 4):
  *
  * 1. EVERY function here calls requireStaff() first. Not the caller, not the page, here. A server
  *    action is a public HTTP endpoint with a generated name; being unreachable from the UI is not

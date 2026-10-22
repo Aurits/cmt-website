@@ -24,7 +24,7 @@ export function buildStats(signatoryTotal: number, yearsInBusiness: string = sit
       unit: 'offices',
       // Counted from `offices`, not written out, so it stays true when an office opens. Kenya is
       // named as the linked practice it is until site.regionConfirmed says otherwise
-      // (docs/OPEN-ITEMS.md #2), the same wording InBrief uses.
+      // (docs/open-items.md #2), the same wording InBrief uses.
       label: `${offices.filter((o) => o.country === 'Uganda').length} in Uganda, ${
         offices.filter((o) => o.country === 'Kenya').length
       } ${site.regionConfirmed ? 'in Kenya' : 'with our linked Kenya practice'}`,

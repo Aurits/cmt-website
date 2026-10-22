@@ -22,7 +22,7 @@ export function SaveStatus() {
     return (
       <div
         role="alert"
-        className="fixed bottom-4 left-1/2 z-40 w-[min(34rem,calc(100vw-2rem))] -translate-x-1/2 border-l-[3px] border-flag bg-paper px-4 py-3 shadow-[0_18px_40px_-18px_rgba(17,52,27,0.45)]"
+        className="fixed bottom-4 left-1/2 z-40 w-[min(34rem,calc(100vw-2rem))] -translate-x-1/2 border-l-[3px] border-flag bg-white px-4 py-3 shadow-[0_18px_40px_-18px_rgba(17,52,27,0.45)]"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -36,7 +36,7 @@ export function SaveStatus() {
             type="button"
             onClick={dismissError}
             aria-label="Dismiss"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-control border border-rule text-muted transition-colors hover:border-flag hover:text-flag"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-control border border-hair text-muted transition-colors hover:border-flag hover:text-flag"
           >
             <CloseIcon width={14} height={14} />
           </button>
@@ -49,7 +49,7 @@ export function SaveStatus() {
     return (
       <p
         aria-live="polite"
-        className="fixed bottom-4 left-1/2 z-40 -translate-x-1/2 border border-rule bg-paper px-3 py-1.5 text-micro text-muted"
+        className="fixed bottom-4 left-1/2 z-40 -translate-x-1/2 border border-hair bg-white px-3 py-1.5 text-micro text-muted"
       >
         Saving…
       </p>

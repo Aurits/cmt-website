@@ -18,7 +18,7 @@ const statusMeta: Record<PostStatus, { label: string; tone: PillTone }> = {
 /**
  * The blog.
  *
- * The columns are the index row from docs/LAYOUT-SPECS.md A-07, date, title, finding, figure —
+ * The columns are the index row from docs/layout-specs.md A-07, date, title, finding, figure —
  * so what an editor sorts here is what a reader scans on the public page. The figure column
  * earns its place by being the thing most often missing: a post without one is just an opinion.
  */
@@ -44,7 +44,7 @@ export default function AdminBlogPostsPage() {
       sortValue: (row) => row.title,
       render: (row) => (
         <Link href={`/admin/blog/${row.slug}`} className="block max-w-[46ch]">
-          <span className="block font-medium text-ink hover:text-green">
+          <span className="block font-medium text-green hover:text-green">
             {row.title || 'Untitled post'}
           </span>
           <span className="mt-0.5 block text-micro leading-snug text-muted">
@@ -69,7 +69,7 @@ export default function AdminBlogPostsPage() {
       key: 'author',
       header: 'Author',
       render: (row) => (
-        <span className="text-body text-ink">
+        <span className="text-body text-green">
           {row.authorId
             ? (state.agents.find((agent) => agent.id === row.authorId)?.name ?? row.authorId)
             : 'Unattributed'}
@@ -101,7 +101,7 @@ export default function AdminBlogPostsPage() {
         </p>
         <Link
           href="/admin/blog/new"
-          className="flex shrink-0 items-center gap-1.5 rounded-control border border-green/35 px-3.5 py-2 text-micro font-medium text-green transition-colors hover:border-green hover:bg-green/8"
+          className="flex shrink-0 items-center gap-1.5 rounded-full border border-green/20 px-4 py-2 text-small font-medium text-green transition-colors hover:bg-cream"
         >
           <PlusIcon width={14} height={14} /> Write a post
         </Link>
@@ -127,8 +127,8 @@ export default function AdminBlogPostsPage() {
       />
 
       {state.posts.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-brand border border-dashed border-rule-strong bg-paper px-6 py-14 text-center">
-          <NotesIcon width={28} height={28} className="text-gold-deep" />
+        <div className="flex flex-col items-center gap-3 border border-green/10 bg-white px-6 py-14 text-center">
+          <NotesIcon width={28} height={28} className="text-moss" />
           <p className="max-w-[54ch] text-body text-muted">
             Nothing published yet. A few posts a year is enough: what rents did, what banks are
             lending against, which corridors absorbed stock. Write from instructions you actually

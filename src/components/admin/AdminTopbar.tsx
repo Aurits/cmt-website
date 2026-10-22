@@ -125,7 +125,7 @@ export function AdminTopbar({ onMenu, adminEmail }: { onMenu: () => void; adminE
         <button
           type="button"
           onClick={onMenu}
-          className="flex h-10 w-10 shrink-0 items-center justify-center border border-green/20 text-green lg:hidden"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-green/20 text-green lg:hidden"
           aria-label="Open admin menu"
         >
           <MenuIcon width={18} height={18} />
@@ -170,11 +170,11 @@ export function AdminTopbar({ onMenu, adminEmail }: { onMenu: () => void; adminE
             }}
             placeholder="Search listings, agents, inquiries"
             autoComplete="off"
-            className="h-10 w-full border border-green/15 bg-cream pr-3 pl-10 text-small text-green placeholder:text-muted focus:border-green focus:shadow-[0_0_0_3px_rgb(15_42_26/0.12)] focus:outline-none"
+            className="h-10 w-full rounded-full border border-green/15 bg-cream pr-4 pl-10 text-small text-green placeholder:text-muted focus:border-green focus:shadow-[0_0_0_3px_rgb(15_42_26/0.12)] focus:outline-none"
           />
         </form>
         {open && query.trim().length >= 2 && (
-          <div className="absolute top-[calc(100%+6px)] right-0 left-0 z-10 border border-green/12 bg-white shadow-[0_24px_48px_-20px_rgba(15,42,26,0.35)]">
+          <div className="absolute top-[calc(100%+6px)] right-0 left-0 z-10 overflow-hidden rounded-[18px] border border-green/12 bg-white shadow-[0_24px_48px_-20px_rgba(15,42,26,0.35)]">
             {hits.length === 0 ? (
               <p className="px-4 py-3 text-small text-muted">
                 Nothing matches &ldquo;{query.trim()}&rdquo;.

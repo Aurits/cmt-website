@@ -27,8 +27,8 @@ export default function AdminPartnersPage() {
       {partnerGroups.map((group) => {
         const rows = state.partners.filter((p) => p.groupId === group.id).sort((a, b) => a.order - b.order);
         return (
-          <section key={group.id} className="rounded-brand border border-rule bg-paper">
-            <div className="flex items-center justify-between gap-3 border-b border-rule px-5 py-4">
+          <section key={group.id} className="border border-green/10 bg-white">
+            <div className="flex items-center justify-between gap-3 border-b border-hair px-5 py-4">
               <div>
                 <h2 className="font-display text-h4 text-green">{group.title}</h2>
                 <p className="mt-0.5 text-micro text-muted">{group.description}</p>
@@ -36,13 +36,13 @@ export default function AdminPartnersPage() {
               <button
                 type="button"
                 onClick={() => upsertPartner(createPartnerDraft(group.id))}
-                className="flex shrink-0 items-center gap-1.5 rounded-control border border-green/35 px-3 py-2 text-micro font-medium text-green transition-colors hover:border-green hover:bg-green/8"
+                className="flex shrink-0 items-center gap-1.5 rounded-full border border-green/20 px-4 py-2 text-small font-medium text-green transition-colors hover:bg-cream"
               >
                 <PlusIcon width={14} height={14} /> Add
               </button>
             </div>
 
-            <ul className="divide-y divide-rule/70">
+            <ul className="divide-y divide-hair">
               {rows.length === 0 && <li className="px-5 py-6 text-body text-muted">No logos in this group.</li>}
               {rows.map((partner, index) => (
                 <PartnerRow
@@ -89,7 +89,7 @@ function PartnerRow({
 
   return (
     <li className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-start">
-      <span className="relative flex h-12 w-20 shrink-0 items-center justify-center overflow-hidden rounded-brand border border-rule bg-cream">
+      <span className="relative flex h-12 w-20 shrink-0 items-center justify-center overflow-hidden rounded-brand border border-hair bg-cream">
         {partner.logo ? (
           <Image src={partner.logo} alt="" fill unoptimized className="object-contain p-1.5" />
         ) : (
@@ -145,7 +145,7 @@ function PartnerRow({
           onClick={() => onMove('up')}
           disabled={isFirst}
           aria-label="Move up"
-          className="flex h-8 w-8 items-center justify-center rounded-control border border-rule-strong text-muted transition-colors hover:border-green/50 hover:text-green disabled:opacity-30"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-green/15 text-green/70 transition-colors hover:bg-cream hover:text-green disabled:opacity-30"
         >
           <ArrowUpIcon width={14} height={14} />
         </button>
@@ -154,7 +154,7 @@ function PartnerRow({
           onClick={() => onMove('down')}
           disabled={isLast}
           aria-label="Move down"
-          className="flex h-8 w-8 items-center justify-center rounded-control border border-rule-strong text-muted transition-colors hover:border-green/50 hover:text-green disabled:opacity-30"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-green/15 text-green/70 transition-colors hover:bg-cream hover:text-green disabled:opacity-30"
         >
           <ArrowDownIcon width={14} height={14} />
         </button>
@@ -162,7 +162,7 @@ function PartnerRow({
           type="button"
           onClick={onDelete}
           aria-label="Remove partner"
-          className="flex h-8 w-8 items-center justify-center rounded-control border border-rule-strong text-muted transition-colors hover:border-flag hover:text-flag"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-green/15 text-green/70 transition-colors hover:border-flag/50 hover:text-flag"
         >
           <TrashIcon width={14} height={14} />
         </button>

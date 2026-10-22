@@ -21,7 +21,7 @@ import type {
  * is what makes swapping Postgres hosts, or leaving one entirely, a matter of writing one file in
  * adapters/ rather than auditing the application. It is also what carries the access rules now
  * that row level security is not the primary control: the repository is the boundary, and it is
- * small enough to review in an afternoon. See docs/PORTABILITY.md section 4.
+ * small enough to review in an afternoon. See docs/portability.md section 4.
  *
  * Reads are what the public site needs. Writes are what the CMS needs. They sit on one interface
  * because they hit one store, but an adapter is free to reject writes, the static adapter does

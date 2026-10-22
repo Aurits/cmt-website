@@ -60,7 +60,7 @@ const SOURCES = {
   'ug-land': '1696963609168-5c3d93857ea4', // terraced plots on a Ugandan hillside
   'ug-agri': '1741012253817-67aacc8e25c6', // coffee cherries ripening, Kampala
 
-  // Survey work, replacing a photograph of an identifiable Kampala building (October 2026). PLAN.md
+  // Survey work, replacing a photograph of an identifiable Kampala building (October 2026). plan.md
   // rules out any identifiable Kampala building without confirmed rights; this shows the work
   // instead, with no building, logo or recognisable face. Unsplash License; page slug noted for
   // CREDITS.md.
@@ -70,7 +70,7 @@ const SOURCES = {
 /** [source, output path, width, height, human description] */
 const JOBS = [
   ['ug-hero', 'hero-home.jpg', 2200, 1760, 'Ribbon-like apartment balconies. Not Kampala: an abstract facade. Not used on any page'],
-  ['ug-office', 'identity-office.jpg', 1400, 1000, "Keith Kasaija: an identifiable Kampala office building. Not used on any page (PLAN.md rules out identifiable Kampala buildings without confirmed rights)"],
+  ['ug-office', 'identity-office.jpg', 1400, 1000, "Keith Kasaija: an identifiable Kampala office building. Not used on any page (plan.md rules out identifiable Kampala buildings without confirmed rights)"],
   ['survey-field', 'survey-field.jpg', 1400, 1000, 'Nazmul ahsan Meraz: a surveyor at a total station in open grass. About page'],
   ['ug-cta', 'cta-skyline.jpg', 2000, 1000, 'Robin Kutesa: identifiable Kampala skyline at sunset. Not used on any page (the closing banners are now plain green)'],
   ['01', 'valuation-keys.jpg', 1200, 800, 'House model and keys — Services / valuation'],
@@ -186,7 +186,7 @@ for (const [src, out, w, h] of JOBS) {
  * an anti-aliased edge pixel keeps its antialiasing, just recoloured — nothing is
  * hard-thresholded, so no edge gets harder or softer than the source drew it.
  *
- * Still the opaque tile, not the transparent variant OPEN-ITEMS.md #11 asks CMT for. A
+ * Still the opaque tile, not the transparent variant open-items.md #11 asks CMT for. A
  * transparent gold wordmark, if CMT supplies one, replaces this file at the same path and
  * lets the masthead return to the brief's exact green (#143d1e) instead of the tile's.
  */
@@ -249,7 +249,7 @@ const credits = [
   'photography at the same paths when that exists.',
   '',
   'October 2026: photographs of identifiable Kampala buildings and skylines were taken off',
-  'every page, because PLAN.md rules them out without confirmed rights. The files stay here,',
+  'every page, because plan.md rules them out without confirmed rights. The files stay here,',
   'marked "Not used on any page", so they can return if CMT secures those rights.',
   '',
   '| File | Source | Description |',

@@ -51,5 +51,6 @@ next-env.d.ts
 # Word lock files, created while a document is open
 ~$*
 
-# Staff personal contact details (CMT Valuers.docx). This repo is public: never commit it.
+# Staff personal contact details (cmt-valuers.docx). This repo is public: never commit it.
+docs/cmt-valuers.docx
 docs/CMT Valuers.docx

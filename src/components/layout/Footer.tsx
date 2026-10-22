@@ -25,7 +25,7 @@ const linkClass = 'text-white/75 transition-colors hover:text-gold';
 /*
  * Where to follow CMT. An account with no URL yet still shows, dimmed and labelled, rather than
  * disappearing: where CMT has not supplied something, the UI says so. Paste a URL into
- * site.social and the icon goes live. See docs/OPEN-ITEMS.md #13.
+ * site.social and the icon goes live. See docs/open-items.md #13.
  */
 const socialLinks = [
   { label: 'Facebook', href: site.social.facebook, Icon: FacebookIcon },

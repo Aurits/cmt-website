@@ -1,7 +1,7 @@
 /**
  * Every institution CMT values for, as text.
  *
- * SOURCE. CMT's own list of current clients (docs/CMT Valuers.docx, received October 2026), which
+ * SOURCE. CMT's own list of current clients (docs/cmt-valuers.docx, received October 2026), which
  * says CMT "has done valuations and is in the panel of" each of them. That is CMT's claim about
  * its own work, so the site words it the same way and no stronger.
  *
@@ -20,7 +20,7 @@
  *
  * HELD BACK until CMT says what they stand for: "PLC", "HCH" and "EFC – MDI". Publishing an
  * abbreviation a reader cannot place adds nothing, and guessing at it would put a name on the site
- * CMT never gave us. Asked in docs/CONTENT-NEEDED.md.
+ * CMT never gave us. Asked in docs/content-needed.md.
  */
 
 export interface ClientGroup {

@@ -82,8 +82,8 @@ export default async function ClientsPage() {
         </div>
       </Section>
 
-      {/* docs/LAYOUT-SPECS.md A-07: the references sit with the logos they come from. Renders nothing
-          until a real, named one exists (docs/OPEN-ITEMS.md #6). */}
+      {/* docs/layout-specs.md A-07: the references sit with the logos they come from. Renders nothing
+          until a real, named one exists (docs/open-items.md #6). */}
       {testimonials.length > 0 && (
         <Section>
           <Reveal>

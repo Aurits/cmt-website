@@ -4,7 +4,7 @@ The database and login design for the Supabase backend. Derived from the types a
 `src/lib/types.ts` and `src/lib/admin/types.ts`, and from the operations `src/lib/admin/store.tsx`
 already performs, so the admin screens need no rewrite.
 
-Companion to `BUILD-PLAN.md`.
+Companion to `build-plan.md`.
 
 ---
 
@@ -338,7 +338,7 @@ create policy "only staff may update enquiries" on inquiries
 > Under the portable architecture there is no browser-facing key at all, so the same protection is
 > carried by the repository: `inquiries.create()` is public, `inquiries.list()` sits behind
 > `requireStaff()`. The guarantee moves from the database to one reviewable directory. See
-> `PORTABILITY.md` section 4.
+> `portability.md` section 4.
 
 **Staff write everything else.**
 
@@ -393,11 +393,11 @@ image pipeline is the classic launch-morning discovery.
 
 ## 5. Auth
 
-> **Amended by `PORTABILITY.md`.** This section describes the Supabase Auth path. The project has
+> **Amended by `portability.md`.** This section describes the Supabase Auth path. The project has
 > since chosen its own auth, in the repo, with users in our own Postgres, so that changing
 > database host does not touch authentication. The shape below still holds — profiles table,
 > roles, no public signup, a server-side gate in proxy.ts — but `auth.users`, the trigger and
-> the Supabase keys are replaced by the arrangement in `PORTABILITY.md` section 3.
+> the Supabase keys are replaced by the arrangement in `portability.md` section 3.
 
 
 **Supabase Auth, email and password, and public signup switched off.** This is the first setting
@@ -467,10 +467,10 @@ rather than discovered in production.
 
 ## 6. How the app connects
 
-> **Amended by `PORTABILITY.md`.** The comparison below is still the right way to understand the
+> **Amended by `portability.md`.** The comparison below is still the right way to understand the
 > five options, and the warning about ORMs bypassing RLS is still true. The project's choice has
 > changed: it now reaches Postgres directly through Kysely and enforces access in the repository
-> layer instead, for the reasons in `PORTABILITY.md` sections 1 and 4.
+> layer instead, for the reasons in `portability.md` sections 1 and 4.
 
 
 Supabase offers five connection options and they are not interchangeable. The choice decides

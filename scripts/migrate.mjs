@@ -3,7 +3,7 @@
  *
  * Plain SQL files applied in filename order, each in its own transaction, recorded in
  * `_migrations` so a re-run is a no-op. Deliberately not a framework: the schema in
- * docs/SCHEMA.md is written as SQL, psql can run the same files, and nothing about the
+ * docs/schema.md is written as SQL, psql can run the same files, and nothing about the
  * database depends on this script still existing in a year.
  *
  *   node scripts/migrate.mjs           apply anything new

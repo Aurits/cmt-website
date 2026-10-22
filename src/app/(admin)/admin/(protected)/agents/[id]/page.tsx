@@ -14,8 +14,8 @@ export default function EditAgentPage() {
   const agent = state.agents.find((a) => a.id === id);
   if (!agent) {
     return (
-      <div className="rounded-brand border border-rule bg-paper p-8 text-center">
-        <p className="text-body text-ink">No team member found for &ldquo;{id}&rdquo;.</p>
+      <div className="border border-green/10 bg-white p-8 text-center">
+        <p className="text-body text-green">No team member found for &ldquo;{id}&rdquo;.</p>
         <Link
           href="/admin/agents"
           className="mt-3 inline-block text-body text-green underline decoration-gold decoration-2 underline-offset-4"

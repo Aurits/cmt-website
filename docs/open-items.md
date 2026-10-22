@@ -8,18 +8,18 @@ This file is the record — the site itself no longer carries the small on-page 
 prototype visibly annotating its own gaps reads as unfinished rather than in-progress. Every fact those
 notes carried is still here.
 
-**For CMT, read `CONTENT-NEEDED.md` instead.** That is the same list in plain language, grouped for
+**For CMT, read `content-needed.md` instead.** That is the same list in plain language, grouped for
 the people who will answer it. This file is the technical record behind it: where each item lives in
 the code and what it switches on.
 
-**Revised 22 October 2026** after CMT sent its staff and client lists (`docs/CMT Valuers.docx`, kept
+**Revised 22 October 2026** after CMT sent its staff and client lists (`docs/cmt-valuers.docx`, kept
 out of git because it holds personal phone numbers). Now on the site: the six valuers registered with
 the Surveyors Registration Board (`src/data/agents.ts`, `signsReports`), the regulator changed from the
 Uganda Institution of Surveyors to the Board (`site.regulator`), and the full client list of 51 named
 institutions (`src/data/clients.ts`; three unexplained abbreviations held back). The two property
 agents not on CMT's staff list are hidden with `listed: false`, not deleted, and their listings show the
 office contact (`contactFor`). Items 1, 5 and 7 below are partly superseded by this; the open questions
-that remain are in `CONTENT-NEEDED.md` sections 2, 3 and 5.
+that remain are in `content-needed.md` sections 2, 3 and 5.
 
 **Public site on the repository (22 October 2026).** Every public page reads listings, the team,
 client logos, testimonials, posts and the office's contact facts (phone, email, WhatsApp, address,
@@ -47,7 +47,7 @@ addressed to CMT were removed in that pass (on About, Our people, Credentials, O
 completing the instruction above; each fact they carried is in both documents.
 
 **Revised 15 September 2026** against a review of CMT's own published material (Uganda and Kenya sites)
-and the competitive field — see `SITE-STRATEGY.md`. That review closed two items, materially changed a
+and the competitive field — see `site-strategy.md`. That review closed two items, materially changed a
 third, and opened three new ones that now block more than anything else on this list.
 
 ---
@@ -243,7 +243,7 @@ The one figure still genuinely missing is the **Uganda founding year**. We would
   is advertised or valued.
 - **Property detail lives at `/properties/[slug]`**, so `/listings/[category]` stays clean for the five
   category landing pages. The nav label is now "Properties" while the listings routes keep their paths —
-  merging them is a route collision, and SEO migration is a later phase. See `SITE-STRATEGY.md` §4.
+  merging them is a route collision, and SEO migration is a later phase. See `site-strategy.md` §4.
 - **One green across the whole site, the logo's green.** The client's decision, taken after the masthead
   showed how much better the mark reads when the surface matches it. Item 12 above is what would let the
   palette return to the brief's `#143d1e`.

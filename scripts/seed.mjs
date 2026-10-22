@@ -217,9 +217,10 @@ async function main() {
   // ── testimonials and blog: both deliberately empty, and the loops prove it ─────────────
   for (const [i, t] of testimonials.entries()) {
     await db.query(
-      `insert into testimonials (quote, name, organisation, role_title, published, sort_order)
-       values ($1,$2,$3,$4,true,$5)`,
-      [t.quote, t.name, t.organisation, t.role ?? null, i],
+      `insert into testimonials (quote, name, organisation, role_title, instruction, year,
+                                 published, sort_order)
+       values ($1,$2,$3,$4,$5,$6,true,$7)`,
+      [t.quote, t.name, t.organisation, t.role ?? null, t.instruction ?? null, t.year ?? null, i],
     );
   }
   count.testimonials = testimonials.length;

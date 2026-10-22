@@ -29,7 +29,7 @@ export const metadata: Metadata = {
  * Built as the cover sheet of a valuation report: every report CMT issues opens by stating who
  * prepared it and under what authority, and this page is that page. It now sits first in the
  * navigation, so it opens on registrations rather than on a mission statement and has to establish
- * standing in one screen. See docs/LAYOUT-SPECS.md A-02.
+ * standing in one screen. See docs/layout-specs.md A-02.
  */
 const chapters = [
   {
@@ -173,7 +173,7 @@ export default async function AboutPage() {
             <div aria-hidden="true" className="absolute inset-[22px_-22px_-22px_22px] rounded-(--radius-plate) bg-sage" />
             <div aria-hidden="true" className="absolute -top-5 -right-5 h-16 w-16 rounded-full bg-gold" />
             <div className="relative aspect-[4/3] overflow-hidden rounded-(--radius-card) lg:aspect-[4/5]">
-              {/* A surveyor at work in the field, no building in frame (PLAN.md rules out
+              {/* A surveyor at work in the field, no building in frame (plan.md rules out
                   identifiable Kampala towers without confirmed rights). Licensed stock, so the alt
                   describes the scene and does not claim the person is a CMT valuer. */}
               <Image

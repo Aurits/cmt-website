@@ -13,7 +13,7 @@ import 'server-only';
  *
  * SERVER ONLY. `import 'server-only'` makes importing this from a client component a build error
  * rather than a leaked secret. There is deliberately no browser-facing database or storage key in
- * this project (docs/PORTABILITY.md), so nothing here should ever reach a bundle, and this is
+ * this project (docs/portability.md), so nothing here should ever reach a bundle, and this is
  * what enforces it rather than hoping.
  */
 

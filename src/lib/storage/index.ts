@@ -12,7 +12,7 @@ import { hasStorage, storage as storageEnv } from '@/lib/env';
  * The S3 API is the portable part of object storage: Supabase Storage, Cloudflare R2, Backblaze
  * B2, MinIO and S3 itself all speak it, so swapping vendors is an endpoint and a key rather than
  * a rewrite. That is the whole reason this project uses the S3 client and not a vendor SDK. See
- * docs/PORTABILITY.md.
+ * docs/portability.md.
  *
  * WHAT A PATH MEANS. The database stores a path, never a full URL, so putting a CDN in front of
  * the bucket later is a config change rather than a data migration. Two kinds of path coexist,

@@ -99,7 +99,7 @@ export function ListingForm({ initial, isNew }: { initial: AdminListing; isNew: 
         <div className="grid gap-5 sm:grid-cols-3">
           <div>
             <Label htmlFor="reference">Reference</Label>
-            <input id="reference" value={draft.reference} readOnly className={cx(inputClass, 'tnum bg-stone/50 text-muted')} />
+            <input id="reference" value={draft.reference} readOnly className={cx(inputClass, 'tnum bg-sage-soft/50 text-muted')} />
           </div>
           <div>
             <Label htmlFor="price">Price (UGX)</Label>
@@ -242,7 +242,7 @@ export function ListingForm({ initial, isNew }: { initial: AdminListing; isNew: 
             placeholder="Mar 2026"
           />
         </div>
-        <label className="flex items-center gap-2.5 text-body text-ink">
+        <label className="flex items-center gap-2.5 text-body text-green">
           <input
             type="checkbox"
             checked={Boolean(draft.featured)}

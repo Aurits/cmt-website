@@ -19,12 +19,13 @@ export function SaveBar({
   extra?: React.ReactNode;
 }) {
   return (
-    <div className="sticky bottom-0 z-10 -mx-4 mt-8 border-t border-rule bg-paper/95 px-4 py-4 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+    // Full width of the content column: the negative margins match AdminShell's main padding.
+    <div className="sticky bottom-0 z-10 -mx-4 mt-8 border-t border-green/10 bg-white/95 px-4 py-4 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-7 lg:px-7">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p
           className={cx(
-            'flex items-center gap-1.5 text-micro',
-            justSaved ? 'text-green' : 'text-muted',
+            'flex items-center gap-2 text-small',
+            justSaved ? 'text-moss' : dirty ? 'text-green' : 'text-muted',
           )}
         >
           {justSaved ? (
@@ -32,7 +33,9 @@ export function SaveBar({
               <CheckIcon width={14} height={14} /> Saved
             </>
           ) : dirty ? (
-            'Unsaved changes'
+            <>
+              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-gold" /> Unsaved changes
+            </>
           ) : (
             'No changes yet'
           )}
