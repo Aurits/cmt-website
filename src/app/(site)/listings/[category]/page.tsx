@@ -78,7 +78,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             {category.description}
           </p>
           <FactStrip
-            className="mt-8 min-[961px]:grid-cols-3"
+            className="mt-8 grid-cols-3 min-[961px]:grid-cols-3"
             facts={[
               { title: String(categoryListings.length), body: 'On our books' },
               {

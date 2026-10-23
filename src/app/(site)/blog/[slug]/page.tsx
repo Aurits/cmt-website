@@ -75,7 +75,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <nav aria-label="Breadcrumb" className="mb-8">
             <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-muted">
               <li>
-                <Link href="/" className="hover:text-green">
+                <Link href="/" className="inline-block py-1.5 hover:text-green">
                   Home
                 </Link>
               </li>
@@ -83,7 +83,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 /
               </li>
               <li>
-                <Link href="/blog" className="hover:text-green">
+                <Link href="/blog" className="inline-block py-1.5 hover:text-green">
                   Blog
                 </Link>
               </li>

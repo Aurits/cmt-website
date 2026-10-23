@@ -20,7 +20,8 @@ import { valuationPurposes } from '@/data/valuations';
 
 // font-sans: headings take the display serif site-wide, and these are labels, not headings.
 const headingClass = 'font-sans text-[12px] font-semibold uppercase tracking-[0.14em] text-gold';
-const linkClass = 'text-white/75 transition-colors hover:text-gold';
+// inline-block py-1: a 27px target for a thumb, with the same visual spacing as before.
+const linkClass = 'inline-block py-1 text-white/75 transition-colors hover:text-gold';
 
 /*
  * Where to follow CMT. An account with no URL yet still shows, dimmed and labelled, rather than
@@ -77,7 +78,7 @@ export async function Footer() {
 
             <div className="max-sm:col-span-2 lg:col-span-2">
               <h2 className={headingClass}>Valuations</h2>
-              <ul className="mt-5 space-y-3 text-body">
+              <ul className="mt-4 space-y-1 text-body">
                 {valuationPurposes.map((purpose) => (
                   <li key={purpose.slug}>
                     <Link href={`/valuations/${purpose.slug}`} className={linkClass}>
@@ -90,7 +91,7 @@ export async function Footer() {
 
             <div className="max-sm:hidden lg:col-span-2">
               <h2 className={headingClass}>Property types</h2>
-              <ul className="mt-5 space-y-3 text-body">
+              <ul className="mt-4 space-y-1 text-body">
                 {categories.map((category) => (
                   <li key={category.slug}>
                     <Link href={`/listings/${category.slug}`} className={linkClass}>
@@ -103,7 +104,7 @@ export async function Footer() {
 
             <nav aria-label="Footer" className="max-sm:hidden lg:col-span-2">
               <h2 className={headingClass}>Company</h2>
-              <ul className="mt-5 space-y-3 text-body">
+              <ul className="mt-4 space-y-1 text-body">
                 {nav
                   .filter((item) => item.href !== '/')
                   .map((item) => (

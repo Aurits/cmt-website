@@ -42,7 +42,7 @@ export function PageHeader({
                     </span>
                   )}
                   {crumb.href ? (
-                    <Link href={crumb.href} className="hover:text-green">
+                    <Link href={crumb.href} className="inline-block py-1.5 hover:text-green">
                       {crumb.label}
                     </Link>
                   ) : (

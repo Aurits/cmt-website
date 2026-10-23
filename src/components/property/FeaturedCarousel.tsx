@@ -192,18 +192,23 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
       {/* Controls sit above the frames, in the bottom strip. */}
       <Container className="pointer-events-none absolute inset-x-0 bottom-0 z-10 pb-6">
         <div className="pointer-events-auto flex items-center justify-between gap-6">
-          <ol className="flex items-center gap-2">
+          <ol className="flex items-center">
             {listings.map((listing, i) => (
               <li key={listing.slug}>
+                {/* The bar stays 3px; the button around it is 44px tall, so a thumb can hit it. */}
                 <button
                   type="button"
                   onClick={() => go(i, true)}
                   aria-current={i === index ? 'true' : undefined}
-                  className={cx(
-                    'h-[3px] transition-all duration-300',
-                    i === index ? 'w-10 bg-gold' : 'w-5 bg-cream/40 hover:bg-cream/70',
-                  )}
+                  className="group flex h-11 items-center px-1"
                 >
+                  <span
+                    aria-hidden="true"
+                    className={cx(
+                      'block h-[3px] transition-all duration-300',
+                      i === index ? 'w-10 bg-gold' : 'w-5 bg-cream/40 group-hover:bg-cream/70',
+                    )}
+                  />
                   <span className="sr-only">{`Show property ${i + 1}: ${listing.title}`}</span>
                 </button>
               </li>

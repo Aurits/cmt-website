@@ -644,6 +644,14 @@
   color: var(--color-green);
 }
 
+/* The map's zoom buttons: 36px rather than Leaflet's 30, easier to hit with a thumb. Specific
+   enough to win over leaflet.css, which loads after this file. */
+.leaflet-container .leaflet-control-zoom.leaflet-bar a {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+}
+
 .leaflet-control-attribution {
   background: rgb(255 253 247 / 0.85) !important;
   font-size: 10px;

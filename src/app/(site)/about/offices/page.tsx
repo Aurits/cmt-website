@@ -70,13 +70,13 @@ export default async function OfficesPage() {
               </p>
               <p className="flex gap-3.5">
                 <PhoneIcon width={18} height={18} className="mt-0.5 shrink-0 text-moss" />
-                <a href={info.phone.href} className="tnum text-ink hover:text-green">
+                <a href={info.phone.href} className="tnum inline-block py-1 text-green hover:text-moss">
                   {info.phone.display}
                 </a>
               </p>
               <p className="flex gap-3.5">
                 <MailIcon width={18} height={18} className="mt-0.5 shrink-0 text-moss" />
-                <a href={`mailto:${info.email}`} className="break-all text-ink hover:text-green">
+                <a href={`mailto:${info.email}`} className="inline-block py-1 break-all text-green hover:text-moss">
                   {info.email}
                 </a>
               </p>
