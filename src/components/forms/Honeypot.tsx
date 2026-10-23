@@ -10,8 +10,10 @@
 export function Honeypot() {
   return (
     <div aria-hidden="true" className="absolute left-[-9999px] top-0 h-px w-px overflow-hidden">
-      <label htmlFor="company">Company (leave this empty)</label>
-      <input id="company" name="company" type="text" tabIndex={-1} autoComplete="off" />
+      {/* Not "company": browsers autofill a field by that name, which made real enquiries look
+          like bots and silently drop. This name matches no autofill category. */}
+      <label htmlFor="hp_ref_check">Leave this field empty</label>
+      <input id="hp_ref_check" name="hp_ref_check" type="text" tabIndex={-1} autoComplete="off" />
     </div>
   );
 }

@@ -19,7 +19,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   return (
     // The office's contact facts, CMS-edited, for every client component below (SiteProvider.tsx).
     <SiteProvider value={info}>
-      <div className="flex min-h-screen flex-col pb-[var(--mobile-cta-h)] lg:pb-0">
+      <div className="flex min-h-screen flex-col">
         <Header facts={facts} />
         <main id="main" className="flex-1">
           {children}

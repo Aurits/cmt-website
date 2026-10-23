@@ -16,6 +16,7 @@ import {
   SproutIcon,
   UsersIcon,
 } from '@/components/admin/icons';
+import { AutoRefresh } from '@/components/admin/AutoRefresh';
 import { useAdmin } from '@/lib/admin/store';
 import type { CategorySlug } from '@/lib/types';
 import { formatPrice } from '@/lib/format';
@@ -93,6 +94,8 @@ export default function AdminOverviewPage() {
 
   return (
     <div className="grid gap-5">
+      {/* New enquiries arrive from the public forms; pick them up while this is open. */}
+      <AutoRefresh />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard
           label="Active listings"

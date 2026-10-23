@@ -93,6 +93,19 @@ export function AdminProvider({
 }) {
   const router = useRouter();
   const [state, setState] = useState<AdminState>(initialState);
+  /*
+   * Take the server's state whenever it sends a new one. router.refresh() (after every save, and
+   * on a timer on the overview and enquiries screens) re-renders the admin layout, which reads the
+   * database again and passes a fresh `initialState`. useState only uses its argument once, so
+   * without this the screen kept the copy it loaded first: an enquiry sent while the admin was
+   * open never appeared until a full reload. Adjusted during render, React's pattern for state
+   * that follows a prop, so there is no extra commit with stale data.
+   */
+  const [received, setReceived] = useState(initialState);
+  if (initialState !== received) {
+    setReceived(initialState);
+    setState(initialState);
+  }
   const [error, setError] = useState<string | null>(null);
   const [saving, startTransition] = useTransition();
 

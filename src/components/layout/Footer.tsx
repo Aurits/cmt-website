@@ -57,7 +57,9 @@ export async function Footer() {
   return (
     <footer className="bg-cream">
       <div className="rounded-t-(--radius-plate) bg-green text-white">
-        <Container className="pt-16 pb-8 lg:pt-20">
+        {/* The bottom padding includes the floating mobile contact bar's height, so the bar floats
+            over the footer's ink rather than over a strip of page paper under it. */}
+        <Container className="pt-16 pb-[calc(2rem+var(--mobile-cta-h))] lg:pt-20 lg:pb-8">
           <div className="grid grid-cols-2 gap-x-6 gap-y-12 sm:gap-x-8 lg:grid-cols-12">
             <div className="col-span-2 lg:col-span-3">
               <Link href="/" aria-label={`${site.name}, home`} className="inline-block">

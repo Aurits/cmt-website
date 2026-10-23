@@ -502,9 +502,10 @@
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: 1rem;
-    margin-inline: -1rem;
-    padding-inline: 1rem;
+    /* Bleeds to the screen edge across the 20px phone gutter (Container: px-5). */
+    scroll-padding-inline: 1.25rem;
+    margin-inline: -1.25rem;
+    padding-inline: 1.25rem;
     padding-bottom: 0.25rem;
     scrollbar-width: none;
 

@@ -10,6 +10,7 @@ import { PageToolbar, iconButtonClass, softButtonClass } from '@/components/admi
 import { StatusPill, type PillTone } from '@/components/admin/StatusPill';
 import { CloseIcon, MailIcon, PhoneIcon, WhatsAppIcon } from '@/components/ui/icons';
 import { assetBySlug, purposeBySlug } from '@/data/valuations';
+import { AutoRefresh } from '@/components/admin/AutoRefresh';
 import { useAdmin } from '@/lib/admin/store';
 import type { Inquiry, InquiryStatus, InquiryType } from '@/lib/admin/types';
 
@@ -153,6 +154,8 @@ export default function AdminInquiriesPage() {
 
   return (
     <div className="grid gap-5">
+      {/* New enquiries arrive from the public forms; pick them up while this is open. */}
+      <AutoRefresh />
       <PageToolbar
         summary={
           <>

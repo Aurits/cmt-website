@@ -2,6 +2,7 @@
 
 import { headers } from 'next/headers';
 import { getRepository } from '@/lib/data';
+import { notifyOffice } from '@/lib/inquiries/notify';
 import type { InquiryType } from '@/lib/admin/types';
 
 /**
@@ -56,7 +57,8 @@ export async function submitInquiry(
   // The field name is duplicated in components/forms/Honeypot.tsx rather than shared from here,
   // because a "use server" file may only export async functions: a shared const would be a build
   // error. Two words in two places, both commented, is the cheaper trade.
-  if (clean(formData.get('company'))) return { ok: true }; // silently accepted, never stored
+  // Named so no browser autofills it: "company" was, which dropped real enquiries as bots.
+  if (clean(formData.get('hp_ref_check'))) return { ok: true }; // silently accepted, never stored
 
   const type = clean(formData.get('type')) as InquiryType;
   const name = clean(formData.get('name'), 200);
@@ -80,7 +82,7 @@ export async function submitInquiry(
 
   try {
     const data = await getRepository();
-    await data.inquiries.create({
+    const inquiry = {
       type: (['valuation', 'agent-contact', 'list-a-property', 'general'] as const).includes(type)
         ? type
         : 'general',
@@ -92,6 +94,11 @@ export async function submitInquiry(
       valuationAsset: clean(formData.get('valuationAsset'), 100) || undefined,
       valuationPurpose: clean(formData.get('valuationPurpose'), 100) || undefined,
       sourcePath: clean(formData.get('sourcePath'), 300) || undefined,
+    };
+    await data.inquiries.create(inquiry);
+    // Saved first; the email to the office is a courtesy and never fails the visitor's request.
+    await notifyOffice(inquiry).catch((cause) => {
+      console.error('Enquiry saved, but the office email failed:', cause);
     });
     return { ok: true };
   } catch {

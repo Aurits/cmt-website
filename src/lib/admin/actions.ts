@@ -1,6 +1,7 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { CONTENT_TAG } from '@/lib/cache-tags';
 import { getRepository } from '@/lib/data';
 import { requireStaff } from '@/lib/auth';
 import type {
@@ -33,6 +34,18 @@ import type {
 async function repo() {
   await requireStaff();
   return getRepository();
+}
+
+/**
+ * After any save that changes public content: expire the cached reads at once (src/lib/content.ts
+ * keeps them for five minutes otherwise) and refresh every page, prerendered or not. Layout-wide,
+ * because almost every list shows up in more than one place: the masthead menus count listings and
+ * valuers on every page, and the client logos appear on the homepage, /valuations and /about/clients.
+ * `{ expire: 0 }` means the next visitor waits for fresh data rather than being served the old.
+ */
+function publish() {
+  revalidateTag(CONTENT_TAG, { expire: 0 });
+  revalidatePath('/', 'layout');
 }
 
 /** The whole CMS state in one read, for the admin layout to hand to the provider. */
@@ -73,16 +86,14 @@ export async function loadAdminState(): Promise<AdminState> {
 export async function saveListing(listing: AdminListing): Promise<void> {
   const data = await repo();
   await data.listings.upsert(listing);
-  // Every page: the masthead's Properties menu prints the listing counts.
-  revalidatePath('/', 'layout');
+  publish();
 }
 
 export async function removeListing(slug: string, category: string): Promise<void> {
   const data = await repo();
   await data.listings.remove(slug);
-  // Every page, as above. `category` is kept in the signature for the callers.
-  void category;
-  revalidatePath('/', 'layout');
+  void category; // kept in the signature for the callers
+  publish();
 }
 
 /* ── team ───────────────────────────────────────────────────────────────────────────────── */
@@ -92,15 +103,13 @@ export async function saveAgent(agent: Parameters<
 >[0]): Promise<void> {
   const data = await repo();
   await data.agents.upsert(agent);
-  // Every page: the team sets the "registered valuers" figure in the masthead's About menu, as
-  // well as /about, /about/people, /about/credentials, /valuations and the property contacts.
-  revalidatePath('/', 'layout');
+  publish();
 }
 
 export async function removeAgent(id: string): Promise<void> {
   const data = await repo();
   await data.agents.remove(id);
-  revalidatePath('/', 'layout');
+  publish();
 }
 
 /* ── clients ────────────────────────────────────────────────────────────────────────────── */
@@ -108,15 +117,13 @@ export async function removeAgent(id: string): Promise<void> {
 export async function savePartner(partner: AdminPartner): Promise<void> {
   const data = await repo();
   await data.partners.upsert(partner);
-  revalidatePath('/about/clients');
-  revalidatePath('/');
+  publish();
 }
 
 export async function removePartner(id: string): Promise<void> {
   const data = await repo();
   await data.partners.remove(id);
-  revalidatePath('/about/clients');
-  revalidatePath('/');
+  publish();
 }
 
 /* ── testimonials ───────────────────────────────────────────────────────────────────────── */
@@ -124,15 +131,13 @@ export async function removePartner(id: string): Promise<void> {
 export async function saveTestimonial(testimonial: AdminTestimonial): Promise<void> {
   const data = await repo();
   await data.testimonials.upsert(testimonial);
-  revalidatePath('/about/clients');
-  revalidatePath('/');
+  publish();
 }
 
 export async function removeTestimonial(id: string): Promise<void> {
   const data = await repo();
   await data.testimonials.remove(id);
-  revalidatePath('/about/clients');
-  revalidatePath('/');
+  publish();
 }
 
 /* ── blog ───────────────────────────────────────────────────────────────────────────────── */
@@ -140,14 +145,13 @@ export async function removeTestimonial(id: string): Promise<void> {
 export async function savePost(post: AdminBlogPost): Promise<void> {
   const data = await repo();
   await data.posts.upsert(post);
-  revalidatePath('/blog');
-  revalidatePath(`/blog/${post.slug}`);
+  publish();
 }
 
 export async function removePost(slug: string): Promise<void> {
   const data = await repo();
   await data.posts.remove(slug);
-  revalidatePath('/blog');
+  publish();
 }
 
 /* ── enquiries ──────────────────────────────────────────────────────────────────────────── */
@@ -163,6 +167,5 @@ export async function setInquiryStatus(id: string, status: InquiryStatus): Promi
 export async function saveSettings(settings: AdminSiteSettings): Promise<void> {
   const data = await repo();
   await data.settings.update(settings);
-  // Settings appear in the header, the footer and the contact page, so on every page.
-  revalidatePath('/', 'layout');
+  publish();
 }

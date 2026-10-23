@@ -1,13 +1,17 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import Image from 'next/image';
+import { useRef, useState, useTransition } from 'react';
 import { AdminSelectField } from '@/components/admin/AdminSelectField';
 import { ConfirmButton } from '@/components/admin/ConfirmButton';
 import { FormSection } from '@/components/admin/FormSection';
 import { SaveBar } from '@/components/admin/SaveBar';
 import { Label, TextArea, TextField, inputClass } from '@/components/forms/fields';
+import { softButtonClass } from '@/components/admin/PageToolbar';
+import { ImageIcon } from '@/components/admin/icons';
 import { useAdmin, slugify } from '@/lib/admin/store';
+import { uploadImage } from '@/lib/admin/upload';
 import type { AdminAgent } from '@/lib/admin/types';
 import { cx } from '@/lib/cx';
 
@@ -28,6 +32,34 @@ export function AgentForm({ initial, isNew }: { initial: AdminAgent; isNew: bool
   const [dirty, setDirty] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
   const [idTouched, setIdTouched] = useState(!isNew);
+  const photoInput = useRef<HTMLInputElement>(null);
+  const [uploading, startUpload] = useTransition();
+  const [photoError, setPhotoError] = useState<string | null>(null);
+
+  /*
+   * A headshot, uploaded to the site's image storage through the same checked action as listing
+   * photos. With one, /about and /about/people show the photograph in place of the monogram.
+   * Only a real photograph of the person, supplied by CMT: never stock standing in for a name.
+   */
+  const onPhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    setPhotoError(null);
+    startUpload(async () => {
+      const body = new FormData();
+      body.set('file', file);
+      body.set('folder', 'agents');
+      const result = await uploadImage(body);
+      if (result.error || !result.url) {
+        setPhotoError(result.error ?? 'The upload failed.');
+        return;
+      }
+      setDraft((prev) => ({ ...prev, photo: result.url }));
+      setDirty(true);
+      setJustSaved(false);
+    });
+  };
 
   const set = <K extends keyof AdminAgent>(key: K, value: AdminAgent[K]) => {
     setDraft((prev) => ({ ...prev, [key]: value }));
@@ -64,8 +96,18 @@ export function AgentForm({ initial, isNew }: { initial: AdminAgent; isNew: bool
     <div className="grid gap-6">
       <FormSection title="Profile">
         <div className="grid gap-5 sm:grid-cols-2">
-          <TextField id="name" label="Full name" value={draft.name} onChange={(e) => handleNameChange(e.target.value)} />
-          <TextField id="role" label="Job title" value={draft.role} onChange={(e) => set('role', e.target.value)} />
+          <TextField
+            id="name"
+            label="Full name"
+            value={draft.name}
+            onChange={(e) => handleNameChange(e.target.value)}
+          />
+          <TextField
+            id="role"
+            label="Job title"
+            value={draft.role}
+            onChange={(e) => set('role', e.target.value)}
+          />
         </div>
         <div className="grid gap-5 sm:grid-cols-2">
           <AdminSelectField
@@ -110,9 +152,71 @@ export function AgentForm({ initial, isNew }: { initial: AdminAgent; isNew: bool
           value={draft.bio ?? ''}
           onChange={(e) => set('bio', e.target.value || undefined)}
         />
+        <div>
+          <Label htmlFor="agent-photo" optional>
+            Photograph
+          </Label>
+          <div className="flex flex-wrap items-center gap-4">
+            <span className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-tag font-display text-[22px] font-semibold text-green">
+              {draft.photo ? (
+                <Image src={draft.photo} alt="" fill unoptimized className="object-cover" />
+              ) : (
+                (draft.name || '?')
+                  .split(/\s+/)
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .map((part) => part[0])
+                  .join('')
+                  .toUpperCase()
+              )}
+            </span>
+            <div className="grid gap-2">
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => photoInput.current?.click()}
+                  disabled={uploading}
+                  className={cx(softButtonClass, 'disabled:opacity-60')}
+                >
+                  <ImageIcon width={14} height={14} />
+                  {uploading ? 'Uploading…' : draft.photo ? 'Replace photo' : 'Upload photo'}
+                </button>
+                {draft.photo && (
+                  <button
+                    type="button"
+                    onClick={() => set('photo', undefined)}
+                    className={softButtonClass}
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+              <p className="text-[12.5px] text-muted">
+                A headshot of this person, JPEG, PNG or WebP up to 8MB. Without one the site shows
+                their initials.
+              </p>
+              {photoError && (
+                <p role="alert" className="text-[12.5px] text-flag">
+                  {photoError}
+                </p>
+              )}
+            </div>
+            <input
+              id="agent-photo"
+              ref={photoInput}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={onPhotoChange}
+              className="hidden"
+            />
+          </div>
+        </div>
       </FormSection>
 
-      <FormSection title="Credentials" lead="Names and roles render regardless. Confirm before publishing a professional credential.">
+      <FormSection
+        title="Credentials"
+        lead="Names and roles render regardless. Confirm before publishing a professional credential."
+      >
         <div>
           <Label htmlFor="qualifications" optional>
             Qualifications (one per line)

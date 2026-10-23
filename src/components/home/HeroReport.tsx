@@ -124,7 +124,7 @@ export function HeroReport({ className }: { className?: string }) {
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-3 border-t border-hair py-[13px] text-small">
-      <span className="text-muted">{label}</span>
+      <span className="shrink-0 whitespace-nowrap text-muted">{label}</span>
       {children}
     </div>
   );

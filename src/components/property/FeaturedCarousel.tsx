@@ -211,7 +211,7 @@ export function FeaturedCarousel({ listings }: { listings: Listing[] }) {
           </ol>
 
           <div className="flex items-center gap-2">
-            <p className="tnum mr-2 text-micro text-cream/70" aria-live="polite">
+            <p className="tnum mr-2 text-micro text-cream/70 whitespace-nowrap" aria-live="polite">
               {index + 1} / {count}
             </p>
             <button

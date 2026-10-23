@@ -20,7 +20,9 @@ export function ProcessSteps({ title = 'From instruction to signed report' }: { 
           lead="Four steps. We tell you at the start which of them could affect your deadline."
         />
       </Reveal>
-      <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* A swipe rail on a phone ("THE MOBILE SYSTEM" in globals.css): stacked, the four cards
+          were a screen and a half; side by side they are one card tall. */}
+      <ol className="rail mt-10 sm:grid sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
         {valuationSteps.map((step, index) => {
           const last = index === valuationSteps.length - 1;
           return (

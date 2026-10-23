@@ -22,7 +22,7 @@ export default async function NotFound() {
 
   return (
     <SiteProvider value={info}>
-      <div className="flex min-h-screen flex-col pb-[var(--mobile-cta-h)] lg:pb-0">
+      <div className="flex min-h-screen flex-col">
         <Header facts={facts} />
         <main className="flex-1 py-20 lg:py-28">
           <Container>

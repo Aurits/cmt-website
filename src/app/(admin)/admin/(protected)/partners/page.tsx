@@ -1,31 +1,42 @@
 'use client';
 
 import Image from 'next/image';
-import { useRef } from 'react';
-import { ArrowDownIcon, ArrowUpIcon, ImageIcon, PlusIcon, TrashIcon } from '@/components/admin/icons';
+import { useRef, useState, useTransition } from 'react';
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  ImageIcon,
+  PlusIcon,
+  TrashIcon,
+} from '@/components/admin/icons';
+import { softButtonClass } from '@/components/admin/PageToolbar';
 import { StatusPill } from '@/components/admin/StatusPill';
 import { inputClass } from '@/components/forms/fields';
 import { partnerGroups } from '@/data/partners';
 import { useAdmin } from '@/lib/admin/store';
+import { uploadImage } from '@/lib/admin/upload';
 import type { AdminPartner } from '@/lib/admin/types';
 import { cx } from '@/lib/cx';
 
 export default function AdminPartnersPage() {
-  const { state, ready, upsertPartner, deletePartner, reorderPartner, createPartnerDraft } = useAdmin();
+  const { state, ready, upsertPartner, deletePartner, reorderPartner, createPartnerDraft } =
+    useAdmin();
 
   if (!ready) return <p className="text-body text-muted">Loading partners…</p>;
 
   return (
     <div className="grid gap-6">
       <p className="text-body text-muted">
-        {state.partners.length} logos across {partnerGroups.length} groups. Order here is the order they
-        appear on the client conveyor. Upload a logo file directly, or point the path field at a file
-        already in <span className="tnum">public/brand/partners/</span>, an uploaded file previews for
-        this browser tab only, since there is no image storage backend yet.
+        {state.partners.length} logos across {partnerGroups.length} groups. Order here is the order
+        they appear on the client belt. Upload a logo (JPEG, PNG or WebP, up to 8MB) and it goes
+        straight to the site&rsquo;s image storage, or point the path field at a file already in{' '}
+        <span className="tnum">public/brand/partners/</span>.
       </p>
 
       {partnerGroups.map((group) => {
-        const rows = state.partners.filter((p) => p.groupId === group.id).sort((a, b) => a.order - b.order);
+        const rows = state.partners
+          .filter((p) => p.groupId === group.id)
+          .sort((a, b) => a.order - b.order);
         return (
           <section key={group.id} className="border border-green/10 bg-white">
             <div className="flex items-center justify-between gap-3 border-b border-hair px-5 py-4">
@@ -43,7 +54,9 @@ export default function AdminPartnersPage() {
             </div>
 
             <ul className="divide-y divide-hair">
-              {rows.length === 0 && <li className="px-5 py-6 text-body text-muted">No logos in this group.</li>}
+              {rows.length === 0 && (
+                <li className="px-5 py-6 text-body text-muted">No logos in this group.</li>
+              )}
               {rows.map((partner, index) => (
                 <PartnerRow
                   key={partner.id}
@@ -79,12 +92,31 @@ function PartnerRow({
   onDelete: () => void;
 }) {
   const fileInput = useRef<HTMLInputElement>(null);
+  const [uploading, startUpload] = useTransition();
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
+  /*
+   * The file goes to the image storage through the same checked server action as listing photos
+   * (lib/admin/upload.ts), and the logo field takes the stored URL. It used to take a blob: URL
+   * from URL.createObjectURL, which showed in this tab and was saved to the database as a link
+   * that worked for nobody else, so the public belt showed a broken image.
+   */
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
-    onChange({ logo: URL.createObjectURL(file) });
     event.target.value = '';
+    if (!file) return;
+    setUploadError(null);
+    startUpload(async () => {
+      const body = new FormData();
+      body.set('file', file);
+      body.set('folder', 'partners');
+      const result = await uploadImage(body);
+      if (result.error || !result.url) {
+        setUploadError(result.error ?? 'The upload failed.');
+        return;
+      }
+      onChange({ logo: result.url });
+    });
   };
 
   return (
@@ -93,7 +125,9 @@ function PartnerRow({
         {partner.logo ? (
           <Image src={partner.logo} alt="" fill unoptimized className="object-contain p-1.5" />
         ) : (
-          <span className="text-micro text-muted">{partner.shortName || partner.name.slice(0, 3) || '—'}</span>
+          <span className="text-micro text-muted">
+            {partner.shortName || partner.name.slice(0, 3) || '—'}
+          </span>
         )}
       </span>
 
@@ -122,12 +156,24 @@ function PartnerRow({
           <button
             type="button"
             onClick={() => fileInput.current?.click()}
-            className="flex shrink-0 items-center gap-1.5 rounded-control border border-rule-strong px-3 text-micro font-medium text-muted transition-colors hover:border-green/50 hover:text-green"
+            disabled={uploading}
+            className={cx(softButtonClass, 'disabled:opacity-60')}
           >
-            <ImageIcon width={14} height={14} /> Upload
+            <ImageIcon width={14} height={14} /> {uploading ? 'Uploading…' : 'Upload'}
           </button>
-          <input ref={fileInput} type="file" accept="image/*" onChange={onFileChange} className="hidden" />
+          <input
+            ref={fileInput}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={onFileChange}
+            className="hidden"
+          />
         </div>
+        {uploadError && (
+          <p role="alert" className="text-[12.5px] text-flag">
+            {uploadError}
+          </p>
+        )}
       </div>
 
       <div className="flex shrink-0 items-center gap-2 sm:pt-0.5">

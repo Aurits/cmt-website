@@ -241,16 +241,18 @@ let db: Kysely<Database> | null = null;
  * Supabase's session-mode pooler (port 5432) allows 15 clients in total, across every process.
  * `next build` renders pages in several workers at once, each with its own pool, and at 5 apiece
  * the build alone asked for 35 and was refused (EMAXCONNSESSION). So a build takes one connection
- * per worker, and a running server takes 3 unless DATABASE_POOL_MAX says otherwise. Queries beyond
- * that wait their turn in the pool rather than failing.
+ * per worker, and a running server takes 2 unless DATABASE_POOL_MAX says otherwise. Queries beyond
+ * that wait their turn in the pool rather than failing, and idle connections are handed back after
+ * ten seconds, so several warm instances can share the 15 slots.
  *
- * The lasting fix is the transaction-mode pooler (port 6543), which is built for many short-lived
- * clients; see docs/portability.md and the README.
+ * The deployment uses the session pooler (5432) for both URLs by choice, so these limits are what
+ * keep it inside the cap. If it is ever reached under real traffic, raise the pool size in the
+ * Supabase dashboard (Database settings, connection pooling) or move the app to port 6543.
  */
 function poolSize(): number {
   const configured = Number(process.env.DATABASE_POOL_MAX);
   if (Number.isInteger(configured) && configured > 0) return configured;
-  return process.env.NEXT_PHASE === 'phase-production-build' ? 1 : 3;
+  return process.env.NEXT_PHASE === 'phase-production-build' ? 1 : 2;
 }
 
 /**
@@ -266,8 +268,8 @@ export function getDb(): Kysely<Database> {
     // unreachable database left every page request hanging until the network gave up; with a
     // limit the request errors quickly and says why.
     connectionTimeoutMillis: 5_000,
-    // Close connections left idle, so a serverless instance does not hold the pooler's slots.
-    idleTimeoutMillis: 30_000,
+    // Hand idle connections back quickly: the session pooler has 15 slots across every instance.
+    idleTimeoutMillis: 10_000,
   });
   db = new Kysely<Database>({ dialect: new PostgresDialect({ pool }) });
   return db;
