@@ -56,69 +56,116 @@ export function DataTable<T>({
     });
   };
 
+  const [lead, ...rest] = columns;
+  // Columns with no header are row actions (edit, delete, open): they go to the card's foot.
+  const fields = rest.filter((column) => column.header);
+  const actions = rest.filter((column) => !column.header);
+
   return (
-    <div className={cx('overflow-x-auto border border-green/10 bg-white', className)}>
-      <table className="w-full min-w-[720px] border-collapse text-body">
-        <thead>
-          <tr className="border-b border-hair bg-cream">
-            {columns.map((column) => (
-              <th
-                key={column.key}
-                scope="col"
-                className={cx(
-                  'px-4 py-3 text-[11.5px] font-semibold tracking-[0.12em] text-green/70 uppercase',
-                  column.align === 'right' ? 'text-right' : 'text-left',
-                )}
-              >
-                {column.sortValue ? (
-                  <button
-                    type="button"
-                    onClick={() => toggleSort(column.key)}
-                    className={cx(
-                      'inline-flex items-center gap-1 hover:text-green',
-                      sort?.key === column.key && 'text-green',
-                    )}
-                  >
-                    {column.header}
-                    <SortIcon width={13} height={13} />
-                  </button>
-                ) : (
-                  column.header
-                )}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {sorted.length === 0 ? (
-            <tr>
-              <td colSpan={columns.length} className="px-4 py-10 text-center text-muted">
-                {emptyMessage}
-              </td>
+    <>
+      {/*
+      Phones: one card per row instead of a 720px table to scroll sideways through. The first
+      column is the card's title, every other column a labelled line, the actions at the foot.
+      Sorting is a desktop affordance; the filters above do the narrowing here.
+    */}
+      <ul className={cx('grid gap-3 md:hidden', className)}>
+        {sorted.length === 0 ? (
+          <li className="border border-green/10 bg-white px-4 py-8 text-center text-body text-muted">
+            {emptyMessage}
+          </li>
+        ) : (
+          sorted.map((row) => (
+            <li key={getRowKey(row)} className="border border-green/10 bg-white p-4">
+              {lead && <div className="min-w-0">{lead.render(row)}</div>}
+              {fields.length > 0 && (
+                <dl className="mt-3 grid gap-2 border-t border-hair pt-3 text-small">
+                  {fields.map((column) => (
+                    <div key={column.key} className="flex items-start justify-between gap-4">
+                      <dt className="shrink-0 text-[11.5px] font-semibold tracking-[0.12em] text-green/60 uppercase">
+                        {column.header}
+                      </dt>
+                      <dd className="min-w-0 text-right">{column.render(row)}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+              {actions.length > 0 && (
+                <div className="mt-3 flex justify-end gap-2 border-t border-hair pt-3">
+                  {actions.map((column) => (
+                    <div key={column.key}>{column.render(row)}</div>
+                  ))}
+                </div>
+              )}
+            </li>
+          ))
+        )}
+      </ul>
+
+      <div
+        className={cx('overflow-x-auto border border-green/10 bg-white max-md:hidden', className)}
+      >
+        <table className="w-full min-w-[720px] border-collapse text-body">
+          <thead>
+            <tr className="border-b border-hair bg-cream">
+              {columns.map((column) => (
+                <th
+                  key={column.key}
+                  scope="col"
+                  className={cx(
+                    'px-4 py-3 text-[11.5px] font-semibold tracking-[0.12em] text-green/70 uppercase',
+                    column.align === 'right' ? 'text-right' : 'text-left',
+                  )}
+                >
+                  {column.sortValue ? (
+                    <button
+                      type="button"
+                      onClick={() => toggleSort(column.key)}
+                      className={cx(
+                        'inline-flex items-center gap-1 hover:text-green',
+                        sort?.key === column.key && 'text-green',
+                      )}
+                    >
+                      {column.header}
+                      <SortIcon width={13} height={13} />
+                    </button>
+                  ) : (
+                    column.header
+                  )}
+                </th>
+              ))}
             </tr>
-          ) : (
-            sorted.map((row) => (
-              <tr
-                key={getRowKey(row)}
-                className="border-b border-hair transition-colors last:border-b-0 hover:bg-cream/60"
-              >
-                {columns.map((column) => (
-                  <td
-                    key={column.key}
-                    className={cx(
-                      'px-4 py-3.5 align-middle',
-                      column.align === 'right' && 'text-right',
-                      column.className,
-                    )}
-                  >
-                    {column.render(row)}
-                  </td>
-                ))}
+          </thead>
+          <tbody>
+            {sorted.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length} className="px-4 py-10 text-center text-muted">
+                  {emptyMessage}
+                </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-    </div>
+            ) : (
+              sorted.map((row) => (
+                <tr
+                  key={getRowKey(row)}
+                  className="border-b border-hair transition-colors last:border-b-0 hover:bg-cream/60"
+                >
+                  {columns.map((column) => (
+                    <td
+                      key={column.key}
+                      className={cx(
+                        'px-4 py-3.5 align-middle',
+                        column.align === 'right' && 'text-right',
+                        column.className,
+                      )}
+                    >
+                      {column.render(row)}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }

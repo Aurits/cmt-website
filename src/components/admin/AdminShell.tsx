@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { AdminTopbar } from '@/components/admin/AdminTopbar';
 import { SaveStatus } from '@/components/admin/SaveStatus';
@@ -42,6 +42,21 @@ export function AdminShell({
   adminEmail: string;
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // While the phone menu is open: Escape closes it, and the page behind does not scroll.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMobileOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = previous;
+    };
+  }, [mobileOpen]);
   const stored = useSyncExternalStore(subscribe, readCollapsed, () => false);
   const [override, setOverride] = useState<boolean | null>(null);
   const collapsed = override ?? stored;

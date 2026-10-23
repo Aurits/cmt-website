@@ -32,9 +32,9 @@ export function PageToolbar({
   return (
     <div className={cx('flex flex-wrap items-center justify-between gap-3', className)}>
       {summary && <div className="min-w-0 text-small text-muted">{summary}</div>}
-      <div className="ml-auto flex flex-wrap items-center gap-3">
+      <div className="flex w-full flex-wrap items-center gap-3 sm:ml-auto sm:w-auto">
         {onSearch && (
-          <label className="relative block">
+          <label className="relative block flex-1 sm:flex-none">
             <span className="sr-only">{searchLabel}</span>
             <SearchIcon
               width={15}
@@ -46,7 +46,7 @@ export function PageToolbar({
               value={search ?? ''}
               onChange={(event) => onSearch(event.target.value)}
               placeholder={searchLabel}
-              className="h-10 w-56 rounded-full border border-green/15 bg-white pr-4 pl-9 text-small text-green placeholder:text-muted focus:border-green focus:shadow-[0_0_0_3px_rgb(15_42_26/0.12)] focus:outline-none"
+              className="h-10 w-full rounded-full sm:w-56 border border-green/15 bg-white pr-4 pl-9 text-small text-green placeholder:text-muted focus:border-green focus:shadow-[0_0_0_3px_rgb(15_42_26/0.12)] focus:outline-none"
             />
           </label>
         )}

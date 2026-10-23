@@ -22,7 +22,8 @@ export function FilterTabs({
     <div
       role="tablist"
       aria-label="Filter"
-      className="inline-flex max-w-full flex-wrap gap-1 rounded-[22px] border border-green/12 bg-white p-1"
+      // One line that scrolls sideways on a phone, rather than wrapping into a lumpy block.
+      className="inline-flex max-w-full gap-1 overflow-x-auto rounded-full border border-green/12 bg-white p-1 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible sm:rounded-[22px] [&::-webkit-scrollbar]:hidden"
     >
       {tabs.map((tab) => {
         const active = tab.value === value;
@@ -34,7 +35,7 @@ export function FilterTabs({
             aria-selected={active}
             onClick={() => onChange(tab.value)}
             className={cx(
-              'inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-small font-medium transition-colors',
+              'inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-small font-medium whitespace-nowrap transition-colors',
               active ? 'bg-green text-white' : 'text-green/75 hover:bg-cream hover:text-green',
             )}
           >

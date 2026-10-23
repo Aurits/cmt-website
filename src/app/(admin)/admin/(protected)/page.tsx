@@ -96,7 +96,9 @@ export default function AdminOverviewPage() {
     <div className="grid gap-5">
       {/* New enquiries arrive from the public forms; pick them up while this is open. */}
       <AutoRefresh />
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {/* Two across from the smallest screen: one per row put the whole first screen of a phone
+          into four numbers. */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         <MetricCard
           label="Active listings"
           value={activeListings.length}

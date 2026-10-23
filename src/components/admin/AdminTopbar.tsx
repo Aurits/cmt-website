@@ -59,6 +59,8 @@ export function AdminTopbar({ onMenu, adminEmail }: { onMenu: () => void; adminE
   const initials = (adminEmail.slice(0, 2) || 'AD').toUpperCase();
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
+  // Phones: the search is a button that opens the field as a full-width row under the bar.
+  const [mobileSearch, setMobileSearch] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
   // Rendered on both sides; suppressHydrationWarning on the line covers the rare case where the
   // server's clock and the reader's fall either side of midnight.
@@ -115,6 +117,7 @@ export function AdminTopbar({ onMenu, adminEmail }: { onMenu: () => void; adminE
 
   const go = (href: string) => {
     setOpen(false);
+    setMobileSearch(false);
     setQuery('');
     router.push(href);
   };
@@ -140,7 +143,15 @@ export function AdminTopbar({ onMenu, adminEmail }: { onMenu: () => void; adminE
         </div>
       </div>
 
-      <div ref={boxRef} className="relative hidden w-full max-w-[280px] md:block">
+      <div
+        ref={boxRef}
+        className={cx(
+          'w-full md:relative md:block md:max-w-[280px]',
+          mobileSearch
+            ? 'absolute inset-x-0 top-full block border-b border-hair bg-white p-3 md:static md:border-0 md:bg-transparent md:p-0'
+            : 'hidden',
+        )}
+      >
         <form
           role="search"
           onSubmit={(event) => {
@@ -166,15 +177,19 @@ export function AdminTopbar({ onMenu, adminEmail }: { onMenu: () => void; adminE
             }}
             onFocus={() => setOpen(true)}
             onKeyDown={(event) => {
-              if (event.key === 'Escape') setOpen(false);
+              if (event.key === 'Escape') {
+                setOpen(false);
+                setMobileSearch(false);
+              }
             }}
+            autoFocus={mobileSearch}
             placeholder="Search listings, agents, inquiries"
             autoComplete="off"
             className="h-10 w-full rounded-full border border-green/15 bg-cream pr-4 pl-10 text-small text-green placeholder:text-muted focus:border-green focus:shadow-[0_0_0_3px_rgb(15_42_26/0.12)] focus:outline-none"
           />
         </form>
         {open && query.trim().length >= 2 && (
-          <div className="absolute top-[calc(100%+6px)] right-0 left-0 z-10 overflow-hidden rounded-[18px] border border-green/12 bg-white shadow-[0_24px_48px_-20px_rgba(15,42,26,0.35)]">
+          <div className="absolute top-[calc(100%+6px)] right-3 left-3 z-10 overflow-hidden rounded-[18px] md:right-0 md:left-0 border border-green/12 bg-white shadow-[0_24px_48px_-20px_rgba(15,42,26,0.35)]">
             {hits.length === 0 ? (
               <p className="px-4 py-3 text-small text-muted">
                 Nothing matches &ldquo;{query.trim()}&rdquo;.
@@ -216,8 +231,18 @@ export function AdminTopbar({ onMenu, adminEmail }: { onMenu: () => void; adminE
         )}
       </div>
 
-      <div className="flex shrink-0 items-center gap-3">
-        <span className={cx('hidden text-small text-green sm:inline')}>{adminEmail}</span>
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <button
+          type="button"
+          onClick={() => setMobileSearch((value) => !value)}
+          aria-expanded={mobileSearch}
+          aria-controls="admin-search"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-green/25 text-green md:hidden"
+          aria-label={mobileSearch ? 'Close search' : 'Search'}
+        >
+          <SearchIcon width={16} height={16} />
+        </button>
+        <span className="hidden text-small text-green lg:inline">{adminEmail}</span>
         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-green text-[12px] font-bold text-gold">
           {initials}
         </span>

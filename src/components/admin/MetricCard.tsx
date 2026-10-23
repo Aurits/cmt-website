@@ -22,19 +22,23 @@ export function MetricCard({
   className?: string;
 }) {
   return (
-    <div className={cx('relative border border-green/10 bg-white p-5', className)}>
+    <div className={cx('relative border border-green/10 bg-white p-4 sm:p-5', className)}>
       <span aria-hidden="true" className="absolute -top-px left-5 h-[3px] w-7 bg-gold" />
       <div className="flex items-start justify-between gap-3">
-        <p className="pt-2 text-[11.5px] font-semibold tracking-[0.14em] text-green uppercase">{label}</p>
+        <p className="pt-2 text-[11.5px] font-semibold tracking-[0.14em] text-green uppercase">
+          {label}
+        </p>
         {icon && (
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-tag text-green">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-tag text-green max-sm:hidden">
             {icon}
           </span>
         )}
       </div>
-      <p className="tnum mt-3 font-display text-[44px] leading-none font-semibold text-green">{value}</p>
+      <p className="tnum mt-3 font-display text-[34px] leading-none font-semibold text-green sm:text-[44px]">
+        {value}
+      </p>
       {(hint || badge) && (
-        <p className="mt-3 flex flex-wrap items-center gap-2 text-small leading-snug text-muted">
+        <p className="mt-3 flex flex-wrap items-center gap-2 text-[12.5px] leading-snug text-muted sm:text-small">
           {badge}
           {hint}
         </p>
